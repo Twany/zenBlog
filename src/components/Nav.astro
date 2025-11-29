@@ -1,16 +1,26 @@
 ---
-import siteConfig, {type Link} from "../site.config";
+import getSiteConfig, {type Link} from "../site.config";
 import Hamburger from "./Hamburger.astro";
 import ThemeSwitcher from "./ThemeSwitcher.astro";
 import SiteIdentity from "./SiteIdentity.astro";
 import NavLinks from "./NavLinks.astro";
 import {withBase} from "../utils/helpers";
-const {activePage} = Astro.props;
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { defaultLang, type Lang } from "../i18n/config";
+import { localizePath } from "../i18n/utils";
+const {
+	activePage,
+	lang = defaultLang,
+} = Astro.props as { activePage: string; lang?: Lang };
+
+const siteConfig = getSiteConfig(lang);
 ---
 
 <header class="w-full">
 	<nav class="font-light w-full flex items-center justify-between px-4">
-		<a href={withBase("/")} class="shrink-0"><SiteIdentity /></a>
+		<a href={withBase(localizePath("/", lang))} class="shrink-0">
+			<SiteIdentity lang={lang} />
+		</a>
 		<div class="hidden sm:flex sm:gap-8 grow justify-center font-bold">
 			{
 				(
@@ -21,7 +31,10 @@ const {activePage} = Astro.props;
 				)
 			}
 		</div>
-		<ThemeSwitcher />
+		<div class="flex items-center gap-3">
+			<LanguageSwitcher lang={lang} />
+			<ThemeSwitcher />
+		</div>
 		<Hamburger />
 	</nav>
 	<div
@@ -34,6 +47,9 @@ const {activePage} = Astro.props;
 			links={siteConfig.headerNavLinks}
 			isMobileLink={true}
 		/>
+		<div class="flex w-full items-center justify-end gap-3 py-4 sm:hidden">
+			<LanguageSwitcher lang={lang} variant="minimal" />
+		</div>
 	</div>
 </header>
 <script is:inline>

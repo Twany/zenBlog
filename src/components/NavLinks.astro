@@ -14,7 +14,7 @@ const {
   links?.map((link) => {
     const classNames = [
       isMobileLink ? "close-menu" : "",
-      activePage === link.text.toLowerCase()
+      link.id && activePage === link.id
         ? "text-space-red! dark:text-space-yellow!"
         : "",
     ]

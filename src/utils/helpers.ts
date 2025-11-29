@@ -32,4 +32,34 @@ export function getPostsByTag(posts: CollectionEntry<'blogs'>[], tagId: string) 
     return filteredPosts;
 }
 
-export const withBase = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+export const withBase = (path: string) => {
+    const base = import.meta.env.BASE_URL || "/";
+    if (!base || base === "/") {
+        return path;
+    }
+    if (path === "/") {
+        return base;
+    }
+    return `${base.replace(/\/$/, "")}${path}`;
+};
+
+export const stripBasePath = (pathname: string) => {
+    const base = import.meta.env.BASE_URL || "/";
+    if (!base || base === "/") {
+        return pathname || "/";
+    }
+    const normalizedBase = base.endsWith("/") ? base.slice(0, -1) : base;
+    if (pathname?.startsWith(normalizedBase)) {
+        const stripped = pathname.slice(normalizedBase.length);
+        return stripped ? stripped : "/";
+    }
+    return pathname || "/";
+};
+
+export const getSlugFromId = (id: string) => {
+    if (!id) {
+        return id;
+    }
+    const segments = id.split("/");
+    return segments[segments.length - 1] || id;
+};

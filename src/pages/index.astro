@@ -1,20 +1,31 @@
 ---
 import { getCollection } from "astro:content";
 import MainLayout from "../layouts/MainLayout.astro";
-import siteConfig from "../site.config";
+import getSiteConfig from "../site.config";
 import { sortItemsByDateDesc, withBase } from "../utils/helpers";
 import PostCardPreview from "../components/PostCardPreview.astro";
 import Button from "../components/Button.astro";
 import { Image } from "astro:assets";
 import heroImage from "../assets/images/pixeltrue-space-discovery.svg";
 import ArrowRight from "../icons/ArrowRight.astro";
+import { defaultLang, type Lang } from "../i18n/config";
+import { localizePath } from "../i18n/utils";
 
-const allPosts = (await getCollection("blogs")).sort(sortItemsByDateDesc);
+const lang = (Astro.props?.lang as Lang) ?? defaultLang;
+const siteConfig = getSiteConfig(lang);
+const allPosts = (await getCollection("blogs"))
+  .filter((post) => post.data.lang === lang)
+  .sort(sortItemsByDateDesc);
+const recentPosts = allPosts.slice(0, siteConfig.recentPostLimit);
+const recentTitle = siteConfig.home?.recentPostsTitle || "Recent Stories";
+const viewAllCopy = siteConfig.home?.viewAllPostsCta || "View All Posts";
+const homeTitle = `${siteConfig.title} | ${siteConfig.hero?.title || siteConfig.description}`;
 ---
 
 <MainLayout
   activePage="home"
-  pageTitle={siteConfig.title + " | An Astro Personal Blog Template"}
+  pageTitle={homeTitle}
+  lang={lang}
 >
   <div
     class="jumbo-banner flex flex-col sm:flex-row sm:items-center sm:justify-between w-full px-4 my-12 gap-6"
@@ -61,16 +72,15 @@ const allPosts = (await getCollection("blogs")).sort(sortItemsByDateDesc);
   </div>
   <div class="page-content">
     <div id="posts" class="flex flex-col items-center justify-center w-full">
-      <h2 class="sigmar-ff text-balance pt-0! pb-8!">Recent Stories</h2>
+      <h2 class="sigmar-ff text-balance pt-0! pb-8!">{recentTitle}</h2>
       <div class="flex flex-col gap-8 max-w-full text-left">
-        {
-          allPosts
-            .slice(0, siteConfig.recentPostLimit)
-            .map((post) => <PostCardPreview post={post} />)
-        }
+        {recentPosts.map((post) => <PostCardPreview post={post} lang={lang} />)}
       </div>
-      <Button href={withBase("/blog")} class="space-btn-filled mt-8">
-        View All Posts <ArrowRight class="w-5 h-5 fill-current ml-4" />
+      <Button
+        href={withBase(localizePath("/blog", lang))}
+        class="space-btn-filled mt-8"
+      >
+        {viewAllCopy} <ArrowRight class="w-5 h-5 fill-current ml-4" />
       </Button>
     </div>
   </div>

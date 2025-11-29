@@ -4,23 +4,29 @@ import { type CollectionEntry, getCollection } from "astro:content";
 import Pagination from "../../components/Pagination.astro";
 import { sortItemsByDateDesc } from "../../utils/helpers";
 import MainLayout from "../../layouts/MainLayout.astro";
-import siteConfig from "../../site.config";
+import getSiteConfig from "../../site.config";
 import PostCardPreview from "../../components/PostCardPreview.astro";
+import { defaultLang, type Lang } from "../../i18n/config";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const blogs = (await getCollection("blogs")).sort(sortItemsByDateDesc);
-  return paginate(blogs, { pageSize: siteConfig.postsPerPage || 2 });
+  const currentConfig = getSiteConfig(defaultLang);
+  const blogs = (await getCollection("blogs"))
+    .filter((post) => post.data.lang === defaultLang)
+    .sort(sortItemsByDateDesc);
+  return paginate(blogs, { pageSize: currentConfig.postsPerPage || 2 });
 }
 
-type Props = { page: Page<CollectionEntry<"blogs">> };
+type Props = { page: Page<CollectionEntry<"blogs">>; lang?: Lang };
 
-const { page } = Astro.props;
+const { page, lang = defaultLang } = Astro.props as Props;
+const siteConfig = getSiteConfig(lang);
 const allPosts = page.data;
+const pageTitle = `${siteConfig.title} | ${siteConfig.blog?.title ?? "Blog"}`;
 ---
 
-<MainLayout activePage="blog" pageTitle={siteConfig.title + " | Blog Archive"}>
+<MainLayout activePage="blog" pageTitle={pageTitle} lang={lang}>
   <div class="page-content py-8 text-center">
-    <h1 class="sigmar-ff">Blog</h1>
+    <h1 class="sigmar-ff">{siteConfig.blog?.title || "Blog"}</h1>
     {
       siteConfig.blog?.description && (
         <p class="font-light text-balance">{siteConfig.blog?.description}</p>
@@ -30,7 +36,7 @@ const allPosts = page.data;
     <div
       class="flex flex-col text-left gap-8 mb-4 text-sm sm:text-base max-w-fit mx-auto"
     >
-      {allPosts.map((post) => <PostCardPreview post={post} />)}
+      {allPosts.map((post) => <PostCardPreview post={post} lang={lang} />)}
     </div>
     <Pagination page={page} class="mb-16 sm:mb-24" />
   </div>

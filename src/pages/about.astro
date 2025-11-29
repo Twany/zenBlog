@@ -1,11 +1,16 @@
 ---
 import { Image } from "astro:assets";
 import MainLayout from "../layouts/MainLayout.astro";
-import siteConfig from "../site.config";
+import getSiteConfig from "../site.config";
 import coverImage from "../assets/images/1.png";
+import { defaultLang, type Lang } from "../i18n/config";
+
+const lang = (Astro.props?.lang as Lang) ?? defaultLang;
+const siteConfig = getSiteConfig(lang);
+const pageTitle = `${siteConfig.title} | ${siteConfig.about?.title ?? "About"}`;
 ---
 
-<MainLayout activePage="about" pageTitle={siteConfig.title + " | About"}>
+<MainLayout activePage="about" pageTitle={pageTitle} lang={lang}>
   <div class="page-content">
     <h1 class="sigmar-ff text-balance">{siteConfig.about?.title}</h1>
     <Image

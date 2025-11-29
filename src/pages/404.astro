@@ -1,19 +1,29 @@
 ---
 import { Image } from "astro:assets";
 import MainLayout from "../layouts/MainLayout.astro";
-import { withBase } from "../utils/helpers";
+import { stripBasePath, withBase } from "../utils/helpers";
 import heroImage from "../assets/images/pixeltrue-space-discovery.svg";
 import SpaceKeyboard from "../components/SpaceKeyboard.astro";
-import siteConfig from "../site.config";
+import getSiteConfig from "../site.config";
+import { getLangFromPathname, localizePath } from "../i18n/utils";
+import { defaultLang, type Lang } from "../i18n/config";
+
+const derivedLang = getLangFromPathname(stripBasePath(Astro.url.pathname));
+const lang = (Astro.props?.lang as Lang) ?? derivedLang ?? defaultLang;
+const siteConfig = getSiteConfig(lang);
+const notFound = siteConfig.notFound;
+const pageTitle = `${siteConfig.title} | 404`;
+const homeHref = notFound?.cta?.href || withBase(localizePath("/", lang));
 ---
 
 <MainLayout
   activePage="404"
-  pageTitle={siteConfig.title + " | 404"}
+  pageTitle={pageTitle}
+  lang={lang}
   showSubscribeForm={false}
 >
   <div class="flex flex-col items-center justify-center page-content">
-    <h1 class="sigmar-ff">404</h1>
+    <h1 class="sigmar-ff">{notFound?.title || "404"}</h1>
     <Image
       class="cover-img"
       src={heroImage}
@@ -21,12 +31,11 @@ import siteConfig from "../site.config";
       width={400}
       height={300}
     />
-    <p>🧑‍🚀: Houston, we have a problem.</p>
+    <p>{notFound?.description || "We couldn't find that page."}</p>
     <p>
-      We couldn't find that link. Verify the address or <a
-        class="font-medium underline"
-        href={withBase("/")}>Go Back Home</a
-      >
+      <a class="font-medium underline" href={homeHref}>
+        {notFound?.cta?.text || "Back to Home"}
+      </a>
     </p>
     <SpaceKeyboard />
   </div>

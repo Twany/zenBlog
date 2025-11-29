@@ -5,19 +5,24 @@ import {
   sortItemsByDateDesc,
   createSlugFromTitle,
   withBase,
+  getSlugFromId,
 } from "../../utils/helpers";
 import { type CollectionEntry, getCollection, render } from "astro:content";
 import Button from "../../components/Button.astro";
 import MainLayout from "../../layouts/MainLayout.astro";
 import ArrowLeft from "../../icons/ArrowLeft.astro";
 import ArrowRight from "../../icons/ArrowRight.astro";
-import siteConfig from "../../site.config";
+import getSiteConfig from "../../site.config";
+import { defaultLang, type Lang } from "../../i18n/config";
+import { localizePath } from "../../i18n/utils";
 
 export async function getStaticPaths() {
-  const posts = (await getCollection("blogs")).sort(sortItemsByDateDesc);
+  const posts = (await getCollection("blogs"))
+    .filter((post) => post.data.lang === defaultLang)
+    .sort(sortItemsByDateDesc);
   const postCount = posts.length;
   return posts.map((post, index) => ({
-    params: { id: post.id },
+    params: { id: post.slug ?? getSlugFromId(post.id) },
     props: {
       post,
       prevPost: index + 1 !== postCount ? posts[index + 1] : null,
@@ -28,16 +33,25 @@ export async function getStaticPaths() {
 
 type Props = {
   post: CollectionEntry<"blogs">;
-  prevPost: CollectionEntry<"blogs">;
-  nextPost: CollectionEntry<"blogs">;
+  prevPost: CollectionEntry<"blogs"> | null;
+  nextPost: CollectionEntry<"blogs"> | null;
+  lang?: Lang;
 };
 
-const { post, prevPost, nextPost } = Astro.props;
+const { post, prevPost, nextPost, lang = defaultLang } = Astro.props as Props;
+const siteConfig = getSiteConfig(lang);
 const { title, pubDate, author, tags = [], image } = post.data;
 const { Content } = await render(post);
+const pageTitle = `${siteConfig.title} | ${title}`;
+const taggedLabel = siteConfig.blog?.taggedLabel || "Tagged";
+const backToListLabel = siteConfig.blog?.backToListLabel || "Back to All Stories";
+const nextPostLabel = siteConfig.blog?.nextPostLabel || "Next Post";
+const getPostSlug = (entry: CollectionEntry<"blogs"> | null) =>
+  entry ? entry.slug ?? getSlugFromId(entry.id) : "";
+const nextSlug = getPostSlug(nextPost);
 ---
 
-<MainLayout pageTitle={siteConfig.title + " | " + title}>
+<MainLayout pageTitle={pageTitle} activePage="blog" lang={lang}>
   <div class="page-content">
     <h1 class="sigmar-ff text-center text-balance">{title}</h1>
     <p class="leading-8 text-center kanit-regular text-balance text-xs">
@@ -54,11 +68,11 @@ const { Content } = await render(post);
       <Content />
     </div>
     <p class="kanit-regular text-center text-balance text-xs">
-      Tagged: {
+      {taggedLabel}: {
         tags.map((tag) => (
           <Button
             class="px-4! m-2"
-            href={withBase("/tags/" + createSlugFromTitle(tag))}
+            href={withBase(localizePath(`/tags/${createSlugFromTitle(tag)}`, lang))}
           >
             {tag}
           </Button>
@@ -68,16 +82,16 @@ const { Content } = await render(post);
     <div
       class="flex flex-col sm:flex-row items-center justify-center gap-4 my-8"
     >
-      <Button class="back-link" href={withBase("/blog")}>
-        <ArrowLeft class="w-5 h-5 fill-current mr-4" /> Back to All Stories
+      <Button class="back-link" href={withBase(localizePath("/blog", lang))}>
+        <ArrowLeft class="w-5 h-5 fill-current mr-4" /> {backToListLabel}
       </Button>
       {
-        (prevPost || nextPost) && nextPost && (
+        (prevPost || nextPost) && nextPost && nextSlug && (
           <Button
             class="back-link text-balance"
-            href={withBase("/blog/" + nextPost.id)}
+            href={withBase(localizePath(`/blog/${nextSlug}`, lang))}
           >
-            Next Post: {nextPost.data.title}{" "}
+            {nextPostLabel}: {nextPost.data.title}{" "}
             <ArrowRight class="w-5 h-5 fill-current ml-4" />
           </Button>
         )

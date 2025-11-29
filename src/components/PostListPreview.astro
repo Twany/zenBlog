@@ -2,22 +2,33 @@
 import { type CollectionEntry } from "astro:content";
 import ArrowRight from "../icons/ArrowRight.astro";
 import FormattedDate from "./FormattedDate.astro";
-import { withBase } from "../utils/helpers";
+import { getSlugFromId, withBase } from "../utils/helpers";
+import { localizePath } from "../i18n/utils";
+import { defaultLang, type Lang } from "../i18n/config";
+import getSiteConfig from "../site.config";
 
 type Props = {
   post: CollectionEntry<"blogs">;
   class?: string;
   headingLevel?: "h2" | "h3";
+  lang?: Lang;
 };
 
-const { post, class: className, headingLevel = "h2" } = Astro.props;
+const {
+  post,
+  class: className,
+  headingLevel = "h2",
+  lang = defaultLang,
+} = Astro.props as Props;
 const { title, pubDate, description } = post.data;
 const TitleTag = headingLevel;
+const readLabel = getSiteConfig(lang).blog?.readPostLabel || "Read Post";
+const slug = post.slug ?? getSlugFromId(post.id);
 ---
 
 <a
   class:list={["flex justify-between items-start gap-8 group", className]}
-  href={withBase("/blog/" + post.id)}
+  href={withBase(localizePath(`/blog/${slug}`, lang))}
 >
   <div class="grow">
     <TitleTag class="sigmar-ff">{title}</TitleTag>
@@ -27,6 +38,6 @@ const TitleTag = headingLevel;
   <div
     class="hidden opacity-0 transition group-hover:opacity-100 sm:inline-flex sm:gap-4 sm:items-center sm:self-center sm:shrink-0"
   >
-    Read Post <ArrowRight class="fill-current w-4 h-4" />
+    {readLabel} <ArrowRight class="fill-current w-4 h-4" />
   </div>
 </a>

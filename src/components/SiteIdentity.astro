@@ -1,7 +1,8 @@
 ---
 import { Image } from "astro:assets";
-import siteConfig from "../site.config";
+import getSiteConfig from "../site.config";
 import { withBase } from "../utils/helpers";
+import { defaultLang, type Lang } from "../i18n/config";
 
 type SiteIdentityProps = {
   logoWidth?: number;
@@ -17,7 +18,10 @@ const {
   loading = "eager",
   textSize = "text-base",
   class: customClass,
-}: SiteIdentityProps = Astro.props;
+  lang = defaultLang,
+}: SiteIdentityProps & { lang?: Lang } = Astro.props;
+
+const siteConfig = getSiteConfig(lang);
 ---
 
 <div class:list={["flex items-center gap-2", customClass]}>

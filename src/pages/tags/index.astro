@@ -8,29 +8,38 @@ import {
 import { getCollection } from "astro:content";
 import Button from "../../components/Button.astro";
 import MainLayout from "../../layouts/MainLayout.astro";
-import siteConfig from "../../site.config";
+import getSiteConfig from "../../site.config";
+import { defaultLang, type Lang } from "../../i18n/config";
+import { localizePath } from "../../i18n/utils";
 
-const posts = (await getCollection("blogs")).sort(sortItemsByDateDesc);
+const lang = (Astro.props?.lang as Lang) ?? defaultLang;
+const siteConfig = getSiteConfig(lang);
+const posts = (await getCollection("blogs"))
+  .filter((post) => post.data.lang === lang)
+  .sort(sortItemsByDateDesc);
 const tags = getAllTags(posts).sort((tagA, tagB) => {
   const postCountTagA = getPostsByTag(posts, tagA.id).length;
   const postCountTagB = getPostsByTag(posts, tagB.id).length;
   return postCountTagB - postCountTagA;
 });
+const tagsTitle = siteConfig.tags?.title || "Tags";
+const tagsDescription = siteConfig.tags?.description || "Select a tag to view related posts.";
+const pageTitle = `${siteConfig.title} | ${tagsTitle}`;
 ---
 
-<MainLayout
-  activePage="tags"
-  pageTitle={siteConfig.title + " | " + "Tags Index"}
->
+<MainLayout activePage="tags" pageTitle={pageTitle} lang={lang}>
   <div class="page-content">
-    <h1 class="sigmar-ff text-balance">Tags</h1>
-    <p class="kanit-regular">Select a tag to view related posts.</p>
+    <h1 class="sigmar-ff text-balance">{tagsTitle}</h1>
+    <p class="kanit-regular">{tagsDescription}</p>
     <div class="flex flex-wrap items-center justify-center gap-4">
       {
         tags.map((tag) => {
           const postCount = getPostsByTag(posts, tag.id).length;
           return (
-            <Button href={`${withBase("/tags/" + tag.id)}`} class="px-4! m-2">
+            <Button
+              href={`${withBase(localizePath("/tags/" + tag.id, lang))}`}
+              class="px-4! m-2"
+            >
               {tag.name} ({postCount})
             </Button>
           );

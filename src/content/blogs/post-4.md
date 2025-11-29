@@ -2,6 +2,7 @@
 title: "May the Fourth be with you"
 author: "Astro-naut Sid"
 description: "This post will show up on its own!"
+lang: "en"
 image:
   url: "../../assets/images/4.jpg"
   alt: "The word astro against an illustration of planets and stars."

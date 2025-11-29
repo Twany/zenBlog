@@ -1,10 +1,17 @@
 ---
 import Button from "./Button.astro";
-import siteConfig from "../site.config";
+import getSiteConfig from "../site.config";
+import { defaultLang, type Lang } from "../i18n/config";
 
-const subscribe = siteConfig.subscribe;
+const { class: className, lang = defaultLang } = Astro.props as {
+  class?: string;
+  lang?: Lang;
+};
 
-const { class: className } = Astro.props;
+const subscribe = getSiteConfig(lang).subscribe;
+const emailLabel = subscribe?.emailLabel || "Email Address";
+const emailPlaceholder = subscribe?.emailPlaceholder || "Your email";
+const buttonText = subscribe?.buttonText || "Subscribe";
 ---
 
 {
@@ -40,7 +47,7 @@ const { class: className } = Astro.props;
         target="_blank"
       >
         <label for="email" class="sr-only">
-          Email Address
+          {emailLabel}
         </label>
         <input
           type="email"
@@ -49,14 +56,14 @@ const { class: className } = Astro.props;
           class="w-full h-9 px-5 py-2 text-sm bg-transparent outline-gray-500 rounded-full kanit-light placeholder:text-gray-500/50 dark:placeholder:text-gray-300/50 focus:outline-space-red dark:focus:outline-space-yellow outline-1"
           required=""
           value=""
-          placeholder="Your email"
+          placeholder={emailPlaceholder}
         />
         <Button
           type="submit"
           name="subscribe"
           class="space-btn-outlined w-full h-9 sm:w-auto"
         >
-          Subscribe
+          {buttonText}
         </Button>
       </form>
     </section>

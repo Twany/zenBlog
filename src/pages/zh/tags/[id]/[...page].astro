@@ -1,0 +1,31 @@
+---
+import type { GetStaticPathsOptions, Page } from "astro";
+import { type CollectionEntry, getCollection } from "astro:content";
+import TagsPage from "../../../tags/[id]/[...page].astro";
+import {
+  getAllTags,
+  getPostsByTag,
+  sortItemsByDateDesc,
+} from "../../../../utils/helpers";
+import getSiteConfig from "../../../../site.config";
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const posts = (await getCollection("blogs"))
+    .filter((post) => post.data.lang === "zh")
+    .sort(sortItemsByDateDesc);
+  const tags = getAllTags(posts);
+
+  return tags.flatMap((tag) =>
+    paginate(getPostsByTag(posts, tag.id), {
+      params: { id: tag.id },
+      pageSize: getSiteConfig("zh").postsPerPage || 2,
+    })
+  );
+}
+
+const { page } = Astro.props as {
+  page: Page<CollectionEntry<"blogs">>;
+};
+---
+
+<TagsPage page={page} lang="zh" />

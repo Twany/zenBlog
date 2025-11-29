@@ -1,0 +1,28 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import BlogPostPage from "../../blog/[id].astro";
+import { getSlugFromId, sortItemsByDateDesc } from "../../../utils/helpers";
+
+export async function getStaticPaths() {
+  const posts = (await getCollection("blogs"))
+    .filter((post) => post.data.lang === "zh")
+    .sort(sortItemsByDateDesc);
+  const postCount = posts.length;
+  return posts.map((post, index) => ({
+    params: { id: post.slug ?? getSlugFromId(post.id) },
+    props: {
+      post,
+      prevPost: index + 1 !== postCount ? posts[index + 1] : null,
+      nextPost: index !== 0 ? posts[index - 1] : null,
+    },
+  }));
+}
+
+const { post, prevPost, nextPost } = Astro.props as {
+  post: CollectionEntry<"blogs">;
+  prevPost: CollectionEntry<"blogs"> | null;
+  nextPost: CollectionEntry<"blogs"> | null;
+};
+---
+
+<BlogPostPage post={post} prevPost={prevPost} nextPost={nextPost} lang="zh" />

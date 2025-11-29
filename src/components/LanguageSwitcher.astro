@@ -1,0 +1,62 @@
+---
+import {defaultLang, languageSelectOptions, type Lang} from "../i18n/config";
+import {removeLocaleFromPath} from "../i18n/utils";
+import {stripBasePath, withBase} from "../utils/helpers";
+import {localizePath} from "../i18n/utils";
+
+const {lang = defaultLang, variant = "default"} = Astro.props as {
+	lang?: Lang;
+	variant?: "default" | "minimal";
+};
+
+const pathname = stripBasePath(Astro.url.pathname);
+const cleanPath = removeLocaleFromPath(pathname);
+const search = Astro.url.search ?? "";
+const options = languageSelectOptions.map(({code, label}) => ({
+	code,
+	label,
+	href: withBase(localizePath(cleanPath, code as Lang)) + search,
+}));
+
+const selectClasses = [
+	"border border-gray-600 dark:border-gray-500 rounded-md",
+	"bg-transparent text-xs uppercase tracking-wide",
+	variant === "minimal" ? "px-2 py-1" : "px-3 py-1.5",
+];
+---
+
+<label class="flex items-center gap-2 text-xs text-gray-400 uppercase">
+	<span class="sr-only">Select language</span>
+	<select
+		class:list={selectClasses}
+		aria-label="Select language"
+		onchange="window.location.href=this.value"
+		value={lang}
+	>
+		{
+			options.map((option) => (
+				<option value={option.href} selected={option.code === lang}>
+					{option.label}
+				</option>
+			))
+		}
+	</select>
+</label>
+
+<style>
+	.sr-only {
+		border: 0;
+		clip: rect(1px, 1px, 1px, 1px);
+		clip-path: inset(50%);
+		height: 1px;
+		margin: -1px;
+		overflow: hidden;
+		padding: 0;
+		position: absolute;
+		width: 1px;
+		white-space: nowrap;
+	}
+	label select option {
+		color: black;
+	}
+</style>

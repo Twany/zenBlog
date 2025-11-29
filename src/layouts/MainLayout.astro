@@ -5,22 +5,27 @@ import Footer from "../components/Footer.astro";
 import Nav from "../components/Nav.astro";
 import Subscribe from "../components/Subscribe.astro";
 import { withBase } from "../utils/helpers";
-import siteConfig from "../site.config";
+import getSiteConfig from "../site.config";
+import { defaultLang, type Lang } from "../i18n/config";
 
 type LayoutProps = {
 	pageTitle: string;
 	activePage: string;
 	showSubscribeForm?: boolean;
+	lang?: Lang;
 };
 const {
 	pageTitle,
 	activePage,
 	showSubscribeForm = true,
+  lang = defaultLang,
 } = Astro.props as LayoutProps;
+
+const siteConfig = getSiteConfig(lang);
 ---
 
 <!doctype html>
-<html lang="en" class="antialiased break-words">
+<html lang={lang} class="antialiased break-words">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" href={withBase(`/space-ahead-logo.png`)} />
@@ -43,10 +48,10 @@ const {
 	</head>
 	<body>
 		<main class="max-w-6xl mx-auto min-h-screen">
-			<Nav activePage={activePage} />
+			<Nav activePage={activePage} lang={lang} />
 			<slot />
-			{showSubscribeForm && <Subscribe class="my-12 w-full" />}
-			<Footer />
+			{showSubscribeForm && <Subscribe class="my-12 w-full" lang={lang} />}
+			<Footer lang={lang} />
 		</main>
 	</body>
 </html>

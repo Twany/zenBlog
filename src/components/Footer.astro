@@ -1,6 +1,9 @@
 ---
-import siteConfig from "../site.config";
-import SiteIdentity from "./SiteIdentity.astro";
+import getSiteConfig from "../site.config";
+import { defaultLang, type Lang } from "../i18n/config";
+
+const { lang = defaultLang } = Astro.props as { lang?: Lang };
+const siteConfig = getSiteConfig(lang);
 const currentYear = new Date().getFullYear();
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: "First Adventure on Mars"
 description: "This is the first post of my new blog."
+lang: "en"
 author: "Astro-naut Sid"
 image:
   url: "../../assets/images/1.png"
