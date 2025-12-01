@@ -1,9 +1,9 @@
 html.light .swup-transition-overlay {
-  background: linear-gradient(
-    60deg,
+  /* background: linear-gradient(
+    160deg,
     var(--color-space-sand),
     var(--color-whitesmoke)
-  );
+  ); */
 }
 
 html.dark .swup-transition-overlay {
