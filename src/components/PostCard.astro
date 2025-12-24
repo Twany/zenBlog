@@ -1,0 +1,75 @@
+---
+import { uiLabels } from '../data/uiLabels';
+import type { Locale } from '../utils/i18n';
+
+interface Props {
+  lang: Locale;
+  href: string;
+  title: string;
+  excerpt: string;
+  category?: string;
+  date: string;
+  readTime?: string;
+  tags?: string[];
+  featured?: boolean;
+}
+
+const {
+  lang,
+  href,
+  title,
+  excerpt,
+  category,
+  date,
+  readTime,
+  tags = [],
+  featured = false,
+} = Astro.props as Props;
+---
+<article class="flex flex-col group h-full">
+  <a href={href} class="flex flex-col gap-3">
+    <div class="flex flex-wrap items-center gap-2 text-xs font-bold tracking-widest uppercase leading-none">
+      {category ? (
+        <>
+          <span class="text-brand-cyan">{category}</span>
+          <span class="text-gray-300">/</span>
+        </>
+      ) : null}
+      <span class="text-gray-500">{date}</span>
+        {readTime ? (
+          <>
+            <span class="text-gray-300">•</span>
+            <span class="text-gray-400">
+              {readTime} {uiLabels.common.readSuffix[lang]}
+            </span>
+          </>
+        ) : null}
+    </div>
+
+    <h3
+      class={`font-sans font-bold text-brand-dark group-hover:text-brand-cyan transition-colors leading-tight block ${
+        featured ? 'text-3xl lg:text-4xl mt-2' : 'text-xl lg:text-2xl'
+      }`}
+    >
+      {title}
+    </h3>
+
+    {tags.length ? (
+      <div class="flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400 bg-gray-50 border border-gray-100 px-2 py-0.5 rounded-sm group-hover:border-gray-200 transition-colors">
+            {tag}
+          </span>
+        ))}
+      </div>
+    ) : null}
+
+    <p
+      class={`text-gray-600 font-serif leading-relaxed ${
+        featured ? 'text-lg lg:text-xl line-clamp-4' : 'text-sm lg:text-base line-clamp-3'
+      }`}
+    >
+      {excerpt}
+    </p>
+  </a>
+</article>

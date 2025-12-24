@@ -1,0 +1,42 @@
+---
+import type { Experiment } from '../types';
+import type { Locale } from '../utils/i18n';
+
+interface Props {
+  experiment: Experiment;
+  lang: Locale;
+}
+
+const { experiment, lang } = Astro.props as Props;
+
+const colorMap = {
+  cyan: 'bg-brand-cyan hover:bg-[#1d4ed8]',
+  blue: 'bg-brand-dark hover:bg-[#1f2d3b]',
+  lime: 'bg-lime-500 hover:bg-lime-600',
+  orange: 'bg-orange-500 hover:bg-orange-600',
+} as const;
+
+const textColor = experiment.color === 'lime' ? 'text-gray-900' : 'text-white';
+---
+<a
+  href={`#experiment-${experiment.id}`}
+  class={`relative overflow-hidden group h-64 flex flex-col justify-between p-6 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl ${
+    colorMap[experiment.color]
+  }`}
+>
+  <div class="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
+
+  <div class={`relative z-10 font-display font-bold text-3xl uppercase leading-none ${textColor}`}>
+    {experiment.title[lang]}
+  </div>
+
+  <div class={`relative z-10 font-sans text-sm font-medium opacity-80 ${textColor}`}>
+    {experiment.description[lang]}
+  </div>
+
+  <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+    <svg xmlns="http://www.w3.org/2000/svg" class={`h-6 w-6 ${textColor}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+    </svg>
+  </div>
+</a>

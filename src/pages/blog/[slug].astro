@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogPostPage from '../../components/pages/BlogPostPage.astro';
+import { getBlogPosts, getBlogPostUrl, getSlugFromEntry } from '../../utils/blog';
+import { SITE } from '../../data/site';
+
+export async function getStaticPaths() {
+  const posts = await getBlogPosts('en');
+  return posts.map((entry) => ({
+    params: { slug: getSlugFromEntry(entry) },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const posts = await getBlogPosts('en');
+const slug = getSlugFromEntry(entry);
+const canonical = new URL(getBlogPostUrl('en', slug), SITE.url).toString();
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: entry.data.title,
+  description: entry.data.description,
+  datePublished: entry.data.pubDate.toISOString(),
+  dateModified: entry.data.pubDate.toISOString(),
+  author: {
+    '@type': 'Person',
+    name: SITE.author,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.title,
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': canonical,
+  },
+};
+---
+<BaseLayout title={entry.data.title} description={entry.data.description} type="article" lang="en">
+  <script type="application/ld+json">{JSON.stringify(schema)}</script>
+  <BlogPostPage entry={entry} posts={posts} lang="en" />
+</BaseLayout>

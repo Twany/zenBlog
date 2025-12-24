@@ -1,0 +1,171 @@
+---
+import { uiLabels } from '../data/uiLabels';
+import { getLocalizedPath, stripLocale, type Locale } from '../utils/i18n';
+import ManSilhouette from './ManSilhouette.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Locale;
+  currentPath: string;
+}
+
+const { lang, currentPath } = Astro.props as Props;
+const normalizedPath = stripLocale(currentPath);
+const alternateLocale: Locale = lang === 'en' ? 'zh' : 'en';
+const alternateHref = getLocalizedPath(currentPath, alternateLocale);
+
+const navItems = [
+  { key: 'blog', label: uiLabels.nav.blog[lang], path: '/blog/' },
+  { key: 'notes', label: uiLabels.nav.notes[lang], path: '/notes/' },
+  { key: 'experiments', label: uiLabels.nav.experiments[lang], path: '/experiments/' },
+  { key: 'about', label: uiLabels.nav.about[lang], path: '/about/' },
+  { key: 'contact', label: uiLabels.nav.contact[lang], path: '/contact/' },
+];
+
+const isActive = (path: string) => {
+  if (path === '/') return normalizedPath === '/';
+  return normalizedPath.startsWith(path);
+};
+---
+<header class="site-header fixed top-0 left-0 right-0 z-50 bg-brand-cyan h-24 lg:h-32">
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute inset-0 opacity-20">
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="contour" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+            <path d="M0 50 Q 25 25 50 50 T 100 50" fill="none" stroke="white" stroke-width="1" opacity="0.5" />
+            <path d="M0 20 Q 25 45 50 20 T 100 20" fill="none" stroke="white" stroke-width="1" opacity="0.3" />
+            <path d="M0 80 Q 25 55 50 80 T 100 80" fill="none" stroke="white" stroke-width="1" opacity="0.3" />
+            <path d="M20 0 Q 45 50 20 100" fill="none" stroke="white" stroke-width="1" opacity="0.4" />
+            <path d="M80 0 Q 55 50 80 100" fill="none" stroke="white" stroke-width="1" opacity="0.4" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#contour)" />
+      </svg>
+    </div>
+
+    <div class="absolute inset-0 opacity-30 mix-blend-overlay">
+      <svg viewBox="0 0 1440 320" preserveAspectRatio="none" class="w-full h-full">
+        <path fill="none" stroke="white" stroke-width="2" d="M0,160 C320,300,420,0,740,160 C1060,320,1380,100,1440,200" />
+        <path fill="none" stroke="white" stroke-width="1.5" d="M0,200 C200,100,600,300,1000,100 C1300,-50,1440,150,1440,150" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between relative z-10">
+    <a href={getLocalizedPath('/', lang)} class="flex items-center gap-4 group">
+      <div class="bg-white/10 backdrop-blur-sm p-2 rounded-full border border-white/20 group-hover:bg-white/20 transition-colors">
+        <ManSilhouette class="site-logo h-12 lg:h-16 text-white" />
+      </div>
+      <div class="flex flex-col text-left">
+        <span class="site-title font-display font-bold text-white leading-none tracking-tighter uppercase transition-all duration-300 text-3xl lg:text-5xl">
+          The Man<br /><span class="text-white/80">In Blue</span>
+        </span>
+      </div>
+    </a>
+
+    <div class="flex items-center gap-6 lg:gap-12">
+      <nav class="hidden md:flex gap-8 lg:gap-12">
+        {navItems.map((link) => (
+          <a
+            href={getLocalizedPath(link.path, lang)}
+            class={`text-white font-display font-bold text-xl lg:text-2xl hover:text-white/80 transition-colors uppercase tracking-wide relative group ${
+              isActive(link.path) ? 'opacity-100' : 'opacity-70 hover:opacity-100'
+            }`}
+          >
+            {link.label}
+            <span
+              class={`absolute -bottom-1 left-0 h-0.5 bg-white transition-all duration-300 ${
+                isActive(link.path) ? 'w-full' : 'w-0 group-hover:w-full'
+              }`}
+            ></span>
+          </a>
+        ))}
+      </nav>
+
+      <a
+        href={alternateHref}
+        class="hidden md:flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-full backdrop-blur-sm border border-white/30 transition-all font-sans font-bold text-xs tracking-widest uppercase"
+      >
+        <Icon name="globe" size={14} />
+        <span>{alternateLocale === 'en' ? 'EN' : '中文'}</span>
+      </a>
+
+      <button
+        class="md:hidden text-white p-2"
+        type="button"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+      >
+        <span data-menu-icon="open">
+          <Icon name="menu" size={32} />
+        </span>
+        <span data-menu-icon="close" class="hidden">
+          <Icon name="x" size={32} />
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-nav" class="md:hidden absolute top-full left-0 right-0 bg-brand-cyan border-t border-white/10 p-6 flex flex-col gap-6 shadow-xl h-screen z-50 hidden" data-mobile-menu>
+    {navItems.map((link) => (
+      <a
+        href={getLocalizedPath(link.path, lang)}
+        class="text-white font-display font-bold text-3xl uppercase text-left"
+        data-menu-link
+      >
+        {link.label}
+      </a>
+    ))}
+    <a
+      href={alternateHref}
+      class="flex items-center gap-3 text-white font-display font-bold text-xl uppercase mt-4 pt-4 border-t border-white/20"
+      data-menu-link
+    >
+      <Icon name="globe" size={24} />
+      <span>{alternateLocale === 'en' ? 'English' : 'Chinese'}</span>
+    </a>
+  </div>
+
+  <script is:inline>
+    const header = document.querySelector('.site-header');
+    const menuButton = document.querySelector('[data-menu-toggle]');
+    const menu = document.querySelector('[data-mobile-menu]');
+    const openIcon = menuButton?.querySelector('[data-menu-icon="open"]');
+    const closeIcon = menuButton?.querySelector('[data-menu-icon="close"]');
+    const menuLinks = document.querySelectorAll('[data-menu-link]');
+
+    const setScrolled = () => {
+      if (!header) return;
+      if (window.scrollY > 50) {
+        header.classList.add('is-scrolled');
+      } else {
+        header.classList.remove('is-scrolled');
+      }
+    };
+
+    setScrolled();
+    window.addEventListener('scroll', setScrolled, { passive: true });
+
+    const toggleMenu = () => {
+      if (!menuButton || !menu) return;
+      const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
+      const nextOpen = !isOpen;
+      menuButton.setAttribute('aria-expanded', String(nextOpen));
+      menu.classList.toggle('hidden', !nextOpen);
+      if (openIcon && closeIcon) {
+        openIcon.classList.toggle('hidden', nextOpen);
+        closeIcon.classList.toggle('hidden', !nextOpen);
+      }
+      document.body.style.overflow = nextOpen ? 'hidden' : '';
+    };
+
+    menuButton?.addEventListener('click', toggleMenu);
+    menuLinks.forEach((link) => link.addEventListener('click', () => {
+      if (menuButton?.getAttribute('aria-expanded') === 'true') {
+        toggleMenu();
+      }
+    }));
+  </script>
+</header>

@@ -1,0 +1,205 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import PostCard from '../PostCard.astro';
+import Icon from '../Icon.astro';
+import { uiLabels } from '../../data/uiLabels';
+import { formatDate } from '../../utils/date';
+import { getBlogPostUrl, getSlugFromEntry } from '../../utils/blog';
+import type { BlogEntry } from '../../utils/blog';
+import type { Locale } from '../../utils/i18n';
+
+interface Props {
+  lang: Locale;
+  posts: BlogEntry[];
+}
+
+const { lang, posts } = Astro.props as Props;
+const categories = ['All', ...Array.from(new Set(posts.map((post) => post.data.category)))];
+const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? []))).sort();
+---
+<div class="max-w-7xl mx-auto px-6">
+  <div class="flex flex-col lg:flex-row gap-12">
+    <aside class="w-full lg:w-1/4 space-y-8">
+      <div>
+        <h3 class="font-display font-bold text-lg uppercase mb-4 text-brand-dark">{uiLabels.common.search[lang]}</h3>
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="..."
+            class="w-full border-2 border-gray-200 p-3 pl-10 rounded-none focus:border-brand-cyan outline-none transition-colors font-sans"
+            data-filter-search
+          />
+          <Icon name="search" class="absolute left-3 top-3.5 text-gray-400 w-5 h-5" size={20} />
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-display font-bold text-lg uppercase mb-4 text-brand-dark">{uiLabels.common.categories[lang]}</h3>
+        <div class="flex flex-wrap lg:flex-col gap-2">
+          {categories.map((cat) => (
+            <button
+              type="button"
+              class={`text-left px-4 py-2 font-bold uppercase text-sm tracking-wide transition-all ${
+                cat === 'All'
+                  ? 'bg-brand-cyan text-white shadow-md transform translate-x-1'
+                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+              }`}
+              data-filter-category={cat}
+            >
+              {cat === 'All' ? uiLabels.blog.all[lang] : cat}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-display font-bold text-lg uppercase text-brand-dark">{uiLabels.common.tags[lang]}</h3>
+          <button type="button" class="text-xs text-gray-400 hover:text-red-500 flex items-center gap-1" data-filter-clear>
+            <Icon name="x" size={12} />
+            {uiLabels.blog.clearTag[lang]}
+          </button>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          {allTags.map((tag) => (
+            <button
+              type="button"
+              class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full border transition-all text-gray-400 border-gray-200 hover:border-brand-cyan hover:text-brand-cyan bg-white"
+              data-filter-tag={tag}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      </div>
+    </aside>
+
+    <div class="w-full lg:w-3/4">
+      <SectionHeading title={uiLabels.common.viewArchive[lang]} />
+
+      <div class="flex flex-col" data-posts>
+        {posts.map((post) => (
+          <div
+            class="border-b border-gray-100 pb-8 mb-8 last:border-0 last:pb-0 last:mb-0"
+            data-post
+            data-category={post.data.category}
+            data-tags={(post.data.tags ?? []).join(',')}
+            data-title={post.data.title.toLowerCase()}
+            data-excerpt={post.data.description.toLowerCase()}
+          >
+            <PostCard
+              lang={lang}
+              href={getBlogPostUrl(lang, getSlugFromEntry(post))}
+              title={post.data.title}
+              excerpt={post.data.description}
+              category={post.data.category}
+              date={formatDate(post.data.pubDate, lang)}
+              readTime={post.data.readTime}
+              tags={post.data.tags ?? []}
+            />
+          </div>
+        ))}
+      </div>
+
+      <div class="py-20 text-center text-gray-400 font-serif italic text-lg bg-gray-50 flex flex-col items-center gap-4 hidden" data-empty>
+        <Icon name="tag" size={48} class="text-gray-200" />
+        <p>{uiLabels.blog.noResults[lang]}</p>
+        <button type="button" class="text-brand-cyan text-sm font-bold uppercase underline" data-filter-reset>
+          {uiLabels.blog.clearFilters[lang]}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  const searchInput = document.querySelector('[data-filter-search]');
+  const categoryButtons = Array.from(document.querySelectorAll('[data-filter-category]'));
+  const tagButtons = Array.from(document.querySelectorAll('[data-filter-tag]'));
+  const clearTagButton = document.querySelector('[data-filter-clear]');
+  const resetButton = document.querySelector('[data-filter-reset]');
+  const posts = Array.from(document.querySelectorAll('[data-post]'));
+  const emptyState = document.querySelector('[data-empty]');
+
+  let activeCategory = 'All';
+  let activeTag = '';
+  let query = '';
+
+  const setActiveCategory = (category) => {
+    activeCategory = category;
+    categoryButtons.forEach((button) => {
+      const isActive = button.dataset.filterCategory === category;
+      button.classList.toggle('bg-brand-cyan', isActive);
+      button.classList.toggle('text-white', isActive);
+      button.classList.toggle('shadow-md', isActive);
+      button.classList.toggle('translate-x-1', isActive);
+      button.classList.toggle('bg-gray-100', !isActive);
+      button.classList.toggle('text-gray-500', !isActive);
+    });
+  };
+
+  const setActiveTag = (tag) => {
+    activeTag = tag;
+    tagButtons.forEach((button) => {
+      const isActive = button.dataset.filterTag === tag;
+      button.classList.toggle('bg-brand-dark', isActive);
+      button.classList.toggle('text-white', isActive);
+      button.classList.toggle('border-brand-dark', isActive);
+    });
+  };
+
+  const updatePosts = () => {
+    let visible = 0;
+    posts.forEach((post) => {
+      const category = post.dataset.category || '';
+      const tags = (post.dataset.tags || '').split(',');
+      const title = post.dataset.title || '';
+      const excerpt = post.dataset.excerpt || '';
+
+      const matchesCategory = activeCategory === 'All' || category === activeCategory;
+      const matchesTag = !activeTag || tags.includes(activeTag);
+      const matchesSearch = !query || title.includes(query) || excerpt.includes(query);
+
+      const shouldShow = matchesCategory && matchesTag && matchesSearch;
+      post.classList.toggle('hidden', !shouldShow);
+      if (shouldShow) visible += 1;
+    });
+
+    if (emptyState) {
+      emptyState.classList.toggle('hidden', visible > 0);
+    }
+  };
+
+  categoryButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      setActiveCategory(button.dataset.filterCategory || 'All');
+      updatePosts();
+    });
+  });
+
+  tagButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const tag = button.dataset.filterTag || '';
+      setActiveTag(activeTag === tag ? '' : tag);
+      updatePosts();
+    });
+  });
+
+  clearTagButton?.addEventListener('click', () => {
+    setActiveTag('');
+    updatePosts();
+  });
+
+  resetButton?.addEventListener('click', () => {
+    setActiveCategory('All');
+    setActiveTag('');
+    if (searchInput) searchInput.value = '';
+    query = '';
+    updatePosts();
+  });
+
+  searchInput?.addEventListener('input', (event) => {
+    query = event.target.value.trim().toLowerCase();
+    updatePosts();
+  });
+</script>

@@ -1,0 +1,63 @@
+---
+import { SITE } from '../data/site';
+import { buildAlternateLinks, buildCanonicalUrl, buildXDefaultLink } from '../utils/seo';
+import { getLocaleFromPath, localeToOg, type Locale } from '../utils/i18n';
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: Locale;
+  type?: 'website' | 'article';
+  image?: string;
+  pathname?: string;
+  canonical?: string;
+}
+
+const {
+  title,
+  description,
+  lang,
+  type = 'website',
+  image,
+  pathname = Astro.url.pathname,
+  canonical,
+} = Astro.props as Props;
+
+const resolvedLang = (lang ?? getLocaleFromPath(pathname)) as Locale;
+const metaTitle = title
+  ? title.includes(SITE.title)
+    ? title
+    : `${title} | ${SITE.title}`
+  : SITE.title;
+const metaDescription = description ?? SITE.description[resolvedLang];
+const canonicalUrl = canonical ?? buildCanonicalUrl(pathname, resolvedLang);
+const alternateLinks = buildAlternateLinks(pathname);
+const xDefault = buildXDefaultLink(pathname);
+---
+<title>{metaTitle}</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content={metaDescription} />
+<link rel="canonical" href={canonicalUrl} />
+{alternateLinks.map((link) => (
+  <link rel="alternate" hreflang={link.hrefLang} href={link.href} />
+))}
+<link rel="alternate" hreflang="x-default" href={xDefault} />
+
+<meta property="og:title" content={metaTitle} />
+<meta property="og:description" content={metaDescription} />
+<meta property="og:type" content={type} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:site_name" content={SITE.title} />
+<meta property="og:locale" content={localeToOg[resolvedLang]} />
+{alternateLinks
+  .filter((link) => link.locale !== resolvedLang)
+  .map((link) => (
+    <meta property="og:locale:alternate" content={localeToOg[link.locale]} />
+  ))}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={metaTitle} />
+<meta name="twitter:description" content={metaDescription} />
+{image ? <meta property="og:image" content={image} /> : null}
+{image ? <meta name="twitter:image" content={image} /> : null}

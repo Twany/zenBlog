@@ -1,0 +1,79 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import ManSilhouette from '../ManSilhouette.astro';
+import { uiLabels } from '../../data/uiLabels';
+import type { Locale } from '../../utils/i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props as Props;
+---
+<div class="max-w-7xl mx-auto px-6">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+    <div>
+      <SectionHeading title={uiLabels.common.whoIs[lang]} />
+
+      <div class="font-serif text-gray-700 leading-relaxed space-y-6 text-lg">
+        {lang === 'en' ? (
+          <>
+            <p>
+              <strong class="font-sans uppercase text-brand-cyan tracking-widest text-sm block mb-1">Origins</strong>
+              I started this digital garden in 2004 as a way to document my journey through the early web. Back then, CSS layouts were experimental, Flash was king, and IE6 was the villain of every story.
+            </p>
+            <p>
+              Over the last two decades, I've worked as a Frontend Architect, Design Systems Lead, and Creative Technologist. My passion lies in the intersection of design and engineering—where pixel-perfect aesthetics meet performant code.
+            </p>
+          </>
+        ) : (
+          <>
+            <p>
+              <strong class="font-sans uppercase text-brand-cyan tracking-widest text-sm block mb-1">起源</strong>
+              我于 2004 年开始了这片数字花园，以此记录我在早期网络世界中的旅程。在那个年代，CSS 布局还处于实验阶段，Flash 是王者，而 IE6 是每个故事中的反派。
+            </p>
+            <p>
+              在过去的二十年里，我曾担任前端架构师、设计系统主管和创意技术专家。我的热情在于设计与工程的交汇点——即像素完美的视觉美学与高性能代码相遇的地方。
+            </p>
+          </>
+        )}
+
+        <div class="pt-8">
+          <h3 class="font-display font-bold text-2xl uppercase text-brand-dark mb-6">Toolkit</h3>
+          <div class="grid grid-cols-2 gap-4 font-sans text-sm font-bold uppercase tracking-wide">
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 text-gray-500"><span class="w-2 h-2 bg-brand-cyan rounded-full"></span>React / Next.js</div>
+              <div class="flex items-center gap-2 text-gray-500"><span class="w-2 h-2 bg-brand-cyan rounded-full"></span>TypeScript</div>
+              <div class="flex items-center gap-2 text-gray-500"><span class="w-2 h-2 bg-brand-cyan rounded-full"></span>Tailwind CSS</div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 text-gray-500"><span class="w-2 h-2 bg-brand-cyan rounded-full"></span>WebGL / Three.js</div>
+              <div class="flex items-center gap-2 text-gray-500"><span class="w-2 h-2 bg-brand-cyan rounded-full"></span>Node.js</div>
+              <div class="flex items-center gap-2 text-gray-500"><span class="w-2 h-2 bg-brand-cyan rounded-full"></span>Rust (Learning)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative h-full min-h-[500px] bg-brand-dark overflow-hidden rounded-lg shadow-2xl">
+      <div class="absolute inset-0 opacity-20">
+        <svg width="100%" height="100%">
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1" />
+          </pattern>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+      </div>
+
+      <div class="absolute inset-0 flex items-center justify-center">
+        <ManSilhouette class="h-4/5 text-brand-cyan drop-shadow-[0_0_15px_rgba(0,174,239,0.5)]" />
+      </div>
+
+      <div class="absolute bottom-8 left-8 right-8 bg-white/10 backdrop-blur-md p-6 border-l-4 border-brand-cyan">
+        <p class="text-white font-serif italic text-lg">"Design is not just what it looks like and feels like. Design is how it works."</p>
+        <p class="text-brand-cyan mt-2 font-display uppercase font-bold text-sm tracking-widest">— Steve Jobs</p>
+      </div>
+    </div>
+  </div>
+</div>

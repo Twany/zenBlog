@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HomePage from '../../components/pages/HomePage.astro';
+import { getBlogPosts } from '../../utils/blog';
+import { SITE } from '../../data/site';
+
+const posts = await getBlogPosts('zh');
+---
+<BaseLayout title={SITE.title} description={SITE.description.zh} lang="zh">
+  <HomePage lang="zh" posts={posts} />
+</BaseLayout>

@@ -1,0 +1,62 @@
+---
+import { uiLabels } from '../data/uiLabels';
+import { getLocalizedPath, type Locale } from '../utils/i18n';
+import ManSilhouette from './ManSilhouette.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props as Props;
+const year = new Date().getFullYear();
+---
+<footer class="bg-brand-dark text-white pt-16 pb-8 border-t-4 border-brand-cyan relative overflow-hidden">
+  <div class="absolute bottom-0 left-4 md:left-20 opacity-10 pointer-events-none">
+    <ManSilhouette class="h-[400px] md:h-[600px]" />
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 relative z-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+      <div class="flex flex-col gap-4">
+        <h3 class="font-display font-bold text-3xl uppercase text-brand-cyan">{uiLabels.nav.home[lang]}</h3>
+        <a href={getLocalizedPath('/', lang)} class="text-left group">
+          <ManSilhouette class="h-48 text-white/90 hidden md:block group-hover:text-brand-cyan transition-colors" />
+        </a>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <h3 class="font-display font-bold text-3xl uppercase">{uiLabels.footer.sections[lang]}</h3>
+        <ul class="space-y-3 font-sans text-gray-300">
+          <li><a href={getLocalizedPath('/blog/', lang)} class="hover:text-brand-cyan transition-colors text-left">{uiLabels.nav.blog[lang]}</a></li>
+          <li><a href={getLocalizedPath('/notes/', lang)} class="hover:text-brand-cyan transition-colors text-left">{uiLabels.nav.notes[lang]}</a></li>
+          <li><a href={getLocalizedPath('/experiments/', lang)} class="hover:text-brand-cyan transition-colors text-left">{uiLabels.nav.experiments[lang]}</a></li>
+          <li><a href={getLocalizedPath('/about/', lang)} class="hover:text-brand-cyan transition-colors text-left">{uiLabels.nav.about[lang]}</a></li>
+        </ul>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <h3 class="font-display font-bold text-3xl uppercase">{uiLabels.footer.quickLinks[lang]}</h3>
+        <ul class="space-y-3 font-sans text-gray-300">
+          <li><a href={getLocalizedPath('/blog/', lang)} class="hover:text-brand-cyan transition-colors text-left">{uiLabels.footer.latestArticles[lang]}</a></li>
+          <li><a href={getLocalizedPath('/notes/', lang)} class="hover:text-brand-cyan transition-colors text-left">{uiLabels.footer.fieldNotes[lang]}</a></li>
+          <li><a href={getLocalizedPath('/experiments/', lang)} class="hover:text-brand-cyan transition-colors text-left">{uiLabels.footer.theLab[lang]}</a></li>
+        </ul>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <h3 class="font-display font-bold text-3xl uppercase">{uiLabels.footer.about[lang]}</h3>
+        <p class="font-serif text-sm text-gray-400 leading-relaxed">
+          {uiLabels.footer.aboutBlurb[lang]}
+        </p>
+        <h3 class="font-display font-bold text-3xl uppercase mt-4">{uiLabels.footer.contact[lang]}</h3>
+        <a href={getLocalizedPath('/contact/', lang)} class="text-brand-cyan hover:text-white transition-colors text-left flex items-center gap-2">
+          {uiLabels.footer.sayHello[lang]} <span>→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="text-right text-xs text-gray-500 border-t border-gray-700 pt-8 font-sans">
+      <p>&copy; {year} The Man in Blue. Reimagined.</p>
+    </div>
+  </div>
+</footer>

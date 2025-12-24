@@ -1,0 +1,188 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import PostCard from '../PostCard.astro';
+import ExperimentCard from '../ExperimentCard.astro';
+import { uiLabels } from '../../data/uiLabels';
+import { notes } from '../../data/notes';
+import { experiments } from '../../data/experiments';
+import { formatDate } from '../../utils/date';
+import { getBlogIndexUrl, getBlogPostUrl, getSlugFromEntry } from '../../utils/blog';
+import { getLocalizedPath } from '../../utils/i18n';
+import type { BlogEntry } from '../../utils/blog';
+import type { Locale } from '../../utils/i18n';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Locale;
+  posts: BlogEntry[];
+}
+
+const { lang, posts } = Astro.props as Props;
+const heroPost = posts[0];
+const subPosts = posts.slice(1, 3);
+const popularPosts = posts.slice(3, 6);
+const featuredExperiments = experiments.slice(0, 4);
+const recentNotes = notes.slice(0, 4);
+---
+<div class="animate-fade-in">
+  <section class="max-w-7xl mx-auto px-6 mb-24">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+      <div class="lg:col-span-8 flex flex-col gap-12">
+        <div class="flex items-baseline justify-between border-b border-gray-200 pb-4 mb-2">
+          <h2 class="font-serif text-4xl lg:text-5xl text-gray-400 font-light">
+            {uiLabels.common.recently[lang]}
+          </h2>
+          <a
+            href={getBlogIndexUrl(lang)}
+            class="hidden md:flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-brand-cyan transition-colors"
+          >
+            {uiLabels.common.viewArchive[lang]} <Icon name="arrow-right" size={14} />
+          </a>
+        </div>
+
+        {heroPost ? (
+          <div class="mb-4">
+            <PostCard
+              lang={lang}
+              href={getBlogPostUrl(lang, getSlugFromEntry(heroPost))}
+              title={heroPost.data.title}
+              excerpt={heroPost.data.description}
+              category={heroPost.data.category}
+              date={formatDate(heroPost.data.pubDate, lang)}
+              readTime={heroPost.data.readTime}
+              tags={heroPost.data.tags ?? []}
+              featured
+            />
+          </div>
+        ) : null}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12 border-t border-gray-100 pt-12">
+          {subPosts.map((post) => (
+            <PostCard
+              lang={lang}
+              href={getBlogPostUrl(lang, getSlugFromEntry(post))}
+              title={post.data.title}
+              excerpt={post.data.description}
+              category={post.data.category}
+              date={formatDate(post.data.pubDate, lang)}
+              readTime={post.data.readTime}
+              tags={post.data.tags ?? []}
+            />
+          ))}
+        </div>
+
+        <a
+          href={getBlogIndexUrl(lang)}
+          class="md:hidden w-full py-4 border border-gray-200 text-xs font-bold uppercase tracking-widest text-gray-500 hover:border-brand-cyan hover:text-brand-cyan transition-colors text-center"
+        >
+          {uiLabels.common.viewArchive[lang]}
+        </a>
+      </div>
+
+      <div class="lg:col-span-4">
+        <div class="bg-slate-50 border border-gray-200/60 rounded-xl p-6 lg:p-8 sticky top-32">
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="font-display font-bold text-xl uppercase tracking-wide text-brand-dark flex items-center gap-3">
+              <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-cyan opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-cyan"></span>
+              </span>
+              {uiLabels.common.latestNotes[lang]}
+            </h2>
+            <Icon name="radio" class="text-gray-300" size={20} />
+          </div>
+
+          <div class="space-y-6 relative">
+            <div class="absolute left-[5px] top-2 bottom-4 w-[2px] bg-gray-200/50 rounded-full"></div>
+
+            {recentNotes.map((note, index) => (
+              <div class="relative pl-6 group">
+                <div
+                  class={`absolute left-0 top-1.5 w-3 h-3 rounded-full border-2 border-white transition-colors z-10 ${
+                    index === 0 ? 'bg-brand-cyan' : 'bg-gray-300 group-hover:bg-brand-cyan'
+                  }`}
+                ></div>
+
+                <div class="flex flex-col gap-2">
+                  <span class="font-mono text-[10px] text-gray-400 uppercase tracking-wider">{note.date}</span>
+                  <p class="font-serif text-gray-700 text-sm leading-relaxed line-clamp-3">
+                    {note.content[lang]}
+                  </p>
+                  {note.tags ? (
+                    <div class="flex flex-wrap gap-1 mt-1 opacity-60">
+                      {note.tags.slice(0, 2).map((tag) => (
+                        <span class="text-[9px] uppercase font-bold text-gray-400">#{tag}</span>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div class="mt-8 pt-6 border-t border-gray-200">
+            <a
+              href={getLocalizedPath('/notes/', lang)}
+              class="w-full text-center text-xs font-bold uppercase tracking-widest text-brand-cyan hover:text-brand-dark transition-colors flex items-center justify-center gap-2"
+            >
+              {uiLabels.common.viewAllNotes[lang]} <Icon name="arrow-right" size={12} />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-6 mb-20">
+    <SectionHeading title={uiLabels.common.popular[lang]} />
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+      {popularPosts.map((post) => (
+        <PostCard
+          lang={lang}
+          href={getBlogPostUrl(lang, getSlugFromEntry(post))}
+          title={post.data.title}
+          excerpt={post.data.description}
+          category={post.data.category}
+          date={formatDate(post.data.pubDate, lang)}
+          readTime={post.data.readTime}
+          tags={post.data.tags ?? []}
+        />
+      ))}
+    </div>
+  </section>
+
+  <section class="bg-brand-dark text-white py-24 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="grid-dark" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="0.5" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid-dark)" />
+      </svg>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+      <div class="flex flex-col md:flex-row md:items-baseline justify-between mb-12 gap-6">
+        <div class="border-b border-gray-700 pb-4 w-full md:w-auto">
+          <h2 class="font-serif text-4xl lg:text-5xl text-gray-400 font-light">
+            {uiLabels.common.lab[lang]}
+          </h2>
+        </div>
+        <a
+          href={getLocalizedPath('/experiments/', lang)}
+          class="inline-flex items-center text-brand-cyan font-bold uppercase tracking-widest hover:text-white transition-colors"
+        >
+          {uiLabels.common.viewArchive[lang]} <span class="ml-2">→</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {featuredExperiments.map((exp) => (
+          <ExperimentCard experiment={exp} lang={lang} />
+        ))}
+      </div>
+    </div>
+  </section>
+</div>

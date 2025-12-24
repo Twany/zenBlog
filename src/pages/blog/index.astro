@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogListPage from '../../components/pages/BlogListPage.astro';
+import { getBlogPosts } from '../../utils/blog';
+
+const posts = await getBlogPosts('en');
+---
+<BaseLayout title="Blog" description="Archive of essays, notes, and experiments." lang="en">
+  <BlogListPage lang="en" posts={posts} />
+</BaseLayout>

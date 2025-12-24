@@ -1,0 +1,91 @@
+---
+import Icon from '../Icon.astro';
+import { uiLabels } from '../../data/uiLabels';
+import type { Locale } from '../../utils/i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props as Props;
+---
+<div class="max-w-7xl mx-auto px-6">
+  <div class="bg-brand-dark rounded-xl overflow-hidden shadow-2xl flex flex-col lg:flex-row min-h-[600px]">
+    <div class="lg:w-1/3 bg-brand-cyan p-12 text-white relative overflow-hidden">
+      <div class="absolute inset-0 opacity-20 pointer-events-none bg-contour"></div>
+
+      <h2 class="font-display font-bold text-4xl uppercase mb-8 relative z-10">{uiLabels.common.getInTouch[lang]}</h2>
+      <p class="font-serif mb-12 relative z-10 opacity-90">
+        {lang === 'en'
+          ? 'Whether you have a question about code, a project proposal, or just want to say hello, my inbox is always open.'
+          : '无论您是有关于代码的问题，项目建议，还是只是想打个招呼，我的收件箱随时为您敞开。'}
+      </p>
+
+      <div class="space-y-6 relative z-10">
+        <div class="flex items-center gap-4">
+          <Icon name="mail" class="w-6 h-6" />
+          <span class="font-sans font-bold">hello@themaninblue.com</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <Icon name="map-pin" class="w-6 h-6" />
+          <span class="font-sans font-bold">Sydney, Australia</span>
+        </div>
+      </div>
+
+      <div class="mt-12 flex gap-4 relative z-10">
+        <a href="#" class="p-2 bg-white/20 hover:bg-white/40 rounded-full transition-colors" aria-label="Twitter">
+          <Icon name="twitter" size={20} />
+        </a>
+        <a href="#" class="p-2 bg-white/20 hover:bg-white/40 rounded-full transition-colors" aria-label="GitHub">
+          <Icon name="github" size={20} />
+        </a>
+        <a href="#" class="p-2 bg-white/20 hover:bg-white/40 rounded-full transition-colors" aria-label="LinkedIn">
+          <Icon name="linkedin" size={20} />
+        </a>
+      </div>
+    </div>
+
+    <div class="lg:w-2/3 p-12 bg-slate-50">
+      <form class="space-y-8 max-w-lg">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="flex flex-col gap-2">
+            <label class="font-display font-bold uppercase text-xs tracking-widest text-gray-500">{uiLabels.common.name[lang]}</label>
+            <input type="text" class="bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="font-display font-bold uppercase text-xs tracking-widest text-gray-500">{uiLabels.common.email[lang]}</label>
+            <input type="email" class="bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors" />
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-display font-bold uppercase text-xs tracking-widest text-gray-500">{uiLabels.common.subject[lang]}</label>
+          <select class="bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors">
+            {lang === 'en' ? (
+              <>
+                <option>Project Inquiry</option>
+                <option>Speaking Request</option>
+                <option>Just saying hi</option>
+              </>
+            ) : (
+              <>
+                <option>项目咨询</option>
+                <option>演讲邀请</option>
+                <option>打个招呼</option>
+              </>
+            )}
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-display font-bold uppercase text-xs tracking-widest text-gray-500">{uiLabels.common.message[lang]}</label>
+          <textarea rows={5} class="bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors resize-none"></textarea>
+        </div>
+
+        <button type="submit" class="bg-brand-dark text-white font-display font-bold uppercase tracking-widest py-4 px-10 hover:bg-brand-cyan transition-colors shadow-lg">
+          {uiLabels.common.sendMessage[lang]}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

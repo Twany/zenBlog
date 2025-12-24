@@ -1,0 +1,51 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import ExperimentCard from '../ExperimentCard.astro';
+import Icon from '../Icon.astro';
+import { experiments } from '../../data/experiments';
+import { uiLabels } from '../../data/uiLabels';
+import type { Locale } from '../../utils/i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props as Props;
+---
+<div class="max-w-7xl mx-auto px-6">
+  <div class="mb-12 flex flex-col md:flex-row md:items-baseline justify-between gap-6">
+    <div>
+      <SectionHeading title={uiLabels.common.lab[lang]} class="mb-4" />
+      <p class="font-serif text-gray-600 max-w-2xl text-lg leading-relaxed">
+        {uiLabels.common.labDesc[lang]}
+        <br />
+        <span class="text-sm italic text-gray-400 mt-2 block">* Warning: Some may require a high-end GPU.</span>
+      </p>
+    </div>
+    <Icon name="flask-conical" class="w-24 h-24 text-gray-100 hidden md:block transform translate-y-4" size={96} />
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
+    {experiments.map((exp, idx) => (
+      <div class={idx % 3 === 0 ? 'md:col-span-2' : ''}>
+        <ExperimentCard experiment={exp} lang={lang} />
+      </div>
+    ))}
+  </div>
+
+  <div class="mt-16 bg-brand-dark p-8 md:p-12 text-white relative overflow-hidden rounded-sm">
+    <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+      <div class="text-center md:text-left">
+        <h3 class="font-display font-bold text-2xl uppercase mb-2">{uiLabels.common.haveIdea[lang]}</h3>
+        <p class="text-gray-400 font-serif">
+          {lang === 'en' ? 'I am always looking for new browser APIs to break.' : '我总在寻找新的浏览器 API 来折腾。'}
+        </p>
+      </div>
+      <button class="bg-brand-cyan hover:bg-white hover:text-brand-cyan text-white font-bold py-3 px-8 uppercase tracking-widest transition-colors border-2 border-brand-cyan">
+        {uiLabels.common.suggestExp[lang]}
+      </button>
+    </div>
+
+    <div class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white opacity-5 rounded-full pointer-events-none"></div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+---
+import SectionHeading from '../SectionHeading.astro';
+import NoteCard from '../NoteCard.astro';
+import Icon from '../Icon.astro';
+import { notes } from '../../data/notes';
+import { uiLabels } from '../../data/uiLabels';
+import type { Locale } from '../../utils/i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props as Props;
+---
+<div class="max-w-6xl mx-auto px-6">
+  <div class="flex items-end justify-between mb-12">
+    <div class="flex flex-col gap-4">
+      <SectionHeading title={uiLabels.common.fieldNotes[lang]} class="mb-0" />
+      <p class="font-serif text-gray-500 italic max-w-lg">
+        {uiLabels.common.notesDesc[lang]}
+      </p>
+    </div>
+    <Icon name="pen-tool" class="text-gray-200 w-16 h-16 hidden md:block" size={64} />
+  </div>
+
+  <div class="columns-1 md:columns-2 gap-8 space-y-8 animate-fade-in">
+    {notes.map((note) => (
+      <NoteCard note={note} lang={lang} class="mb-8" />
+    ))}
+  </div>
+</div>

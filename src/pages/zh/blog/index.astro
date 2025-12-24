@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogListPage from '../../../components/pages/BlogListPage.astro';
+import { getBlogPosts } from '../../../utils/blog';
+
+const posts = await getBlogPosts('zh');
+---
+<BaseLayout title="博客" description="文章、笔记与实验的归档。" lang="zh">
+  <BlogListPage lang="zh" posts={posts} />
+</BaseLayout>

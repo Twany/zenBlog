@@ -1,0 +1,37 @@
+---
+import '../styles/global.css';
+import SeoHead from '../components/SeoHead.astro';
+import TopographicHeader from '../components/TopographicHeader.astro';
+import Footer from '../components/Footer.astro';
+import { getLocaleFromPath, type Locale } from '../utils/i18n';
+
+interface Props {
+  title?: string;
+  description?: string;
+  type?: 'website' | 'article';
+  lang?: Locale;
+}
+
+const { title, description, type, lang } = Astro.props as Props;
+const currentPath = Astro.url.pathname;
+const resolvedLang = (lang ?? getLocaleFromPath(currentPath)) as Locale;
+---
+<!doctype html>
+<html lang={resolvedLang}>
+  <head>
+    <SeoHead title={title} description={description} type={type} lang={resolvedLang} pathname={currentPath} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300&family=Oswald:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <TopographicHeader lang={resolvedLang} currentPath={currentPath} />
+    <main class="flex-grow pt-32 lg:pt-48 pb-20">
+      <slot />
+    </main>
+    <Footer lang={resolvedLang} />
+  </body>
+</html>
