@@ -1,6 +1,8 @@
-# The Man in Blue — Astro
+# Twany's Blog — Astro
 
 Astro-powered, SEO-friendly blog with multilingual routes.
+
+Design inspiration and origin from https://themaninblue.com/
 
 ## Run locally
 
@@ -11,13 +13,13 @@ Astro-powered, SEO-friendly blog with multilingual routes.
 
 ## Build
 
-- `npm run build`
-- `npm run preview`
+-   `npm run build`
+-   `npm run preview`
 
 ## Multilingual
 
-- English: `/`
-- Chinese: `/zh/`
-- RSS: `/rss.xml` and `/zh/rss.xml`
+-   English: `/`
+-   Chinese: `/zh/`
+-   RSS: `/rss.xml` and `/zh/rss.xml`
 
 Update `astro.config.mjs` with your production domain for correct sitemap and canonical URLs.

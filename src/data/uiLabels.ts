@@ -5,7 +5,7 @@ export const uiLabels = {
     experiments: { en: 'Experiments', zh: '实验室' },
     about: { en: 'About', zh: '关于' },
     contact: { en: 'Contact', zh: '联系' },
-    home: { en: 'The Man In Blue', zh: '蓝衣人' },
+    home: { en: 'Twany Blog', zh: ' 渐悟备忘录' },
   },
   common: {
     recently: { en: 'Recently...', zh: '近期发布...' },
@@ -28,7 +28,7 @@ export const uiLabels = {
     },
     suggestExp: { en: 'Suggest an Experiment', zh: '建议一个实验' },
     haveIdea: { en: 'Have an idea?', zh: '有个点子？' },
-    whoIs: { en: 'Who is The Man in Blue?', zh: '谁是蓝衣人？' },
+    whoIs: { en: 'Who is Twany?', zh: '谁是渐悟？' },
     getInTouch: { en: 'Get in Touch', zh: '取得联系' },
     sendMessage: { en: 'Send Message', zh: '发送信息' },
     name: { en: 'Name', zh: '姓名' },
@@ -63,8 +63,8 @@ export const uiLabels = {
     contact: { en: 'Contact', zh: '联系' },
     sayHello: { en: 'Say Hello', zh: '打个招呼' },
     aboutBlurb: {
-      en: 'Designed and built by The Man in Blue. A web classic reimagined for the modern era using Astro.',
-      zh: '由蓝衣人设计与构建。一个面向现代的经典网站新想象，基于 Astro 打造。',
+      en: 'Designed and built by Twany. Design inspiration and origin from themaninblue, based on Astro.',
+      zh: '由渐悟设计与构建。设计灵感和起源来自 themaninblue ，基于 Astro 打造。',
     },
   },
 };
