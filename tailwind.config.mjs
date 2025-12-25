@@ -31,6 +31,16 @@ export default {
         DEFAULT: {
           css: {
             color: theme('colors.gray.700'),
+            p: {
+              fontSize: '1rem',
+              lineHeight: '1.75',
+              marginTop: '1em',
+              marginBottom: '1em',
+            },
+            li: {
+              fontSize: '1rem',
+              lineHeight: '1.75',
+            },
             a: {
               color: theme('colors.brand.cyan'),
               fontWeight: '700',
@@ -44,6 +54,34 @@ export default {
               color: theme('colors.brand.dark'),
               fontFamily: theme('fontFamily.display').join(', '),
               fontWeight: '700',
+            },
+            h1: {
+              fontSize: '2rem',
+              lineHeight: '2.5rem',
+              marginTop: '2.2rem',
+              marginBottom: '1rem',
+            },
+            h2: {
+              fontSize: '1.5rem',
+              lineHeight: '2rem',
+              marginTop: '2rem',
+              marginBottom: '0.75rem',
+            },
+            h3: {
+              fontSize: '1.25rem',
+              lineHeight: '1.75rem',
+              marginTop: '1.5rem',
+              marginBottom: '0.5rem',
+            },
+            h4: {
+              fontSize: '1.125rem',
+              lineHeight: '1.5rem',
+              marginTop: '1.25rem',
+              marginBottom: '0.5rem',
+            },
+            blockquote: {
+              fontSize: '1rem',
+              lineHeight: '1.7',
             },
             code: {
               color: theme('colors.pink.600'),

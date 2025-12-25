@@ -8,7 +8,7 @@ export const uiLabels = {
     home: { en: 'Twany Blog', zh: ' 渐悟备忘录' },
   },
   common: {
-    recently: { en: 'Recently...', zh: '近期发布...' },
+    recently: { en: 'Recently', zh: '近期发布' },
     latestNotes: { en: 'Latest Notes', zh: '最新碎碎念' },
     popular: { en: 'Popular', zh: '热门文章' },
     viewArchive: { en: 'View Archive', zh: '查看归档' },

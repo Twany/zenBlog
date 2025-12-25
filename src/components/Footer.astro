@@ -14,11 +14,11 @@ const year = new Date().getFullYear();
 <footer
 	class="bg-brand-dark text-white pt-16 pb-8 border-t-4 border-brand-cyan relative overflow-hidden"
 >
-	<div
+	<!-- <div
 		class="absolute bottom-0 left-4 md:left-20 opacity-10 pointer-events-none"
 	>
 		<ManSilhouette class="h-[400px] md:h-[600px]" />
-	</div>
+	</div> -->
 
 	<div class="max-w-7xl mx-auto px-6 relative z-10">
 		<div
@@ -30,11 +30,11 @@ const year = new Date().getFullYear();
 				>
 					{uiLabels.nav.home[lang]}
 				</h3>
-				<a href={getLocalizedPath("/", lang)} class="text-left group">
+				<!-- <a href={getLocalizedPath("/", lang)} class="text-left group">
 					<ManSilhouette
 						class="h-48 text-white/90 hidden md:block group-hover:text-brand-cyan transition-colors"
 					/>
-				</a>
+				</a> -->
 			</div>
 
 			<div class="flex flex-col gap-4">
@@ -46,25 +46,29 @@ const year = new Date().getFullYear();
 						<a
 							href={getLocalizedPath("/blog/", lang)}
 							class="hover:text-brand-cyan transition-colors text-left"
-							>{uiLabels.nav.blog[lang]}</a>
+							>{uiLabels.nav.blog[lang]}</a
+						>
 					</li>
 					<li>
 						<a
 							href={getLocalizedPath("/notes/", lang)}
 							class="hover:text-brand-cyan transition-colors text-left"
-							>{uiLabels.nav.notes[lang]}</a>
+							>{uiLabels.nav.notes[lang]}</a
+						>
 					</li>
 					<li>
 						<a
 							href={getLocalizedPath("/experiments/", lang)}
 							class="hover:text-brand-cyan transition-colors text-left"
-							>{uiLabels.nav.experiments[lang]}</a>
+							>{uiLabels.nav.experiments[lang]}</a
+						>
 					</li>
 					<li>
 						<a
 							href={getLocalizedPath("/about/", lang)}
 							class="hover:text-brand-cyan transition-colors text-left"
-							>{uiLabels.nav.about[lang]}</a>
+							>{uiLabels.nav.about[lang]}</a
+						>
 					</li>
 				</ul>
 			</div>
@@ -78,19 +82,22 @@ const year = new Date().getFullYear();
 						<a
 							href={getLocalizedPath("/blog/", lang)}
 							class="hover:text-brand-cyan transition-colors text-left"
-							>{uiLabels.footer.latestArticles[lang]}</a>
+							>{uiLabels.footer.latestArticles[lang]}</a
+						>
 					</li>
 					<li>
 						<a
 							href={getLocalizedPath("/notes/", lang)}
 							class="hover:text-brand-cyan transition-colors text-left"
-							>{uiLabels.footer.fieldNotes[lang]}</a>
+							>{uiLabels.footer.fieldNotes[lang]}</a
+						>
 					</li>
 					<li>
 						<a
 							href={getLocalizedPath("/experiments/", lang)}
 							class="hover:text-brand-cyan transition-colors text-left"
-							>{uiLabels.footer.theLab[lang]}</a>
+							>{uiLabels.footer.theLab[lang]}</a
+						>
 					</li>
 				</ul>
 			</div>
