@@ -168,8 +168,32 @@ git push
 | 博客文章 | `src/content/blog/[en\|zh]/` | CMS 或本地 |
 | 笔记 | `src/data/notes.json` | CMS 或本地 |
 | 实验项目 | `src/data/experiments.json` | CMS 或本地 |
-| 站点配置 | `src/data/site.ts` | 仅本地 |
+| 站点设置 | `src/data/site.json` | CMS 或本地 |
 | 组件 | `src/components/` | 仅本地 |
+| UI 文案 | `src/data/uiLabels.ts` | 仅本地 |
+
+### CMS 功能
+
+CMS（`/admin/`）提供完整的内容管理界面：
+
+| 分类 | 内容 | 说明 |
+|------|------|------|
+| **Blog Posts (English)** | 英文文章 | Markdown 格式 |
+| **博客文章 (中文)** | 中文文章 | Markdown 格式 |
+| **Data Files** | | |
+| ├─ Notes / 笔记 | 短内容 | 双语、标签、图片 |
+| └─ Experiments / 实验项目 | 项目展示 | 双语、颜色、技术栈 |
+| **Settings / 设置** | | |
+| └─ Site Settings | 全局配置 | 站点信息、社交链接、显示数量 |
+
+#### CMS 可编辑内容
+
+- **站点信息**：名称、标语、描述（中英文）、URL、作者、邮箱
+- **社交链接**：Twitter、GitHub、LinkedIn 链接
+- **显示数量**：首页显示数量、相关文章数等
+- **博客文章**：完整的 Markdown 编辑器，支持预览
+- **笔记**：支持双语的短内容
+- **实验项目**：带技术栈标签的项目卡片
 
 ## 多语言路由
 

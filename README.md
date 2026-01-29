@@ -168,8 +168,32 @@ git push
 | Blog posts | `src/content/blog/[en\|zh]/` | CMS or local |
 | Notes | `src/data/notes.json` | CMS or local |
 | Experiments | `src/data/experiments.json` | CMS or local |
-| Site config | `src/data/site.ts` | Local only |
+| Site settings | `src/data/site.json` | CMS or local |
 | Components | `src/components/` | Local only |
+| UI labels | `src/data/uiLabels.ts` | Local only |
+
+### CMS Features
+
+The CMS (`/admin/`) provides a full-featured content management interface:
+
+| Category | Content | Description |
+|----------|---------|-------------|
+| **Blog Posts (English)** | English articles | Markdown with frontmatter |
+| **博客文章 (中文)** | Chinese articles | Markdown with frontmatter |
+| **Data Files** | | |
+| ├─ Notes | Short-form content | Bilingual, tags, images |
+| └─ Experiments | Project showcase | Bilingual, colors, tech stack |
+| **Settings** | | |
+| └─ Site Settings | Global config | Site info, social links, display limits |
+
+#### What You Can Edit in CMS
+
+- **Site Info**: Name, tagline, description (EN/ZH), URL, author, email
+- **Social Links**: Twitter, GitHub, LinkedIn URLs
+- **Display Limits**: Number of items shown on homepage, related posts, etc.
+- **Blog Posts**: Full Markdown editor with preview
+- **Notes**: Quick thoughts with bilingual support
+- **Experiments**: Project cards with tech stack tags
 
 ## Multilingual Routes
 
