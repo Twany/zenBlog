@@ -4,6 +4,58 @@ A modern, SEO-friendly blog built with Astro, featuring multilingual support and
 
 [中文文档](./README.zh.md)
 
+## Architecture Philosophy
+
+This project follows a **"Local for Code, Cloud for Content"** architecture:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        CONTENT EDITORS                          │
+│                                                                 │
+│   Visit /admin/ → GitHub OAuth → Edit Content → Auto Publish   │
+│                                                                 │
+└─────────────────────────────────┬───────────────────────────────┘
+                                  │
+                                  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                          GITHUB                                 │
+│                                                                 │
+│   • Blog posts (Markdown)                                       │
+│   • Notes & Experiments (JSON)                                  │
+│   • Site code & configuration                                   │
+│                                                                 │
+└─────────────────────────────────┬───────────────────────────────┘
+                                  │
+                    ┌─────────────┴─────────────┐
+                    ▼                           ▼
+┌───────────────────────────┐   ┌───────────────────────────────┐
+│      DEVELOPERS           │   │      CLOUDFLARE               │
+│                           │   │                               │
+│   git pull               │   │   Auto-deploy on push         │
+│   Code & Style changes    │   │   Serve static site           │
+│   git push               │   │   Global CDN                  │
+│                           │   │                               │
+└───────────────────────────┘   └───────────────────────────────┘
+```
+
+### Why This Architecture?
+
+| Aspect | Local Development | Cloud CMS |
+|--------|-------------------|-----------|
+| **Who** | Developers | Content editors |
+| **What** | Code, styles, components | Blog posts, notes, data |
+| **Tools** | VS Code, Git, npm | Web browser only |
+| **Skills needed** | Programming | None |
+| **Workflow** | Edit → Commit → Push | Edit → Publish (one click) |
+
+### Benefits
+
+- **Separation of concerns**: Developers focus on code, editors focus on content
+- **No server required**: Static site + serverless OAuth = zero maintenance
+- **Version control**: All changes tracked in Git, easy rollback
+- **Fast & secure**: Static files served from global CDN
+- **Cost effective**: Cloudflare free tier handles most use cases
+
 ## Features
 
 - **Astro 5** - Fast static site generation
@@ -16,11 +68,14 @@ A modern, SEO-friendly blog built with Astro, featuring multilingual support and
 
 ## Tech Stack
 
-- [Astro](https://astro.build/) - Static site generator
-- [Tailwind CSS](https://tailwindcss.com/) - CSS framework
-- [Sveltia CMS](https://github.com/sveltia/sveltia-cms) - Content management
-- [TypeScript](https://www.typescriptlang.org/) - Type safety
-- [Cloudflare Workers](https://workers.cloudflare.com/) - Deployment
+| Layer | Technology |
+|-------|------------|
+| Framework | [Astro](https://astro.build/) |
+| Styling | [Tailwind CSS](https://tailwindcss.com/) |
+| CMS | [Sveltia CMS](https://github.com/sveltia/sveltia-cms) |
+| Auth | [Cloudflare Workers OAuth](https://github.com/Twany/cf-oauth-worker) |
+| Hosting | [Cloudflare Pages](https://pages.cloudflare.com/) |
+| Language | [TypeScript](https://www.typescriptlang.org/) |
 
 ## Getting Started
 
@@ -79,17 +134,42 @@ public/
 
 ## Content Management
 
-### Using the CMS
+### For Content Editors (Cloud)
 
-1. Visit `/admin/` on your deployed site
+1. Visit `https://your-site.com/admin/`
 2. Sign in with GitHub
 3. Create and edit content
+4. Click "Publish" - changes go live automatically
 
-### Manual Editing
+No coding knowledge required. No local setup needed.
 
-- **Blog posts**: Add Markdown files to `src/content/blog/[en|zh]/`
-- **Notes**: Edit `src/data/notes.json`
-- **Experiments**: Edit `src/data/experiments.json`
+### For Developers (Local)
+
+```bash
+# Get latest content changes
+git pull
+
+# Make code/style changes
+# ...edit files...
+
+# Test locally
+npm run dev
+
+# Deploy
+git add .
+git commit -m "your changes"
+git push
+```
+
+### Content Locations
+
+| Content Type | Location | Edit Via |
+|--------------|----------|----------|
+| Blog posts | `src/content/blog/[en\|zh]/` | CMS or local |
+| Notes | `src/data/notes.json` | CMS or local |
+| Experiments | `src/data/experiments.json` | CMS or local |
+| Site config | `src/data/site.ts` | Local only |
+| Components | `src/components/` | Local only |
 
 ## Multilingual Routes
 
@@ -100,7 +180,7 @@ public/
 
 ## Deployment
 
-This site is deployed on Cloudflare Workers/Pages.
+This site is deployed on Cloudflare Pages with automatic deployments on push.
 
 ```bash
 npm run build
@@ -108,9 +188,18 @@ npm run build
 
 The `dist/` folder contains the production build.
 
-## CMS Authentication
+## CMS Authentication Setup
 
-The CMS uses a self-hosted OAuth service on Cloudflare Workers. See [cf-oauth-worker](https://github.com/Twany/cf-oauth-worker) for setup instructions.
+The CMS uses a self-hosted OAuth service on Cloudflare Workers.
+
+### Quick Setup
+
+1. Deploy [cf-oauth-worker](https://github.com/Twany/cf-oauth-worker) to Cloudflare Workers
+2. Create a GitHub OAuth App (not GitHub App)
+3. Configure environment variables in Cloudflare Dashboard
+4. Update `public/admin/config.yml` with your OAuth worker URL
+
+See [cf-oauth-worker README](https://github.com/Twany/cf-oauth-worker) for detailed instructions.
 
 ## License
 
