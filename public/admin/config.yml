@@ -1,0 +1,122 @@
+backend:
+  name: github
+  repo: Twany/zenBlog
+  branch: main
+
+# 本地开发时使用 (运行 npx @sveltia/cms-proxy)
+local_backend: true
+
+# 媒体文件配置
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+# 站点配置
+site_url: https://twany.me
+display_url: https://twany.me
+logo_url: /images/static/icon.jpg
+
+# 语言设置
+locale: 'zh_Hans'
+
+# 编辑器配置
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  sanitize_replacement: "-"
+
+# 内容集合
+collections:
+  # 英文博客文章
+  - name: "blog-en"
+    label: "Blog Posts (English)"
+    label_singular: "Blog Post (EN)"
+    folder: "src/content/blog/en"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    editor:
+      preview: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Publish Date", name: "pubDate", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { label: "Category", name: "category", widget: "string", hint: "e.g., Design, Technology, Culture" }
+      - { label: "Tags", name: "tags", widget: "list", required: false, hint: "Press Enter after each tag" }
+      - { label: "Read Time", name: "readTime", widget: "string", default: "5 min read" }
+      - { label: "Language", name: "lang", widget: "hidden", default: "en" }
+      - { label: "Translation Key", name: "translationKey", widget: "string", hint: "Use same key for EN/ZH versions (e.g., my-post-slug)" }
+      - { label: "Content", name: "body", widget: "markdown" }
+
+  # 中文博客文章
+  - name: "blog-zh"
+    label: "博客文章 (中文)"
+    label_singular: "博客文章"
+    folder: "src/content/blog/zh"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    editor:
+      preview: true
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - { label: "描述", name: "description", widget: "text" }
+      - { label: "发布日期", name: "pubDate", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { label: "分类", name: "category", widget: "string", hint: "例如：设计、技术、文化" }
+      - { label: "标签", name: "tags", widget: "list", required: false, hint: "输入后按回车添加" }
+      - { label: "阅读时间", name: "readTime", widget: "string", default: "5 分钟阅读" }
+      - { label: "语言", name: "lang", widget: "hidden", default: "zh" }
+      - { label: "翻译键", name: "translationKey", widget: "string", hint: "与英文版本使用相同的键" }
+      - { label: "内容", name: "body", widget: "markdown" }
+
+  # 笔记和实验项目
+  - name: "data"
+    label: "Data Files"
+    files:
+      - name: "notes"
+        label: "Notes / 笔记"
+        file: "src/data/notes.json"
+        fields:
+          - label: "Notes"
+            name: "notes"
+            widget: "list"
+            summary: "{{fields.date}} - {{fields.content.en}}"
+            fields:
+              - { label: "ID", name: "id", widget: "string" }
+              - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+              - label: "Content"
+                name: "content"
+                widget: "object"
+                fields:
+                  - { label: "English", name: "en", widget: "text" }
+                  - { label: "中文", name: "zh", widget: "text" }
+              - { label: "Tags", name: "tags", widget: "list" }
+              - { label: "Image URL", name: "image", widget: "string", required: false }
+
+      - name: "experiments"
+        label: "Experiments / 实验项目"
+        file: "src/data/experiments.json"
+        fields:
+          - label: "Experiments"
+            name: "experiments"
+            widget: "list"
+            summary: "{{fields.id}} - {{fields.title.en}}"
+            fields:
+              - { label: "ID", name: "id", widget: "string" }
+              - label: "Title"
+                name: "title"
+                widget: "object"
+                fields:
+                  - { label: "English", name: "en", widget: "string" }
+                  - { label: "中文", name: "zh", widget: "string" }
+              - label: "Description"
+                name: "description"
+                widget: "object"
+                fields:
+                  - { label: "English", name: "en", widget: "string" }
+                  - { label: "中文", name: "zh", widget: "string" }
+              - { label: "Color", name: "color", widget: "select", options: ["cyan", "blue", "lime", "orange"] }
+              - { label: "Tech Stack", name: "techStack", widget: "list" }

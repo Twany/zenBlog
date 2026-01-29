@@ -1,5 +1,5 @@
 ---
-import { SITE } from '../data/site';
+import { SITE, SOCIAL_LINKS } from '../data/site';
 import { buildAlternateLinks, buildCanonicalUrl, buildXDefaultLink } from '../utils/seo';
 import { getLocaleFromPath, localeToOg, type Locale } from '../utils/i18n';
 
@@ -11,6 +11,12 @@ interface Props {
   image?: string;
   pathname?: string;
   canonical?: string;
+  article?: {
+    publishedTime?: string;
+    modifiedTime?: string;
+    author?: string;
+    tags?: string[];
+  };
 }
 
 const {
@@ -21,6 +27,7 @@ const {
   image,
   pathname = Astro.url.pathname,
   canonical,
+  article,
 } = Astro.props as Props;
 
 const resolvedLang = (lang ?? getLocaleFromPath(pathname)) as Locale;
@@ -33,11 +40,58 @@ const metaDescription = description ?? SITE.description[resolvedLang];
 const canonicalUrl = canonical ?? buildCanonicalUrl(pathname, resolvedLang);
 const alternateLinks = buildAlternateLinks(pathname);
 const xDefault = buildXDefaultLink(pathname);
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.name,
+  url: SITE.url,
+  description: SITE.description.en,
+  inLanguage: ['en', 'zh-Hans'],
+};
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.author,
+  url: SITE.url,
+  email: SITE.email,
+  sameAs: [
+    SOCIAL_LINKS.twitter,
+    SOCIAL_LINKS.github,
+    SOCIAL_LINKS.linkedin,
+  ].filter(url => !url.includes('YOUR_')),
+};
+
+const articleSchema = article ? {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description: metaDescription,
+  url: canonicalUrl,
+  datePublished: article.publishedTime,
+  dateModified: article.modifiedTime || article.publishedTime,
+  author: {
+    '@type': 'Person',
+    name: article.author || SITE.author,
+    url: SITE.url,
+  },
+  publisher: {
+    '@type': 'Person',
+    name: SITE.author,
+    url: SITE.url,
+  },
+  keywords: article.tags?.join(', '),
+  inLanguage: resolvedLang === 'zh' ? 'zh-Hans' : 'en',
+} : null;
 ---
 <title>{metaTitle}</title>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="description" content={metaDescription} />
+<meta name="theme-color" content="#00B4D8" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <link rel="icon" type="image/jpeg" href="/images/static/icon.jpg" />
 <link rel="apple-touch-icon" href="/images/static/icon.jpg" />
 <link rel="canonical" href={canonicalUrl} />
@@ -63,3 +117,7 @@ const xDefault = buildXDefaultLink(pathname);
 <meta name="twitter:description" content={metaDescription} />
 {image ? <meta property="og:image" content={image} /> : null}
 {image ? <meta name="twitter:image" content={image} /> : null}
+
+<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+{articleSchema ? <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} /> : null}

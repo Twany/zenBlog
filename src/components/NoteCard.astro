@@ -16,13 +16,17 @@ const charLimit = 120;
 const content = note.content[lang];
 const shouldTruncate = truncate && content.length > charLimit;
 const displayContent = shouldTruncate ? `${content.slice(0, charLimit)}...` : content;
+const imageAlt = content.slice(0, 60) + (content.length > 60 ? '...' : '');
 ---
 <div class={`flex flex-col bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 rounded-lg overflow-hidden break-inside-avoid ${className}`}>
   {note.image ? (
     <div class="relative h-48 w-full overflow-hidden bg-gray-100 border-b border-gray-100">
       <img
         src={note.image}
-        alt="Note attachment"
+        alt={imageAlt}
+        width={400}
+        height={192}
+        decoding="async"
         class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
         loading="lazy"
       />

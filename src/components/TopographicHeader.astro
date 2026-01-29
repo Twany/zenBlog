@@ -127,7 +127,7 @@ const isActive = (path: string) => {
 		</a>
 
 		<div class="flex items-center gap-6 lg:gap-12">
-			<nav class="hidden md:flex gap-8 lg:gap-12">
+			<nav class="hidden md:flex gap-8 lg:gap-12" aria-label="Main navigation">
 				{
 					navItems.map((link) => (
 						<a
@@ -137,6 +137,7 @@ const isActive = (path: string) => {
 									? "opacity-100"
 									: "opacity-70 hover:opacity-100"
 							}`}
+							aria-current={isActive(link.path) ? "page" : undefined}
 						>
 							{link.label}
 							<span

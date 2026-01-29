@@ -5,7 +5,20 @@ export const SITE = {
     en: 'A reimagined digital garden exploring design, code, and culture.',
     zh: '一个重新想象的数字花园，探索设计、代码与文化。',
   },
-  url: 'https://themaninblue.com',
+  url: 'https://twany.me',
   author: 'Twany',
-  email: 'hello@themaninblue.com',
+  email: 'hello@twany.me',
+};
+
+export const SOCIAL_LINKS = {
+  twitter: 'https://twitter.com/YOUR_TWITTER_USERNAME',
+  github: 'https://github.com/YOUR_GITHUB_USERNAME',
+  linkedin: 'https://linkedin.com/in/YOUR_LINKEDIN_USERNAME',
+};
+
+export const DISPLAY_LIMITS = {
+  homeExperiments: 4,
+  homeNotes: 4,
+  relatedPosts: 2,
+  tagsPreview: 2,
 };

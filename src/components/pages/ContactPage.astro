@@ -1,6 +1,7 @@
 ---
 import Icon from '../Icon.astro';
 import { uiLabels } from '../../data/uiLabels';
+import { SOCIAL_LINKS } from '../../data/site';
 import type { Locale } from '../../utils/i18n';
 
 interface Props {
@@ -24,7 +25,7 @@ const { lang } = Astro.props as Props;
       <div class="space-y-6 relative z-10">
         <div class="flex items-center gap-4">
           <Icon name="mail" class="w-6 h-6" />
-          <span class="font-sans font-bold">hello@themaninblue.com</span>
+          <span class="font-sans font-bold">hello@twany.me</span>
         </div>
         <div class="flex items-center gap-4">
           <Icon name="map-pin" class="w-6 h-6" />
@@ -33,34 +34,34 @@ const { lang } = Astro.props as Props;
       </div>
 
       <div class="mt-12 flex gap-4 relative z-10">
-        <a href="#" class="p-2 bg-white/20 hover:bg-white/40 rounded-full transition-colors" aria-label="Twitter">
+        <a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer" class="p-2 bg-white/20 hover:bg-white/40 rounded-full transition-colors" aria-label="Twitter">
           <Icon name="twitter" size={20} />
         </a>
-        <a href="#" class="p-2 bg-white/20 hover:bg-white/40 rounded-full transition-colors" aria-label="GitHub">
+        <a href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer" class="p-2 bg-white/20 hover:bg-white/40 rounded-full transition-colors" aria-label="GitHub">
           <Icon name="github" size={20} />
         </a>
-        <a href="#" class="p-2 bg-white/20 hover:bg-white/40 rounded-full transition-colors" aria-label="LinkedIn">
+        <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" class="p-2 bg-white/20 hover:bg-white/40 rounded-full transition-colors" aria-label="LinkedIn">
           <Icon name="linkedin" size={20} />
         </a>
       </div>
     </div>
 
     <div class="lg:w-2/3 p-12 bg-slate-50">
-      <form class="space-y-8 max-w-lg">
+      <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" class="space-y-8 max-w-lg">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div class="flex flex-col gap-2">
-            <label class="font-display font-bold uppercase text-xs tracking-widest text-gray-500">{uiLabels.common.name[lang]}</label>
-            <input type="text" class="bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors" />
+            <label for="name" class="font-display font-bold uppercase text-xs tracking-widest text-gray-500">{uiLabels.common.name[lang]}</label>
+            <input type="text" id="name" name="name" required class="bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors" />
           </div>
           <div class="flex flex-col gap-2">
-            <label class="font-display font-bold uppercase text-xs tracking-widest text-gray-500">{uiLabels.common.email[lang]}</label>
-            <input type="email" class="bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors" />
+            <label for="email" class="font-display font-bold uppercase text-xs tracking-widest text-gray-500">{uiLabels.common.email[lang]}</label>
+            <input type="email" id="email" name="email" required class="bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors" />
           </div>
         </div>
 
         <div class="flex flex-col gap-2">
-          <label class="font-display font-bold uppercase text-xs tracking-widest text-gray-500">{uiLabels.common.subject[lang]}</label>
-          <select class="bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors">
+          <label for="subject" class="font-display font-bold uppercase text-xs tracking-widest text-gray-500">{uiLabels.common.subject[lang]}</label>
+          <select id="subject" name="subject" class="bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors">
             {lang === 'en' ? (
               <>
                 <option>Project Inquiry</option>
@@ -78,8 +79,8 @@ const { lang } = Astro.props as Props;
         </div>
 
         <div class="flex flex-col gap-2">
-          <label class="font-display font-bold uppercase text-xs tracking-widest text-gray-500">{uiLabels.common.message[lang]}</label>
-          <textarea rows={5} class="bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors resize-none"></textarea>
+          <label for="message" class="font-display font-bold uppercase text-xs tracking-widest text-gray-500">{uiLabels.common.message[lang]}</label>
+          <textarea id="message" name="message" rows={5} required class="bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors resize-none"></textarea>
         </div>
 
         <button type="submit" class="bg-brand-dark text-white font-display font-bold uppercase tracking-widest py-4 px-10 hover:bg-brand-cyan transition-colors shadow-lg">

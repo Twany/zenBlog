@@ -1,0 +1,53 @@
+{
+  "experiments": [
+    {
+      "id": "daft",
+      "title": { "en": "Definitive Daft Punk", "zh": "绝对的 Daft Punk" },
+      "description": { "en": "Visualizing the beats", "zh": "节拍可视化" },
+      "color": "cyan",
+      "techStack": ["WebAudio", "Canvas"]
+    },
+    {
+      "id": "blob",
+      "title": { "en": "Blobular", "zh": "Blobular 物理" },
+      "description": { "en": "Canvas physics engine", "zh": "Canvas 物理引擎" },
+      "color": "blue",
+      "techStack": ["Physics", "Canvas"]
+    },
+    {
+      "id": "hidden",
+      "title": { "en": "Hidden Message", "zh": "隐藏信息" },
+      "description": { "en": "Steganography in JS", "zh": "JS 隐写术" },
+      "color": "lime",
+      "techStack": ["Cryptography", "DOM"]
+    },
+    {
+      "id": "bunny",
+      "title": { "en": "Bunny Hunt", "zh": "猎兔" },
+      "description": { "en": "Vector SVG Game", "zh": "矢量 SVG 游戏" },
+      "color": "orange",
+      "techStack": ["SVG", "Game Logic"]
+    },
+    {
+      "id": "synth",
+      "title": { "en": "Web Synth", "zh": "Web 合成器" },
+      "description": { "en": "Browser based synthesizer", "zh": "基于浏览器的合成器" },
+      "color": "cyan",
+      "techStack": ["WebAudio", "MIDI"]
+    },
+    {
+      "id": "frac",
+      "title": { "en": "Fractal Garden", "zh": "分形花园" },
+      "description": { "en": "Recursive generation", "zh": "递归生成" },
+      "color": "lime",
+      "techStack": ["WebGL", "Math"]
+    },
+    {
+      "id": "typog",
+      "title": { "en": "Kinetic Type", "zh": "动态字体" },
+      "description": { "en": "Interactive Fonts", "zh": "交互式字体" },
+      "color": "blue",
+      "techStack": ["CSS", "Variable Fonts"]
+    }
+  ]
+}
