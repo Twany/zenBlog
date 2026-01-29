@@ -1,13 +1,17 @@
 ---
-title: "Code & Typography"
-description: "A showcase of how we handle code blocks and typography in this new system using Markdown."
+translationKey: ''
+title: Code & Typography哈哈哈哈
+description: A showcase of how we handle code blocks and typography in this new system using Markdown.
 pubDate: 2024-11-15
 category: CSS
-tags: ["Markdown", "Code", "Design"]
-readTime: "5 min"
+tags:
+  - Markdown
+  - Code
+  - Design
+readTime: 5 min
 lang: en
-translationKey: code-typography
 ---
+
 We consume content at a staggering rate. But are we actually reading? Or are we just scanning? In this essay, I explore the impact of typography on reading comprehension.
 
 ## Typography Principles
