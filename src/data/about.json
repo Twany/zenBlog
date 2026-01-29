@@ -1,0 +1,36 @@
+{
+  "intro": {
+    "en": [
+      {
+        "label": "Origins",
+        "content": "I started this digital garden in 2004 as a way to document my journey through the early web. Back then, CSS layouts were experimental, Flash was king, and IE6 was the villain of every story."
+      },
+      {
+        "label": "",
+        "content": "Over the last two decades, I've worked as a Frontend Architect, Design Systems Lead, and Creative Technologist. My passion lies in the intersection of design and engineering—where pixel-perfect aesthetics meet performant code."
+      }
+    ],
+    "zh": [
+      {
+        "label": "起源",
+        "content": "我于 2004 年开始了这片数字花园，以此记录我在早期网络世界中的旅程。在那个年代，CSS 布局还处于实验阶段，Flash 是王者，而 IE6 是每个故事中的反派。"
+      },
+      {
+        "label": "",
+        "content": "在过去的二十年里，我曾担任前端架构师、设计系统主管和创意技术专家。我的热情在于设计与工程的交汇点——即像素完美的视觉美学与高性能代码相遇的地方。"
+      }
+    ]
+  },
+  "toolkit": [
+    "React / Next.js",
+    "TypeScript",
+    "Tailwind CSS",
+    "WebGL / Three.js",
+    "Node.js",
+    "Rust (Learning)"
+  ],
+  "quote": {
+    "text": "Design is not just what it looks like and feels like. Design is how it works.",
+    "author": "Steve Jobs"
+  }
+}

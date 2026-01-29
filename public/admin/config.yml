@@ -161,3 +161,36 @@ collections:
               - { label: "Home Page Notes", name: "homeNotes", widget: "number", default: 4 }
               - { label: "Related Posts", name: "relatedPosts", widget: "number", default: 2 }
               - { label: "Tags Preview", name: "tagsPreview", widget: "number", default: 2 }
+
+      - name: "about"
+        label: "About Page / 关于页面"
+        file: "src/data/about.json"
+        fields:
+          - label: "Introduction (English)"
+            name: "intro"
+            widget: "object"
+            fields:
+              - label: "English Paragraphs"
+                name: "en"
+                widget: "list"
+                summary: "{{fields.label}}"
+                fields:
+                  - { label: "Label (optional)", name: "label", widget: "string", required: false, hint: "e.g., Origins, Background" }
+                  - { label: "Content", name: "content", widget: "text" }
+              - label: "中文段落"
+                name: "zh"
+                widget: "list"
+                summary: "{{fields.label}}"
+                fields:
+                  - { label: "标签（可选）", name: "label", widget: "string", required: false, hint: "例如：起源、背景" }
+                  - { label: "内容", name: "content", widget: "text" }
+          - label: "Toolkit / 技术栈"
+            name: "toolkit"
+            widget: "list"
+            hint: "Skills and technologies you work with"
+          - label: "Quote / 引言"
+            name: "quote"
+            widget: "object"
+            fields:
+              - { label: "Quote Text", name: "text", widget: "text" }
+              - { label: "Author", name: "author", widget: "string" }
