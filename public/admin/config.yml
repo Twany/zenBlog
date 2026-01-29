@@ -122,3 +122,42 @@ collections:
                   - { label: "中文", name: "zh", widget: "string" }
               - { label: "Color", name: "color", widget: "select", options: ["cyan", "blue", "lime", "orange"] }
               - { label: "Tech Stack", name: "techStack", widget: "list" }
+
+  # 站点设置
+  - name: "settings"
+    label: "Settings / 设置"
+    files:
+      - name: "site"
+        label: "Site Settings / 站点设置"
+        file: "src/data/site.json"
+        fields:
+          - label: "Site Info"
+            name: "site"
+            widget: "object"
+            fields:
+              - { label: "Site Name", name: "name", widget: "string" }
+              - { label: "Site Title / Tagline", name: "title", widget: "string" }
+              - label: "Description"
+                name: "description"
+                widget: "object"
+                fields:
+                  - { label: "English", name: "en", widget: "text" }
+                  - { label: "中文", name: "zh", widget: "text" }
+              - { label: "Site URL", name: "url", widget: "string" }
+              - { label: "Author Name", name: "author", widget: "string" }
+              - { label: "Contact Email", name: "email", widget: "string" }
+          - label: "Social Links"
+            name: "socialLinks"
+            widget: "object"
+            fields:
+              - { label: "Twitter URL", name: "twitter", widget: "string", required: false }
+              - { label: "GitHub URL", name: "github", widget: "string", required: false }
+              - { label: "LinkedIn URL", name: "linkedin", widget: "string", required: false }
+          - label: "Display Limits"
+            name: "displayLimits"
+            widget: "object"
+            fields:
+              - { label: "Home Page Experiments", name: "homeExperiments", widget: "number", default: 4 }
+              - { label: "Home Page Notes", name: "homeNotes", widget: "number", default: 4 }
+              - { label: "Related Posts", name: "relatedPosts", widget: "number", default: 2 }
+              - { label: "Tags Preview", name: "tagsPreview", widget: "number", default: 2 }
