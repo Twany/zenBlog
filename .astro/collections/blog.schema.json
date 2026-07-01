@@ -48,6 +48,20 @@
         "translationKey": {
           "type": "string"
         },
+        "template": {
+          "type": "string",
+          "enum": [
+            "case-study",
+            "workflow-tutorial",
+            "design-review",
+            "debugging-postmortem"
+          ],
+          "default": "workflow-tutorial"
+        },
+        "socialSummary": {
+          "type": "string",
+          "maxLength": 220
+        },
         "draft": {
           "type": "boolean",
           "default": false

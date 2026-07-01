@@ -1,21 +1,24 @@
 ---
-title: "From Proxy Routing to Traffic Auditing: Making Two Clash Subscriptions Maintainable"
-description: "A natural engineering flow for turning a two-subscription Clash routing need into stable egress roles, reusable rules, historical traffic auditing, and a background collector."
+title: 'From Proxy Routing to Traffic Auditing: Making Two Clash Subscriptions Maintainable'
+description: 'A natural engineering flow for turning a two-subscription Clash routing need into stable egress roles, reusable rules, historical traffic auditing, and a background collector.'
 pubDate: 2026-06-21
-category: "AI Workflow"
+category: 'AI Workflow'
 tags:
-  - "Codex"
-  - "AI Workflow"
-  - "Automation"
-  - "Networking"
-  - "Observability"
-  - "Clash"
-  - "LaunchAgent"
-readTime: "10 min"
+  - 'Codex'
+  - 'AI Workflow'
+  - 'Automation'
+  - 'Networking'
+  - 'Observability'
+  - 'Clash'
+  - 'LaunchAgent'
+readTime: '10 min'
 lang: en
-translationKey: "local-proxy-traffic-dashboard-collector-workflow"
+translationKey: 'local-proxy-traffic-dashboard-collector-workflow'
+template: 'workflow-tutorial'
+socialSummary: 'A maintainable workflow for turning two Clash subscriptions into stable egress roles, reusable routing rules, and auditable local traffic history.'
 draft: false
 ---
+
 When you have two local proxy subscriptions, the hard part is usually not “send a few domains through another route.” The harder questions come immediately after: will the routing survive subscription refreshes, will complex services leak through the wrong egress path, will old browser connections keep showing stale behavior, and can you still explain route usage a few days later?
 
 That is why this should not be written as a list of configuration changes. The more useful story is how a small routing need naturally becomes a local network governance workflow: stabilize egress roles, make the structure recoverable, then use observation to prove that it keeps working over time.
@@ -38,11 +41,11 @@ Those three concerns define the real scope of the system.
 
 A two-subscription setup should start with roles, not rules. A and B are not just two pools of nodes. They should represent different responsibilities.
 
-| Role | Responsibility | Design purpose |
-| --- | --- | --- |
-| Primary subscription A | Daily browsing, downloads, ordinary APIs, original subscription rules | Preserve the default network behavior |
-| Auxiliary subscription B | Selected sensitive services and their dependency domains | Keep those services on a consistent egress path |
-| Unclassified traffic | Fall back to A's original rules | Avoid sending unknown traffic into B |
+| Role                     | Responsibility                                                        | Design purpose                                  |
+| ------------------------ | --------------------------------------------------------------------- | ----------------------------------------------- |
+| Primary subscription A   | Daily browsing, downloads, ordinary APIs, original subscription rules | Preserve the default network behavior           |
+| Auxiliary subscription B | Selected sensitive services and their dependency domains              | Keep those services on a consistent egress path |
+| Unclassified traffic     | Fall back to A's original rules                                       | Avoid sending unknown traffic into B            |
 
 This role boundary affects the whole implementation. Without it, the setup tends to drift into one of two bad shapes: either everything is globally switched to B, or the user manually clicks routes in the UI and has to rediscover the setup after every refresh.
 
@@ -64,13 +67,13 @@ Many proxy setups become messy because the first fix optimizes only for “it wo
 
 A useful before/after is:
 
-| Temporary fix | Maintainable fix |
-| --- | --- |
-| Copy B nodes into A | Reference B through a local profile/provider |
-| Append a few domain rules at the end | Prepend target rules before A's original rules |
-| Rebuild the setup from memory after refreshes | Regenerate it with a script or Skill |
-| Assume stale connections prove the rule failed | Reload and close old connections so new ones rematch rules |
-| Only works for the current A/B pair | Treat primary and auxiliary as replaceable roles, so C/D works too |
+| Temporary fix                                  | Maintainable fix                                                   |
+| ---------------------------------------------- | ------------------------------------------------------------------ |
+| Copy B nodes into A                            | Reference B through a local profile/provider                       |
+| Append a few domain rules at the end           | Prepend target rules before A's original rules                     |
+| Rebuild the setup from memory after refreshes  | Regenerate it with a script or Skill                               |
+| Assume stale connections prove the rule failed | Reload and close old connections so new ones rematch rules         |
+| Only works for the current A/B pair            | Treat primary and auxiliary as replaceable roles, so C/D works too |
 
 This is why the routing workflow belongs in a Codex Skill. The user should only need to confirm two roles: which subscription is primary A and which one is auxiliary B. The script can then locate profiles, inject the provider, create the route group, prepend rules, reload the runtime, close stale connections, and verify target domains.
 
@@ -109,13 +112,13 @@ That is when a dashboard becomes useful. It is not decoration. It turns live con
 
 The dashboard should also follow the debugging path. The useful flow is not a giant raw connection table. It is route first, then process, then domain and rule.
 
-| Dashboard view | Question answered |
-| --- | --- |
-| Route summary | How much upload/download did A and B use? |
-| Route -> process drilldown | Which processes consumed a route? |
-| Domain summary | Which destinations used the most traffic? |
-| Rule summary | Which rules matched most often? |
-| Time filter | When did the behavior happen? |
+| Dashboard view             | Question answered                         |
+| -------------------------- | ----------------------------------------- |
+| Route summary              | How much upload/download did A and B use? |
+| Route -> process drilldown | Which processes consumed a route?         |
+| Domain summary             | Which destinations used the most traffic? |
+| Rule summary               | Which rules matched most often?           |
+| Time filter                | When did the behavior happen?             |
 
 This is more useful than a stronger live connection list because each click reduces the search space.
 

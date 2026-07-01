@@ -1,28 +1,31 @@
 ---
-title: "Inside Canva’s First Decade: How a Simple Idea Became a Super Unicorn"
-description: "A deep dive into Canva’s early startup journey—how real user needs were discovered, first customers were won without resources, and why investors backed a founder without elite credentials."
+title: 'Inside Canva’s First Decade: How a Simple Idea Became a Super Unicorn'
+description: 'A deep dive into Canva’s early startup journey—how real user needs were discovered, first customers were won without resources, and why investors backed a founder without elite credentials.'
 pubDate: 2025-12-25
 category: Startup
 tags:
-    [
-        "Canva",
-        "Startups",
-        "Product Thinking",
-        "Fundraising",
-        "Indie Makers",
-        "User Research",
-    ]
-readTime: "18 min"
+  [
+    'Canva',
+    'Startups',
+    'Product Thinking',
+    'Fundraising',
+    'Indie Makers',
+    'User Research',
+  ]
+readTime: '18 min'
 lang: en
 translationKey: canva-first-decade
+template: 'case-study'
+socialSummary: "A case study of Canva's first decade: user pain, founder persistence, early distribution, fundraising, and product clarity."
+draft: false
 ---
 
 > **Preface**
 > This article distills the key early-stage experiences of Canva founder Melanie Perkins, and attempts to answer three very practical questions:
 >
-> -   **How does someone without a business background discover real user needs?**
-> -   **With no traffic and no resources, how do you land your first customers?**
-> -   **Without elite schools or big-tech credentials, why would investors take the bet?**
+> - **How does someone without a business background discover real user needs?**
+> - **With no traffic and no resources, how do you land your first customers?**
+> - **Without elite schools or big-tech credentials, why would investors take the bet?**
 
 ---
 
@@ -55,8 +58,8 @@ The goal at this stage was crystal clear: not to build perfect software, but to 
 
 After launch, they had no channels, no brand, and no marketing experience. So they used the most primitive customer-acquisition methods imaginable:
 
--   **Direct mail blasts**: the whole family helped fold flyers, lick stamps, and mail brochures to schools across Australia.
--   **Cold calls**: calling school administrators directly and mailing free yearbook samples.
+- **Direct mail blasts**: the whole family helped fold flyers, lick stamps, and mail brochures to schools across Australia.
+- **Cold calls**: calling school administrators directly and mailing free yearbook samples.
 
 The process was tedious, but critical. Fusion Books’ early profitability didn’t just keep the company alive — it taught the team sales, customer support, and product delivery from scratch. More importantly, it taught them _why_ users were willing to pay.
 
@@ -75,24 +78,24 @@ That’s what a first customer really means:
 
 At the time, investors were hunting for a familiar archetype — a repeat of Mark Zuckerberg:
 
--   Ivy League or top-tier university degrees
--   Former employees of Google, Apple, or Facebook
--   Rapidly rising growth charts
+- Ivy League or top-tier university degrees
+- Former employees of Google, Apple, or Facebook
+- Rapidly rising growth charts
 
 Any deviation from this pattern was seen as a negative. Melanie seemed to check every “minus” box.
 
 But she wasn’t starting from zero:
 
--   **They had worked with hundreds of Australian schools, personally handling product development, marketing, sales, and customer service — giving them deep insight into real user needs.**
--   **They had a clear vision for the future and knew exactly which problem they were solving.**
+- **They had worked with hundreds of Australian schools, personally handling product development, marketing, sales, and customer service — giving them deep insight into real user needs.**
+- **They had a clear vision for the future and knew exactly which problem they were solving.**
 
 To break the stalemate, Melanie stayed in San Francisco for three months (originally planned for two weeks), sleeping on her brother’s floor.
 
--   **Relentless meetings**: no matter how early or late, if someone would meet, she showed up.
--   **Radical follow-through**: she once stayed awake for 36 hours straight to send a business plan before a promised deadline. The investor might not have cared — but Melanie did. If she said she’d do something, she did it. And the plan itself was high-quality — parts of it are still being executed today.
-    ![Melanie's pitch deck](/images/blog/melanie-pitch-deck.png)
+- **Relentless meetings**: no matter how early or late, if someone would meet, she showed up.
+- **Radical follow-through**: she once stayed awake for 36 hours straight to send a business plan before a promised deadline. The investor might not have cared — but Melanie did. If she said she’d do something, she did it. And the plan itself was high-quality — parts of it are still being executed today.
+  ![Melanie's pitch deck](/images/blog/melanie-pitch-deck.png)
 
--   **Playing the long game**: when she learned that a key investor loved kite-surfing, she forced herself to learn it — despite a deep fear of losing control — just to attend the gathering.
+- **Playing the long game**: when she learned that a key investor loved kite-surfing, she forced herself to learn it — despite a deep fear of losing control — just to attend the gathering.
 
 In an email to investors, she wrote excitedly:
 
@@ -157,9 +160,9 @@ This was far from the joyful experience Canva envisioned. The team quickly reali
 
 Canva’s success depended on users having a great experience within minutes. So they completely rebuilt onboarding:
 
--   No more blank canvas on first launch
--   Introduced small tasks like “turn the circle red” or “put a hat on the monkey”
--   **Gamification**: within two minutes, users felt, _“Wow — I can actually design.”_
+- No more blank canvas on first launch
+- Introduced small tasks like “turn the circle red” or “put a hat on the monkey”
+- **Gamification**: within two minutes, users felt, _“Wow — I can actually design.”_
 
 This change was decisive. Fear turned into curiosity. Exploration replaced hesitation. Word-of-mouth exploded.
 
@@ -200,10 +203,10 @@ Melanie summarized Canva’s core growth lessons from 0 to 1:
 
 Melanie shared several practical habits:
 
--   **Writing**: clarifies thinking and restores focus
--   **Sleep**: non-negotiable
--   **Vacations**: essential for recovery
--   **Quiet time**: find what truly relaxes you — and protect it
+- **Writing**: clarifies thinking and restores focus
+- **Sleep**: non-negotiable
+- **Vacations**: essential for recovery
+- **Quiet time**: find what truly relaxes you — and protect it
 
 ### Drawing Strength from Challenges
 

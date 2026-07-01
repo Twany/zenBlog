@@ -11,6 +11,7 @@ interface Props {
   type?: 'website' | 'article';
   lang?: Locale;
   image?: string;
+  imageAlt?: string;
   canonical?: string;
   article?: {
     publishedTime?: string;
@@ -20,7 +21,7 @@ interface Props {
   };
 }
 
-const { title, description, type, lang, image, canonical, article } =
+const { title, description, type, lang, image, imageAlt, canonical, article } =
   Astro.props as Props;
 const currentPath = Astro.url.pathname;
 const resolvedLang = (lang ?? getLocaleFromPath(currentPath)) as Locale;
@@ -40,6 +41,7 @@ const analyticsBeacon = analyticsToken
       lang={resolvedLang}
       pathname={currentPath}
       image={image}
+      imageAlt={imageAlt}
       canonical={canonical}
       article={article}
     />

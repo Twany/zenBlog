@@ -1,0 +1,58 @@
+{
+  "case-study": {
+    "label": {
+      "en": "Case Study",
+      "zh": "案例复盘"
+    },
+    "description": {
+      "en": "A narrative walkthrough from context and constraints to decisions, implementation, and reusable lessons.",
+      "zh": "从背景、约束、决策、实现到可复用经验的案例复盘。"
+    },
+    "requiredSections": {
+      "en": ["context", "method", "walkthrough", "checklist"],
+      "zh": ["背景", "方法", "过程", "清单"]
+    }
+  },
+  "workflow-tutorial": {
+    "label": {
+      "en": "Workflow Tutorial",
+      "zh": "工作流教程"
+    },
+    "description": {
+      "en": "A practical guide that turns a repeated process into steps, guardrails, verification, and reuse.",
+      "zh": "把可重复流程拆成步骤、边界、验证和复用方式的实践教程。"
+    },
+    "requiredSections": {
+      "en": ["why", "workflow", "verification", "checklist"],
+      "zh": ["为什么", "流程", "验证", "清单"]
+    }
+  },
+  "design-review": {
+    "label": {
+      "en": "Design Review",
+      "zh": "设计审视"
+    },
+    "description": {
+      "en": "A critique-led article for interface, product, or content experience changes, with before/after reasoning.",
+      "zh": "围绕界面、产品或内容体验变化展开的审视文章，强调前后对比和判断依据。"
+    },
+    "requiredSections": {
+      "en": ["problem", "principles", "changes", "before and after"],
+      "zh": ["问题", "原则", "改动", "前后对比"]
+    }
+  },
+  "debugging-postmortem": {
+    "label": {
+      "en": "Debugging Postmortem",
+      "zh": "排障复盘"
+    },
+    "description": {
+      "en": "A diagnosis-centered post that explains symptoms, investigation, root cause, fix, and prevention.",
+      "zh": "以诊断为中心，说明现象、排查、根因、修复和预防措施的复盘。"
+    },
+    "requiredSections": {
+      "en": ["symptom", "investigation", "root cause", "prevention"],
+      "zh": ["现象", "排查", "根因", "预防"]
+    }
+  }
+}

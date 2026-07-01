@@ -13,6 +13,7 @@ interface Props {
   lang?: Locale;
   type?: 'website' | 'article';
   image?: string;
+  imageAlt?: string;
   pathname?: string;
   canonical?: string;
   article?: {
@@ -29,6 +30,7 @@ const {
   lang,
   type = 'website',
   image,
+  imageAlt: imageAltProp,
   pathname = Astro.url.pathname,
   canonical,
   article,
@@ -46,8 +48,11 @@ const alternateLinks = buildAlternateLinks(pathname);
 const xDefault = buildXDefaultLink(pathname);
 const defaultImage = new URL('/images/static/icon.jpg', SITE.url).toString();
 const metaImage = image ? new URL(image, SITE.url).toString() : defaultImage;
-const imageAlt =
-  resolvedLang === 'zh' ? `${SITE.name} 的站点图标` : `${SITE.name} site icon`;
+const metaImageAlt =
+  imageAltProp ??
+  (resolvedLang === 'zh'
+    ? `${SITE.name} 的站点图`
+    : `${SITE.name} social image`);
 
 const websiteSchema = {
   '@context': 'https://schema.org',
@@ -139,7 +144,10 @@ const articleSchema = article
 <meta property="og:site_name" content={SITE.title} />
 <meta property="og:locale" content={localeToOg[resolvedLang]} />
 <meta property="og:image" content={metaImage} />
-<meta property="og:image:alt" content={imageAlt} />
+<meta property="og:image:alt" content={metaImageAlt} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:type" content="image/png" />
 {
   alternateLinks
     .filter((link) => link.locale !== resolvedLang)

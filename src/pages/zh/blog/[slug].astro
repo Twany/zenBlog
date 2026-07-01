@@ -14,6 +14,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const posts = await getBlogPosts('zh');
+const slug = getSlugFromEntry(entry);
 ---
 
 <BaseLayout
@@ -21,6 +22,8 @@ const posts = await getBlogPosts('zh');
   description={entry.data.description}
   type="article"
   lang="zh"
+  image={`/og/zh/${slug}.png`}
+  imageAlt={entry.data.title}
   article={{
     publishedTime: entry.data.pubDate.toISOString(),
     modifiedTime: entry.data.pubDate.toISOString(),

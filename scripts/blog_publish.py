@@ -9,6 +9,7 @@ import os
 import shutil
 import subprocess
 import time
+import urllib.request
 from datetime import date, datetime, timezone
 from pathlib import Path
 
@@ -55,6 +56,20 @@ def package_command(script: str) -> list[str]:
     raise RuntimeError("No package runner was found.")
 
 
+def script_command(script: str, *args: str) -> list[str]:
+    if which("npm"):
+        return ["npm", "run", script, "--", *args]
+    direct_commands = {
+        "blog:validate": ["python3", "scripts/blog_validate.py", *args],
+        "og:generate": ["node", "scripts/generate_og_images.mjs", *args],
+    }
+    if script in direct_commands:
+        return direct_commands[script]
+    if which("pnpm"):
+        return ["pnpm", "run", script, "--", *args]
+    raise RuntimeError(f"No runner was found for script: {script}")
+
+
 def wrangler_command() -> list[str]:
     if which("npx"):
         return ["npx", "wrangler", "deploy"]
@@ -91,6 +106,13 @@ def set_field(lines: list[str], key: str, value: str) -> list[str]:
     return updated
 
 
+def yaml_scalar(value: str) -> str:
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+        return value[1:-1]
+    return value
+
+
 def update_post(path: Path, *, publish_date: str | None, dry_run: bool) -> None:
     text = path.read_text(encoding="utf-8")
     lines, body = split_frontmatter(text)
@@ -100,6 +122,14 @@ def update_post(path: Path, *, publish_date: str | None, dry_run: bool) -> None:
     next_text = "---\n" + "\n".join(lines) + "\n---\n" + body
     if not dry_run:
         path.write_text(next_text, encoding="utf-8")
+
+
+def read_title(path: Path) -> str:
+    lines, _body = split_frontmatter(path.read_text(encoding="utf-8"))
+    for line in lines:
+        if line.startswith("title:"):
+            return yaml_scalar(line.split(":", 1)[1])
+    return ""
 
 
 def record_event(
@@ -166,6 +196,68 @@ def run(command: list[str], *, dry_run: bool, step: str) -> None:
     record_event(step, "success", command=command, duration_ms=duration_ms)
 
 
+def fetch_text(url: str, *, timeout: int = 20) -> tuple[int, str]:
+    request = urllib.request.Request(url, headers={"User-Agent": "zenblog-publish-check/1.0"})
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        raw = response.read(750_000)
+        return response.status, raw.decode("utf-8", errors="replace")
+
+
+def fetch_status(url: str, *, timeout: int = 20) -> int:
+    request = urllib.request.Request(url, headers={"User-Agent": "zenblog-publish-check/1.0"})
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        response.read(64)
+        return response.status
+
+
+def post_deploy_check(slug: str, titles: dict[str, str], *, dry_run: bool) -> None:
+    targets = [
+        ("article-en", f"https://twany.me/blog/{slug}/", titles["en"]),
+        ("article-zh", f"https://twany.me/zh/blog/{slug}/", titles["zh"]),
+        ("topics", "https://twany.me/topics/", "Topics"),
+        ("llms", "https://twany.me/llms.txt", "## Topics"),
+        ("rss-en", "https://twany.me/rss.xml", "<rss"),
+        ("rss-zh", "https://twany.me/zh/rss.xml", "<rss"),
+    ]
+    og_targets = [
+        ("og-en", f"https://twany.me/og/en/{slug}.png"),
+        ("og-zh", f"https://twany.me/og/zh/{slug}.png"),
+    ]
+
+    if dry_run:
+        record_event("post-deploy-check", "dry-run", detail=f"would check {len(targets) + len(og_targets)} URLs")
+        return
+
+    started = time.perf_counter()
+    checked: list[str] = []
+    try:
+        for label, url, expected in targets:
+            status, text = fetch_text(url)
+            if status < 200 or status >= 300:
+                raise RuntimeError(f"{label} returned {status}: {url}")
+            if expected and expected not in text:
+                raise RuntimeError(f"{label} did not contain expected text: {expected}")
+            checked.append(label)
+
+        for label, url in og_targets:
+            status = fetch_status(url)
+            if status < 200 or status >= 300:
+                raise RuntimeError(f"{label} returned {status}: {url}")
+            checked.append(label)
+    except Exception as exc:
+        duration_ms = int((time.perf_counter() - started) * 1000)
+        record_event("post-deploy-check", "failed", duration_ms=duration_ms, detail=str(exc))
+        raise
+
+    duration_ms = int((time.perf_counter() - started) * 1000)
+    record_event(
+        "post-deploy-check",
+        "success",
+        duration_ms=duration_ms,
+        detail=", ".join(checked),
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Publish a reviewed zh/en blog draft.")
     parser.add_argument("slug", help="Shared slug for src/content/blog/{zh,en}/<slug>.md")
@@ -182,6 +274,8 @@ def main() -> int:
             raise FileNotFoundError("Missing draft file(s): " + ", ".join(missing))
 
         publish_date = None if args.keep_date else date.today().isoformat()
+        titles = {"zh": read_title(paths[0]), "en": read_title(paths[1])}
+
         for path in paths:
             update_post(path, publish_date=publish_date, dry_run=args.dry_run)
             print(f"{'Would publish' if args.dry_run else 'Published'} {path}")
@@ -191,11 +285,14 @@ def main() -> int:
             detail=f"updated {len(paths)} post files",
         )
 
+        run(script_command("blog:validate", args.slug), dry_run=args.dry_run, step="template-check")
+        run(script_command("og:generate", f"--slug={args.slug}"), dry_run=args.dry_run, step="og-images")
         run(package_command("lint"), dry_run=args.dry_run, step="lint")
         run(package_command("check"), dry_run=args.dry_run, step="check")
         run(package_command("build"), dry_run=args.dry_run, step="build")
         if not args.skip_deploy:
             run(wrangler_command(), dry_run=args.dry_run, step="deploy")
+            post_deploy_check(args.slug, titles, dry_run=args.dry_run)
         else:
             record_event("deploy", "skipped", detail="--skip-deploy")
     except Exception as exc:

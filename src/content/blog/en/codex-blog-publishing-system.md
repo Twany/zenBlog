@@ -1,21 +1,24 @@
 ---
-title: "Turn Codex Work into Blog Posts: The Publishing System I Built for My Own Blog"
-description: "A practical workflow for turning Codex sessions into live bilingual long-form posts, with content rules, validation, and automatic Cloudflare deployment."
+title: 'Turn Codex Work into Blog Posts: The Publishing System I Built for My Own Blog'
+description: 'A practical workflow for turning Codex sessions into live bilingual long-form posts, with content rules, validation, and automatic Cloudflare deployment.'
 pubDate: 2026-06-21
-category: "AI Workflow"
+category: 'AI Workflow'
 tags:
-  - "Codex"
-  - "AI Writing"
-  - "AI Workflow"
-  - "Automation"
-  - "Publishing"
-  - "Astro"
-  - "Cloudflare"
-readTime: "8 min"
+  - 'Codex'
+  - 'AI Writing'
+  - 'AI Workflow'
+  - 'Automation'
+  - 'Publishing'
+  - 'Astro'
+  - 'Cloudflare'
+readTime: '8 min'
 lang: en
-translationKey: "codex-blog-publishing-system"
+translationKey: 'codex-blog-publishing-system'
+template: 'workflow-tutorial'
+socialSummary: 'A practical workflow for turning Codex sessions into bilingual long-form posts, with content rules, validation, and automatic Cloudflare deployment.'
 draft: false
 ---
+
 The most useful thing to preserve from a Codex session is rarely the final diff. It is the reasoning around it: why the change was made, which paths were rejected, what constraints had to stay intact, and how the result was verified. I built a small publishing system around that idea. When I say “publish to blog,” Codex now creates a bilingual long-form post, validates it, deploys it, and verifies the live page. Draft mode remains available only when I explicitly ask for it.
 
 ## Why I needed this system
@@ -39,13 +42,13 @@ So the final rule is: publish directly by default, but keep validation and safet
 
 So the boundary is explicit:
 
-| Stage | What can be automated | Boundary that remains |
-| --- | --- | --- |
-| Topic extraction | Find the problem, decisions, and reusable method | Use only public-safe material |
-| Writing | Create Chinese and English long-form versions | Do not invent facts or expose private details |
-| File creation | Generate Markdown, frontmatter, slug, and reading time | Default to `draft: false` unless draft mode is requested |
-| Validation | Run schema checks, linting, Astro check, and build | Stop immediately if any step fails |
-| Deployment | Deploy to Cloudflare and check the public page | Verify the URL after deployment |
+| Stage            | What can be automated                                  | Boundary that remains                                    |
+| ---------------- | ------------------------------------------------------ | -------------------------------------------------------- |
+| Topic extraction | Find the problem, decisions, and reusable method       | Use only public-safe material                            |
+| Writing          | Create Chinese and English long-form versions          | Do not invent facts or expose private details            |
+| File creation    | Generate Markdown, frontmatter, slug, and reading time | Default to `draft: false` unless draft mode is requested |
+| Validation       | Run schema checks, linting, Astro check, and build     | Stop immediately if any step fails                       |
+| Deployment       | Deploy to Cloudflare and check the public page         | Verify the URL after deployment                          |
 
 That table is the principle behind the whole system. The trigger phrase defines intent. The scripts turn that intent into a reliable publishing path.
 
@@ -93,14 +96,14 @@ That deployment path fits the current Cloudflare setup. Cloudflare’s [Workers 
 
 ## Before and after
 
-| Before | After |
-| --- | --- |
-| I had to remember which Codex sessions were worth writing about | “Publish to blog” turns the session into a live article |
-| AI could write prose, but file format had to be explained again | The skill knows the project schema, folders, tags, and scripts |
-| Chinese and English versions could drift apart | Chinese is written first, English is rewritten idiomatically, both share one translation key |
-| Writing and publishing were mixed together | The trigger phrase defines whether this is direct publish or draft mode |
-| Validation depended on what I remembered to run | The publish script runs lint, check, build, then deploys |
-| Private details could leak into public writing | The skill requires sensitive details to be abstracted away |
+| Before                                                          | After                                                                                        |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| I had to remember which Codex sessions were worth writing about | “Publish to blog” turns the session into a live article                                      |
+| AI could write prose, but file format had to be explained again | The skill knows the project schema, folders, tags, and scripts                               |
+| Chinese and English versions could drift apart                  | Chinese is written first, English is rewritten idiomatically, both share one translation key |
+| Writing and publishing were mixed together                      | The trigger phrase defines whether this is direct publish or draft mode                      |
+| Validation depended on what I remembered to run                 | The publish script runs lint, check, build, then deploys                                     |
+| Private details could leak into public writing                  | The skill requires sensitive details to be abstracted away                                   |
 
 The most important change is explicit intent. When I say “publish to blog,” the system treats that as a publishing workflow and completes it. When I say “draft first,” it stops before deployment.
 

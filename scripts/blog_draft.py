@@ -15,6 +15,8 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 BLOG_ROOT = PROJECT_ROOT / "src" / "content" / "blog"
+TEMPLATES_PATH = PROJECT_ROOT / "src" / "data" / "articleTemplates.json"
+DEFAULT_TEMPLATE = "workflow-tutorial"
 
 
 def load_payload(raw: str) -> dict[str, Any]:
@@ -58,6 +60,18 @@ def require_text(record: dict[str, Any], field: str) -> str:
     return value
 
 
+def load_templates() -> dict[str, Any]:
+    return json.loads(TEMPLATES_PATH.read_text(encoding="utf-8"))
+
+
+def normalize_template(value: Any, templates: dict[str, Any]) -> str:
+    template = str(value or DEFAULT_TEMPLATE).strip()
+    if template not in templates:
+        allowed = ", ".join(sorted(templates))
+        raise ValueError(f"template must be one of: {allowed}")
+    return template
+
+
 def estimate_read_time(body: str, lang: str) -> str:
     if lang == "zh":
         cjk_chars = len(re.findall(r"[\u4e00-\u9fff]", body))
@@ -79,6 +93,8 @@ def frontmatter(
     read_time: str,
     lang: str,
     translation_key: str,
+    template: str,
+    social_summary: str,
     draft: bool,
 ) -> str:
     lines = [
@@ -98,6 +114,8 @@ def frontmatter(
             f"readTime: {yaml_string(read_time)}",
             f"lang: {lang}",
             f"translationKey: {yaml_string(translation_key)}",
+            f"template: {yaml_string(template)}",
+            f"socialSummary: {yaml_string(social_summary)}",
             f"draft: {'true' if draft else 'false'}",
             "---",
             "",
@@ -121,6 +139,7 @@ def build_post(
     pub_date: str,
     category: str,
     tags: list[str],
+    template: str,
     draft: bool,
 ) -> tuple[Path, str]:
     record = payload.get(lang)
@@ -131,6 +150,9 @@ def build_post(
     description = require_text(record, "description")
     body = require_text(record, "body")
     read_time = str(record.get("readTime", "")).strip() or estimate_read_time(body, lang)
+    social_summary = str(record.get("socialSummary") or record.get("social_summary") or description).strip()
+    if len(social_summary) > 220:
+        raise ValueError(f"{lang}.socialSummary must be 220 characters or fewer.")
     path = BLOG_ROOT / lang / f"{slug}.md"
     content = (
         frontmatter(
@@ -142,6 +164,8 @@ def build_post(
             read_time=read_time,
             lang=lang,
             translation_key=translation_key,
+            template=template,
+            social_summary=social_summary,
             draft=draft,
         )
         + body.rstrip()
@@ -159,22 +183,25 @@ def main() -> int:
     args = parser.parse_args()
 
     payload = load_payload(args.json if args.json is not None else sys.stdin.read())
+    templates = load_templates()
     en_title = require_text(payload.get("en", {}) if isinstance(payload.get("en"), dict) else {}, "title")
     slug = slugify(str(payload.get("slug") or payload.get("translationKey") or en_title))
     translation_key = slugify(str(payload.get("translationKey") or slug))
     pub_date = str(payload.get("pubDate") or date.today().isoformat())
     category = str(payload.get("category") or "AI Workflow").strip()
     tags = normalize_tags(payload.get("tags"))
+    template = normalize_template(payload.get("template"), templates)
     draft = not args.published
 
     posts = [
-        build_post(payload, "zh", slug, translation_key, pub_date, category, tags, draft),
-        build_post(payload, "en", slug, translation_key, pub_date, category, tags, draft),
+        build_post(payload, "zh", slug, translation_key, pub_date, category, tags, template, draft),
+        build_post(payload, "en", slug, translation_key, pub_date, category, tags, template, draft),
     ]
 
     result = {
         "slug": slug,
         "translationKey": translation_key,
+        "template": template,
         "draft": draft,
         "files": [str(path) for path, _ in posts],
     }

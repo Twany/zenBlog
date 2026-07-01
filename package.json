@@ -12,6 +12,8 @@
     "lint:fix": "eslint . --fix",
     "blog:draft": "python3 scripts/blog_draft.py",
     "blog:publish": "python3 scripts/blog_publish.py",
+    "blog:validate": "python3 scripts/blog_validate.py",
+    "og:generate": "node scripts/generate_og_images.mjs",
     "visual:qa": "node scripts/visual_qa.mjs",
     "visual:qa:update": "node scripts/visual_qa.mjs --update-baseline",
     "visual:qa:compare": "node scripts/visual_qa.mjs --fail-on-diff",
