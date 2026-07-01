@@ -11,9 +11,9 @@
     "email": "hello@twany.me"
   },
   "socialLinks": {
-    "twitter": "https://twitter.com/YOUR_TWITTER_USERNAME",
-    "github": "https://github.com/YOUR_GITHUB_USERNAME",
-    "linkedin": "https://linkedin.com/in/YOUR_LINKEDIN_USERNAME"
+    "twitter": "",
+    "github": "",
+    "linkedin": ""
   },
   "displayLimits": {
     "homeExperiments": 4,

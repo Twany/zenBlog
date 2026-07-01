@@ -2,22 +2,22 @@
   "intro": {
     "en": [
       {
-        "label": "Origins",
-        "content": "I started this digital garden in 2004 as a way to document my journey through the early web. Back then, CSS layouts were experimental, Flash was king, and IE6 was the villain of every story."
+        "label": "Why this exists",
+        "content": "This blog is where I turn real building sessions into reusable notes: AI workflows, interface decisions, product judgment, and the small engineering choices that usually disappear after a task is done."
       },
       {
         "label": "",
-        "content": "Over the last two decades, I've worked as a Frontend Architect, Design Systems Lead, and Creative Technologist. My passion lies in the intersection of design and engineering—where pixel-perfect aesthetics meet performant code."
+        "content": "Most posts start from something practical I just changed or tested. The point is not to archive every detail, but to keep the reasoning, tradeoffs, and checks that might help the next project."
       }
     ],
     "zh": [
       {
-        "label": "起源",
-        "content": "我于 2004 年开始了这片数字花园，以此记录我在早期网络世界中的旅程。在那个年代，CSS 布局还处于实验阶段，Flash 是王者，而 IE6 是每个故事中的反派。"
+        "label": "为什么写",
+        "content": "这个博客用来把真实构建过程沉淀成可复用的记录：AI 工作流、界面判断、产品思考，以及那些做完任务后很容易消失的工程取舍。"
       },
       {
         "label": "",
-        "content": "在过去的二十年里，我曾担任前端架构师、设计系统主管和创意技术专家。我的热情在于设计与工程的交汇点——即像素完美的视觉美学与高性能代码相遇的地方。"
+        "content": "这里的大多数文章都来自刚刚做过、改过、验证过的事情。重点不是记录所有细节，而是留下判断依据、取舍过程和下一次还能复用的检查清单。"
       }
     ]
   },
@@ -25,9 +25,9 @@
     "React / Next.js",
     "TypeScript",
     "Tailwind CSS",
-    "WebGL / Three.js",
-    "Node.js",
-    "Rust (Learning)"
+    "Astro / Cloudflare",
+    "Codex / AI Workflow",
+    "Product Notes"
   ],
   "quote": {
     "text": "Design is not just what it looks like and feels like. Design is how it works.",

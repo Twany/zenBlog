@@ -16,17 +16,17 @@ const colorMap = {
   orange: 'border-orange-500',
 } as const;
 ---
-<a
-  href={`#experiment-${experiment.id}`}
-  class={`group flex min-h-56 flex-col justify-between border-t-2 bg-white p-5 transition-colors hover:bg-white ${
+
+<article
+  class={`flex min-h-56 flex-col justify-between border-t-2 bg-white p-5 ${
     colorMap[experiment.color]
   }`}
 >
-  <div class="font-serif text-2xl font-normal leading-tight text-brand-dark group-hover:text-brand-cyan">
+  <div class="font-serif text-2xl font-normal leading-tight text-brand-dark">
     {experiment.title[lang]}
   </div>
 
   <div class="font-sans text-sm leading-relaxed text-slate-600">
     {experiment.description[lang]}
   </div>
-</a>
+</article>

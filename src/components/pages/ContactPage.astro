@@ -1,7 +1,6 @@
 ---
 import Icon from '../Icon.astro';
 import { uiLabels } from '../../data/uiLabels';
-import { SOCIAL_LINKS } from '../../data/site';
 import type { Locale } from '../../utils/i18n';
 
 interface Props {
@@ -31,12 +30,15 @@ const contactEmail = 'hello@twany.me';
       </p>
 
       <div class="space-y-6">
-        <div class="flex items-center gap-4">
+        <a
+          href={`mailto:${contactEmail}`}
+          class="flex items-center gap-4 transition-colors hover:text-brand-cyan"
+        >
           <Icon name="mail" class="w-5 h-5 text-brand-cyan" />
           <span class="font-sans font-semibold text-brand-dark"
             >{contactEmail}</span
           >
-        </div>
+        </a>
         <div class="flex items-center gap-4">
           <Icon name="map-pin" class="w-5 h-5 text-brand-cyan" />
           <span class="font-sans font-semibold text-brand-dark"
@@ -44,166 +46,28 @@ const contactEmail = 'hello@twany.me';
           >
         </div>
       </div>
-
-      <div class="mt-12 flex gap-3">
-        <a
-          href={SOCIAL_LINKS.twitter}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="min-h-11 min-w-11 inline-flex items-center justify-center border border-slate-200 text-slate-600 hover:border-brand-cyan hover:text-brand-cyan transition-colors"
-          aria-label="Twitter"
-        >
-          <Icon name="twitter" size={20} />
-        </a>
-        <a
-          href={SOCIAL_LINKS.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="min-h-11 min-w-11 inline-flex items-center justify-center border border-slate-200 text-slate-600 hover:border-brand-cyan hover:text-brand-cyan transition-colors"
-          aria-label="GitHub"
-        >
-          <Icon name="github" size={20} />
-        </a>
-        <a
-          href={SOCIAL_LINKS.linkedin}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="min-h-11 min-w-11 inline-flex items-center justify-center border border-slate-200 text-slate-600 hover:border-brand-cyan hover:text-brand-cyan transition-colors"
-          aria-label="LinkedIn"
-        >
-          <Icon name="linkedin" size={20} />
-        </a>
-      </div>
     </div>
 
     <div class="lg:col-span-8">
-      <form
-        action={`mailto:${contactEmail}`}
-        method="post"
-        enctype="text/plain"
-        class="space-y-8 max-w-lg"
-        data-contact-form
-      >
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="flex flex-col gap-2">
-            <label
-              for="name"
-              class="font-sans font-semibold uppercase text-xs tracking-widest text-gray-500"
-              >{uiLabels.common.name[lang]}</label
-            >
-            <input
-              type="text"
-              id="name"
-              name="name"
-              required
-              class="min-h-11 bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors"
-            />
-          </div>
-          <div class="flex flex-col gap-2">
-            <label
-              for="email"
-              class="font-sans font-semibold uppercase text-xs tracking-widest text-gray-500"
-              >{uiLabels.common.email[lang]}</label
-            >
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              class="min-h-11 bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors"
-            />
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <label
-            for="subject"
-            class="font-sans font-semibold uppercase text-xs tracking-widest text-gray-500"
-            >{uiLabels.common.subject[lang]}</label
-          >
-          <select
-            id="subject"
-            name="subject"
-            class="min-h-11 bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors"
-          >
-            {
-              lang === 'en' ? (
-                <>
-                  <option>Project Inquiry</option>
-                  <option>Speaking Request</option>
-                  <option>Just saying hi</option>
-                </>
-              ) : (
-                <>
-                  <option>项目咨询</option>
-                  <option>演讲邀请</option>
-                  <option>打个招呼</option>
-                </>
-              )
-            }
-          </select>
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <label
-            for="message"
-            class="font-sans font-semibold uppercase text-xs tracking-widest text-gray-500"
-            >{uiLabels.common.message[lang]}</label
-          >
-          <textarea
-            id="message"
-            name="message"
-            rows={5}
-            required
-            class="bg-transparent border-b-2 border-gray-300 focus:border-brand-cyan outline-none py-2 text-gray-800 transition-colors resize-none"
-          ></textarea>
-        </div>
-
-        <button
-          type="submit"
-          class="min-h-12 border border-brand-dark bg-brand-dark text-white font-sans font-semibold uppercase tracking-widest py-4 px-10 hover:bg-brand-cyan hover:border-brand-cyan transition-colors"
-        >
-          {uiLabels.common.sendMessage[lang]}
-        </button>
-        <p
-          class="sr-only text-sm text-slate-500"
-          aria-live="polite"
-          data-contact-status
-        >
+      <div class="max-w-lg border border-slate-200 p-6 md:p-8">
+        <h2 class="font-sans text-sm font-semibold text-brand-dark">
+          {lang === 'en' ? 'Best way to reach me' : '最直接的联系渠道'}
+        </h2>
+        <p class="mt-4 text-base leading-7 text-slate-600">
           {
             lang === 'en'
-              ? 'Your email client will open to send this message.'
-              : '将打开您的邮件客户端发送这条消息。'
+              ? 'Send a short email with context, links, and what kind of response would be useful. I read mail directly, so there is no hidden contact form behind this page.'
+              : '直接发一封带上下文、链接和期望回复方式的邮件即可。这里不再放一个看起来能站内提交、实际依赖邮件客户端的表单。'
           }
         </p>
-      </form>
+        <a
+          href={`mailto:${contactEmail}`}
+          class="mt-6 inline-flex min-h-12 items-center gap-2 border border-brand-dark bg-brand-dark px-6 py-3 font-sans text-sm font-semibold text-white transition-colors hover:border-brand-cyan hover:bg-brand-cyan"
+        >
+          <Icon name="mail" size={16} />
+          {contactEmail}
+        </a>
+      </div>
     </div>
   </div>
 </div>
-
-<script is:inline define:vars={{ contactEmail }}>
-  const contactForm = document.querySelector('[data-contact-form]');
-  const contactStatus = document.querySelector('[data-contact-status]');
-
-  contactForm?.addEventListener('submit', (event) => {
-    event.preventDefault();
-    if (!contactForm.reportValidity()) return;
-
-    const formData = new FormData(contactForm);
-    const subject = String(formData.get('subject') || 'Message from twany.me');
-    const name = String(formData.get('name') || '');
-    const email = String(formData.get('email') || '');
-    const message = String(formData.get('message') || '');
-    const body = [`Name: ${name}`, `Email: ${email}`, '', message].join('\n');
-    const mailto = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-    if (contactStatus) {
-      contactStatus.classList.remove('sr-only');
-      contactStatus.textContent = document.documentElement.lang.startsWith('zh')
-        ? '正在打开邮件客户端。'
-        : 'Opening your email client.';
-    }
-
-    window.location.href = mailto;
-  });
-</script>

@@ -19,7 +19,7 @@ interface Props {
 }
 
 const { lang, posts } = Astro.props as Props;
-const popularPosts = posts.slice(0, 3);
+const featuredPosts = posts.slice(0, 3);
 const startPosts = posts.slice(0, 4);
 
 const copy =
@@ -31,7 +31,7 @@ const copy =
         intro:
           'Essays from real building sessions: what changed, why it changed, and what can be reused.',
         browseArchive: 'View all new',
-        popular: 'Popular essays',
+        featured: 'Featured essays',
       }
     : {
         eyebrow: '个人知识入口',
@@ -40,7 +40,7 @@ const copy =
         intro:
           '从真实构建过程里整理出的长文：改了什么、为什么改、哪些判断可以复用。',
         browseArchive: '查看全部',
-        popular: '热门长文',
+        featured: '精选长文',
       };
 ---
 
@@ -103,11 +103,11 @@ const copy =
   </section>
 
   {
-    popularPosts.length ? (
+    featuredPosts.length ? (
       <section class="mx-auto mb-20 max-w-7xl px-6">
         <div>
           <div class="mb-6 flex flex-col gap-3 md:flex-row md:items-baseline md:justify-between">
-            <SectionHeading title={copy.popular} />
+            <SectionHeading title={copy.featured} />
             <a
               href={getBlogIndexUrl(lang)}
               class="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-slate-500 transition-colors hover:text-brand-cyan"
@@ -117,7 +117,7 @@ const copy =
             </a>
           </div>
           <div class="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-            {popularPosts.map((post) => {
+            {featuredPosts.map((post) => {
               const slug = getSlugFromEntry(post);
               return (
                 <PostCard

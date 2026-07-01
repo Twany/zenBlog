@@ -73,7 +73,7 @@ const organizationSchema = {
     SOCIAL_LINKS.twitter,
     SOCIAL_LINKS.github,
     SOCIAL_LINKS.linkedin,
-  ].filter((url) => !url.includes('YOUR_')),
+  ].filter(Boolean),
 };
 
 const articleSchema = article
