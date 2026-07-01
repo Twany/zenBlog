@@ -40,13 +40,13 @@ This project follows a **"Local for Code, Cloud for Content"** architecture:
 
 ### Why This Architecture?
 
-| Aspect | Local Development | Cloud CMS |
-|--------|-------------------|-----------|
-| **Who** | Developers | Content editors |
-| **What** | Code, styles, components | Blog posts, notes, data |
-| **Tools** | VS Code, Git, npm | Web browser only |
-| **Skills needed** | Programming | None |
-| **Workflow** | Edit → Commit → Push | Edit → Publish (one click) |
+| Aspect            | Local Development        | Cloud CMS                  |
+| ----------------- | ------------------------ | -------------------------- |
+| **Who**           | Developers               | Content editors            |
+| **What**          | Code, styles, components | Blog posts, notes, data    |
+| **Tools**         | VS Code, Git, npm        | Web browser only           |
+| **Skills needed** | Programming              | None                       |
+| **Workflow**      | Edit → Commit → Push     | Edit → Publish (one click) |
 
 ### Benefits
 
@@ -68,14 +68,14 @@ This project follows a **"Local for Code, Cloud for Content"** architecture:
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | [Astro](https://astro.build/) |
-| Styling | [Tailwind CSS](https://tailwindcss.com/) |
-| CMS | [Sveltia CMS](https://github.com/sveltia/sveltia-cms) |
-| Auth | [Cloudflare Workers OAuth](https://github.com/Twany/cf-oauth-worker) |
-| Hosting | [Cloudflare Pages](https://pages.cloudflare.com/) |
-| Language | [TypeScript](https://www.typescriptlang.org/) |
+| Layer     | Technology                                                           |
+| --------- | -------------------------------------------------------------------- |
+| Framework | [Astro](https://astro.build/)                                        |
+| Styling   | [Tailwind CSS](https://tailwindcss.com/)                             |
+| CMS       | [Sveltia CMS](https://github.com/sveltia/sveltia-cms)                |
+| Auth      | [Cloudflare Workers OAuth](https://github.com/Twany/cf-oauth-worker) |
+| Hosting   | [Cloudflare Pages](https://pages.cloudflare.com/)                    |
+| Language  | [TypeScript](https://www.typescriptlang.org/)                        |
 
 ## Getting Started
 
@@ -102,15 +102,15 @@ Visit `http://localhost:4321`
 
 ### Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-| `npm run check` | Type check with Astro |
-| `npm run lint` | Lint code with ESLint |
-| `npm run format` | Format code with Prettier |
-| `npm run test` | Run unit tests |
+| Command           | Description               |
+| ----------------- | ------------------------- |
+| `npm run dev`     | Start development server  |
+| `npm run build`   | Build for production      |
+| `npm run preview` | Preview production build  |
+| `npm run check`   | Type check with Astro     |
+| `npm run lint`    | Lint code with ESLint     |
+| `npm run format`  | Format code with Prettier |
+| `npm run test`    | Run unit tests            |
 
 ## Project Structure
 
@@ -163,28 +163,28 @@ git push
 
 ### Content Locations
 
-| Content Type | Location | Edit Via |
-|--------------|----------|----------|
-| Blog posts | `src/content/blog/[en\|zh]/` | CMS or local |
-| Notes | `src/data/notes.json` | CMS or local |
-| Experiments | `src/data/experiments.json` | CMS or local |
-| Site settings | `src/data/site.json` | CMS or local |
-| Components | `src/components/` | Local only |
-| UI labels | `src/data/uiLabels.ts` | Local only |
+| Content Type  | Location                     | Edit Via     |
+| ------------- | ---------------------------- | ------------ |
+| Blog posts    | `src/content/blog/[en\|zh]/` | CMS or local |
+| Notes         | `src/data/notes.json`        | CMS or local |
+| Experiments   | `src/data/experiments.json`  | CMS or local |
+| Site settings | `src/data/site.json`         | CMS or local |
+| Components    | `src/components/`            | Local only   |
+| UI labels     | `src/data/uiLabels.ts`       | Local only   |
 
 ### CMS Features
 
 The CMS (`/admin/`) provides a full-featured content management interface:
 
-| Category | Content | Description |
-|----------|---------|-------------|
-| **Blog Posts (English)** | English articles | Markdown with frontmatter |
-| **博客文章 (中文)** | Chinese articles | Markdown with frontmatter |
-| **Data Files** | | |
-| ├─ Notes | Short-form content | Bilingual, tags, images |
-| └─ Experiments | Project showcase | Bilingual, colors, tech stack |
-| **Settings** | | |
-| └─ Site Settings | Global config | Site info, social links, display limits |
+| Category                 | Content            | Description                             |
+| ------------------------ | ------------------ | --------------------------------------- |
+| **Blog Posts (English)** | English articles   | Markdown with frontmatter               |
+| **博客文章 (中文)**      | Chinese articles   | Markdown with frontmatter               |
+| **Data Files**           |                    |                                         |
+| ├─ Notes                 | Short-form content | Bilingual, tags, images                 |
+| └─ Experiments           | Project showcase   | Bilingual, colors, tech stack           |
+| **Settings**             |                    |                                         |
+| └─ Site Settings         | Global config      | Site info, social links, display limits |
 
 #### What You Can Edit in CMS
 
@@ -197,10 +197,10 @@ The CMS (`/admin/`) provides a full-featured content management interface:
 
 ## Multilingual Routes
 
-| Language | Path | RSS |
-|----------|------|-----|
-| English | `/` | `/rss.xml` |
-| Chinese | `/zh/` | `/zh/rss.xml` |
+| Language | Path   | RSS           |
+| -------- | ------ | ------------- |
+| English  | `/`    | `/rss.xml`    |
+| Chinese  | `/zh/` | `/zh/rss.xml` |
 
 ## Deployment
 
@@ -211,6 +211,20 @@ npm run build
 ```
 
 The `dist/` folder contains the production build.
+
+### Analytics
+
+The layout supports Cloudflare Web Analytics through the official beacon script.
+Set `PUBLIC_CLOUDFLARE_WEB_ANALYTICS_TOKEN` before building to include the
+beacon in production HTML:
+
+```bash
+PUBLIC_CLOUDFLARE_WEB_ANALYTICS_TOKEN=your-token npm run build
+```
+
+If the variable is not set, no analytics script is rendered and no third-party
+request is made. Publishing through `scripts/blog_publish.py` writes a JSON run
+log to `logs/` with each validation and deployment step.
 
 ## CMS Authentication Setup
 

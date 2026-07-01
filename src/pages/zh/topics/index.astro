@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import TopicsPage from '../../../components/pages/TopicsPage.astro';
+import { getBlogPosts } from '../../../utils/blog';
+
+const posts = await getBlogPosts('zh');
+---
+
+<BaseLayout
+  title="专题"
+  description="围绕 AI 工作流、设计、代码、发布系统和产品思考整理的主题地图。"
+  lang="zh"
+>
+  <TopicsPage lang="zh" posts={posts} />
+</BaseLayout>

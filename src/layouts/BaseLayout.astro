@@ -10,11 +10,24 @@ interface Props {
   description?: string;
   type?: 'website' | 'article';
   lang?: Locale;
+  image?: string;
+  canonical?: string;
+  article?: {
+    publishedTime?: string;
+    modifiedTime?: string;
+    author?: string;
+    tags?: string[];
+  };
 }
 
-const { title, description, type, lang } = Astro.props as Props;
+const { title, description, type, lang, image, canonical, article } =
+  Astro.props as Props;
 const currentPath = Astro.url.pathname;
 const resolvedLang = (lang ?? getLocaleFromPath(currentPath)) as Locale;
+const analyticsToken = import.meta.env.PUBLIC_CLOUDFLARE_WEB_ANALYTICS_TOKEN;
+const analyticsBeacon = analyticsToken
+  ? JSON.stringify({ token: analyticsToken })
+  : '';
 ---
 
 <!doctype html>
@@ -26,6 +39,9 @@ const resolvedLang = (lang ?? getLocaleFromPath(currentPath)) as Locale;
       type={type}
       lang={resolvedLang}
       pathname={currentPath}
+      image={image}
+      canonical={canonical}
+      article={article}
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -50,5 +66,15 @@ const resolvedLang = (lang ?? getLocaleFromPath(currentPath)) as Locale;
       <slot />
     </main>
     <Footer lang={resolvedLang} />
+    {
+      analyticsToken ? (
+        <script
+          is:inline
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={analyticsBeacon}
+        />
+      ) : null
+    }
   </body>
 </html>

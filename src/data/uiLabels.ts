@@ -1,6 +1,7 @@
 export const uiLabels = {
   nav: {
     blog: { en: 'Blog', zh: '博客' },
+    topics: { en: 'Topics', zh: '专题' },
     library: { en: 'Library', zh: '图书馆' },
     notes: { en: 'Notes', zh: '碎碎念' },
     experiments: { en: 'Experiments', zh: '实验室' },
@@ -50,7 +51,10 @@ export const uiLabels = {
     relatedPosts: { en: 'You might also like', zh: '你可能也喜欢' },
     clearTag: { en: 'Clear', zh: '清除' },
     clearFilters: { en: 'Clear all filters', zh: '清除筛选' },
-    noResults: { en: 'No posts found matching these filters.', zh: '没有找到匹配的文章。' },
+    noResults: {
+      en: 'No posts found matching these filters.',
+      zh: '没有找到匹配的文章。',
+    },
     pageLabel: { en: 'Page', zh: '第' },
     ofLabel: { en: 'of', zh: '页 / 共' },
   },

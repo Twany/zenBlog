@@ -12,6 +12,7 @@ import {
   getSlugFromEntry,
 } from '../../utils/blog';
 import { getLocalizedPath } from '../../utils/i18n';
+import { getTopicSummaries } from '../../utils/topics';
 import type { BlogEntry } from '../../utils/blog';
 import type { Locale } from '../../utils/i18n';
 import Icon from '../Icon.astro';
@@ -27,10 +28,25 @@ const subPosts = posts.slice(1, 3);
 const popularPosts = posts.slice(3, 6);
 const featuredExperiments = experiments.slice(0, 4);
 const recentNotes = notes.slice(0, 4);
+const featuredTopics = getTopicSummaries(posts, lang).slice(0, 4);
 const positioning =
   lang === 'en'
     ? 'Notes on AI workflows, interface craft, code, and slow product thinking.'
     : '记录 AI 工作流、界面手感、代码，以及慢一点的产品思考。';
+const topicsCopy =
+  lang === 'en'
+    ? {
+        title: 'Topic Map',
+        viewAll: 'View topics',
+        articles: 'articles',
+        article: 'article',
+      }
+    : {
+        title: '专题地图',
+        viewAll: '查看专题',
+        articles: '篇文章',
+        article: '篇文章',
+      };
 ---
 
 <div class="animate-fade-in">
@@ -155,6 +171,50 @@ const positioning =
       </div>
     </div>
   </section>
+
+  {
+    featuredTopics.length ? (
+      <section class="max-w-7xl mx-auto px-6 mb-20">
+        <div class="border-t border-slate-200 pt-12">
+          <div class="flex flex-col md:flex-row md:items-baseline justify-between mb-10 gap-6">
+            <h2 class="font-serif text-4xl lg:text-5xl text-brand-dark font-normal text-balance">
+              {topicsCopy.title}
+            </h2>
+            <a
+              href={getLocalizedPath('/topics/', lang)}
+              class="inline-flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-brand-cyan transition-colors"
+            >
+              {topicsCopy.viewAll}
+              <Icon name="arrow-right" size={14} />
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredTopics.map((topic) => (
+              <a
+                href={topic.href}
+                class="group border-t border-slate-200 pt-5 min-h-48 flex flex-col"
+              >
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-cyan">
+                  {topic.kind}
+                </span>
+                <h3 class="mt-3 font-serif text-2xl text-brand-dark group-hover:text-brand-cyan transition-colors">
+                  {topic.name}
+                </h3>
+                <p class="mt-4 text-sm leading-6 text-slate-600 line-clamp-3">
+                  {topic.description}
+                </p>
+                <span class="mt-auto pt-5 text-xs font-semibold uppercase tracking-widest text-slate-500">
+                  {topic.count}{' '}
+                  {topic.count === 1 ? topicsCopy.article : topicsCopy.articles}
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    ) : null
+  }
 
   {
     popularPosts.length ? (

@@ -1,6 +1,10 @@
 ---
 import { SITE, SOCIAL_LINKS } from '../data/site';
-import { buildAlternateLinks, buildCanonicalUrl, buildXDefaultLink } from '../utils/seo';
+import {
+  buildAlternateLinks,
+  buildCanonicalUrl,
+  buildXDefaultLink,
+} from '../utils/seo';
 import { getLocaleFromPath, localeToOg, type Locale } from '../utils/i18n';
 
 interface Props {
@@ -40,6 +44,10 @@ const metaDescription = description ?? SITE.description[resolvedLang];
 const canonicalUrl = canonical ?? buildCanonicalUrl(pathname, resolvedLang);
 const alternateLinks = buildAlternateLinks(pathname);
 const xDefault = buildXDefaultLink(pathname);
+const defaultImage = new URL('/images/static/icon.jpg', SITE.url).toString();
+const metaImage = image ? new URL(image, SITE.url).toString() : defaultImage;
+const imageAlt =
+  resolvedLang === 'zh' ? `${SITE.name} 的站点图标` : `${SITE.name} site icon`;
 
 const websiteSchema = {
   '@context': 'https://schema.org',
@@ -60,44 +68,68 @@ const organizationSchema = {
     SOCIAL_LINKS.twitter,
     SOCIAL_LINKS.github,
     SOCIAL_LINKS.linkedin,
-  ].filter(url => !url.includes('YOUR_')),
+  ].filter((url) => !url.includes('YOUR_')),
 };
 
-const articleSchema = article ? {
-  '@context': 'https://schema.org',
-  '@type': 'BlogPosting',
-  headline: title,
-  description: metaDescription,
-  url: canonicalUrl,
-  datePublished: article.publishedTime,
-  dateModified: article.modifiedTime || article.publishedTime,
-  author: {
-    '@type': 'Person',
-    name: article.author || SITE.author,
-    url: SITE.url,
-  },
-  publisher: {
-    '@type': 'Person',
-    name: SITE.author,
-    url: SITE.url,
-  },
-  keywords: article.tags?.join(', '),
-  inLanguage: resolvedLang === 'zh' ? 'zh-Hans' : 'en',
-} : null;
+const articleSchema = article
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: title,
+      description: metaDescription,
+      image: metaImage,
+      url: canonicalUrl,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': canonicalUrl,
+      },
+      datePublished: article.publishedTime,
+      dateModified: article.modifiedTime || article.publishedTime,
+      author: {
+        '@type': 'Person',
+        name: article.author || SITE.author,
+        url: SITE.url,
+      },
+      publisher: {
+        '@type': 'Person',
+        name: SITE.author,
+        url: SITE.url,
+      },
+      keywords: article.tags?.join(', '),
+      inLanguage: resolvedLang === 'zh' ? 'zh-Hans' : 'en',
+    }
+  : null;
 ---
+
 <title>{metaTitle}</title>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="description" content={metaDescription} />
+<meta name="author" content={SITE.author} />
+<meta name="robots" content="index,follow,max-image-preview:large" />
 <meta name="theme-color" content="#2563EB" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta
+  name="apple-mobile-web-app-status-bar-style"
+  content="black-translucent"
+/>
 <link rel="icon" type="image/jpeg" href="/images/static/icon.jpg" />
 <link rel="apple-touch-icon" href="/images/static/icon.jpg" />
 <link rel="canonical" href={canonicalUrl} />
-{alternateLinks.map((link) => (
-  <link rel="alternate" hreflang={link.hrefLang} href={link.href} />
-))}
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={`${SITE.title} RSS`}
+  href={new URL(
+    resolvedLang === 'zh' ? '/zh/rss.xml' : '/rss.xml',
+    SITE.url
+  ).toString()}
+/>
+{
+  alternateLinks.map((link) => (
+    <link rel="alternate" hreflang={link.hrefLang} href={link.href} />
+  ))
+}
 <link rel="alternate" hreflang="x-default" href={xDefault} />
 
 <meta property="og:title" content={metaTitle} />
@@ -106,18 +138,37 @@ const articleSchema = article ? {
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:site_name" content={SITE.title} />
 <meta property="og:locale" content={localeToOg[resolvedLang]} />
-{alternateLinks
-  .filter((link) => link.locale !== resolvedLang)
-  .map((link) => (
-    <meta property="og:locale:alternate" content={localeToOg[link.locale]} />
-  ))}
+<meta property="og:image" content={metaImage} />
+<meta property="og:image:alt" content={imageAlt} />
+{
+  alternateLinks
+    .filter((link) => link.locale !== resolvedLang)
+    .map((link) => (
+      <meta property="og:locale:alternate" content={localeToOg[link.locale]} />
+    ))
+}
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={metaTitle} />
 <meta name="twitter:description" content={metaDescription} />
-{image ? <meta property="og:image" content={image} /> : null}
-{image ? <meta name="twitter:image" content={image} /> : null}
+<meta name="twitter:image" content={metaImage} />
 
-<script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
-<script is:inline type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
-{articleSchema ? <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} /> : null}
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify(websiteSchema)}
+/>
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify(organizationSchema)}
+/>
+{
+  articleSchema ? (
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(articleSchema)}
+    />
+  ) : null
+}

@@ -4,18 +4,22 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import shutil
 import subprocess
-from datetime import date
+import time
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 BLOG_ROOT = PROJECT_ROOT / "src" / "content" / "blog"
+LOG_ROOT = PROJECT_ROOT / "logs"
 CODEX_DEPS = Path.home() / ".cache" / "codex-runtimes" / "codex-primary-runtime" / "dependencies"
 CODEX_BIN = CODEX_DEPS / "bin"
 CODEX_NODE_BIN = CODEX_DEPS / "node" / "bin"
+PUBLISH_EVENTS: list[dict[str, object]] = []
 
 
 def command_env() -> dict[str, str]:
@@ -98,12 +102,68 @@ def update_post(path: Path, *, publish_date: str | None, dry_run: bool) -> None:
         path.write_text(next_text, encoding="utf-8")
 
 
-def run(command: list[str], *, dry_run: bool) -> None:
+def record_event(
+    step: str,
+    status: str,
+    *,
+    command: list[str] | None = None,
+    duration_ms: int | None = None,
+    detail: str | None = None,
+) -> None:
+    event: dict[str, object] = {
+        "step": step,
+        "status": status,
+        "time": datetime.now(timezone.utc).isoformat(),
+    }
+    if command:
+        event["command"] = command
+    if duration_ms is not None:
+        event["durationMs"] = duration_ms
+    if detail:
+        event["detail"] = detail
+    PUBLISH_EVENTS.append(event)
+
+
+def write_publish_log(*, slug: str, status: str, started_at: str, error: str | None = None) -> Path:
+    LOG_ROOT.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    path = LOG_ROOT / f"publish-{slug}-{timestamp}.json"
+    payload = {
+        "slug": slug,
+        "status": status,
+        "startedAt": started_at,
+        "finishedAt": datetime.now(timezone.utc).isoformat(),
+        "events": PUBLISH_EVENTS,
+    }
+    if error:
+        payload["error"] = error
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"Publish log: {path}")
+    return path
+
+
+def run(command: list[str], *, dry_run: bool, step: str) -> None:
     printable = " ".join(command)
     if dry_run:
         print(f"[dry-run] {printable}")
+        record_event(step, "dry-run", command=command)
         return
-    subprocess.run(command, cwd=PROJECT_ROOT, check=True, env=command_env())
+    print(f"[{step}] {printable}")
+    started = time.perf_counter()
+    try:
+        subprocess.run(command, cwd=PROJECT_ROOT, check=True, env=command_env())
+    except subprocess.CalledProcessError as exc:
+        duration_ms = int((time.perf_counter() - started) * 1000)
+        record_event(
+            step,
+            "failed",
+            command=command,
+            duration_ms=duration_ms,
+            detail=f"exit code {exc.returncode}",
+        )
+        raise
+    duration_ms = int((time.perf_counter() - started) * 1000)
+    record_event(step, "success", command=command, duration_ms=duration_ms)
 
 
 def main() -> int:
@@ -113,22 +173,36 @@ def main() -> int:
     parser.add_argument("--skip-deploy", action="store_true", help="Run checks/build but do not deploy.")
     parser.add_argument("--keep-date", action="store_true", help="Keep existing pubDate instead of setting today.")
     args = parser.parse_args()
+    started_at = datetime.now(timezone.utc).isoformat()
 
-    paths = [BLOG_ROOT / "zh" / f"{args.slug}.md", BLOG_ROOT / "en" / f"{args.slug}.md"]
-    missing = [str(path) for path in paths if not path.exists()]
-    if missing:
-        raise FileNotFoundError("Missing draft file(s): " + ", ".join(missing))
+    try:
+        paths = [BLOG_ROOT / "zh" / f"{args.slug}.md", BLOG_ROOT / "en" / f"{args.slug}.md"]
+        missing = [str(path) for path in paths if not path.exists()]
+        if missing:
+            raise FileNotFoundError("Missing draft file(s): " + ", ".join(missing))
 
-    publish_date = None if args.keep_date else date.today().isoformat()
-    for path in paths:
-        update_post(path, publish_date=publish_date, dry_run=args.dry_run)
-        print(f"{'Would publish' if args.dry_run else 'Published'} {path}")
+        publish_date = None if args.keep_date else date.today().isoformat()
+        for path in paths:
+            update_post(path, publish_date=publish_date, dry_run=args.dry_run)
+            print(f"{'Would publish' if args.dry_run else 'Published'} {path}")
+        record_event(
+            "frontmatter",
+            "dry-run" if args.dry_run else "success",
+            detail=f"updated {len(paths)} post files",
+        )
 
-    run(package_command("lint"), dry_run=args.dry_run)
-    run(package_command("check"), dry_run=args.dry_run)
-    run(package_command("build"), dry_run=args.dry_run)
-    if not args.skip_deploy:
-        run(wrangler_command(), dry_run=args.dry_run)
+        run(package_command("lint"), dry_run=args.dry_run, step="lint")
+        run(package_command("check"), dry_run=args.dry_run, step="check")
+        run(package_command("build"), dry_run=args.dry_run, step="build")
+        if not args.skip_deploy:
+            run(wrangler_command(), dry_run=args.dry_run, step="deploy")
+        else:
+            record_event("deploy", "skipped", detail="--skip-deploy")
+    except Exception as exc:
+        write_publish_log(slug=args.slug, status="failed", started_at=started_at, error=str(exc))
+        raise
+
+    write_publish_log(slug=args.slug, status="success", started_at=started_at)
 
     return 0
 

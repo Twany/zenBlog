@@ -40,13 +40,13 @@
 
 ### 为什么采用这种架构？
 
-| 方面 | 本地开发 | 云端 CMS |
-|------|----------|----------|
-| **谁用** | 开发者 | 内容编辑者 |
-| **做什么** | 代码、样式、组件 | 博客文章、笔记、数据 |
-| **工具** | VS Code、Git、npm | 只需浏览器 |
-| **技能要求** | 需要编程知识 | 无需任何技术背景 |
-| **工作流** | 编辑 → 提交 → 推送 | 编辑 → 发布（一键完成） |
+| 方面         | 本地开发           | 云端 CMS                |
+| ------------ | ------------------ | ----------------------- |
+| **谁用**     | 开发者             | 内容编辑者              |
+| **做什么**   | 代码、样式、组件   | 博客文章、笔记、数据    |
+| **工具**     | VS Code、Git、npm  | 只需浏览器              |
+| **技能要求** | 需要编程知识       | 无需任何技术背景        |
+| **工作流**   | 编辑 → 提交 → 推送 | 编辑 → 发布（一键完成） |
 
 ### 优势
 
@@ -68,14 +68,14 @@
 
 ## 技术栈
 
-| 层级 | 技术 |
-|------|------|
-| 框架 | [Astro](https://astro.build/) |
-| 样式 | [Tailwind CSS](https://tailwindcss.com/) |
-| CMS | [Sveltia CMS](https://github.com/sveltia/sveltia-cms) |
+| 层级 | 技术                                                                 |
+| ---- | -------------------------------------------------------------------- |
+| 框架 | [Astro](https://astro.build/)                                        |
+| 样式 | [Tailwind CSS](https://tailwindcss.com/)                             |
+| CMS  | [Sveltia CMS](https://github.com/sveltia/sveltia-cms)                |
 | 认证 | [Cloudflare Workers OAuth](https://github.com/Twany/cf-oauth-worker) |
-| 托管 | [Cloudflare Pages](https://pages.cloudflare.com/) |
-| 语言 | [TypeScript](https://www.typescriptlang.org/) |
+| 托管 | [Cloudflare Pages](https://pages.cloudflare.com/)                    |
+| 语言 | [TypeScript](https://www.typescriptlang.org/)                        |
 
 ## 快速开始
 
@@ -102,15 +102,15 @@ npm run dev
 
 ### 可用脚本
 
-| 命令 | 说明 |
-|------|------|
-| `npm run dev` | 启动开发服务器 |
-| `npm run build` | 构建生产版本 |
-| `npm run preview` | 预览生产构建 |
-| `npm run check` | Astro 类型检查 |
-| `npm run lint` | ESLint 代码检查 |
-| `npm run format` | Prettier 代码格式化 |
-| `npm run test` | 运行单元测试 |
+| 命令              | 说明                |
+| ----------------- | ------------------- |
+| `npm run dev`     | 启动开发服务器      |
+| `npm run build`   | 构建生产版本        |
+| `npm run preview` | 预览生产构建        |
+| `npm run check`   | Astro 类型检查      |
+| `npm run lint`    | ESLint 代码检查     |
+| `npm run format`  | Prettier 代码格式化 |
+| `npm run test`    | 运行单元测试        |
 
 ## 项目结构
 
@@ -163,28 +163,28 @@ git push
 
 ### 内容位置
 
-| 内容类型 | 位置 | 编辑方式 |
-|----------|------|----------|
+| 内容类型 | 位置                         | 编辑方式   |
+| -------- | ---------------------------- | ---------- |
 | 博客文章 | `src/content/blog/[en\|zh]/` | CMS 或本地 |
-| 笔记 | `src/data/notes.json` | CMS 或本地 |
-| 实验项目 | `src/data/experiments.json` | CMS 或本地 |
-| 站点设置 | `src/data/site.json` | CMS 或本地 |
-| 组件 | `src/components/` | 仅本地 |
-| UI 文案 | `src/data/uiLabels.ts` | 仅本地 |
+| 笔记     | `src/data/notes.json`        | CMS 或本地 |
+| 实验项目 | `src/data/experiments.json`  | CMS 或本地 |
+| 站点设置 | `src/data/site.json`         | CMS 或本地 |
+| 组件     | `src/components/`            | 仅本地     |
+| UI 文案  | `src/data/uiLabels.ts`       | 仅本地     |
 
 ### CMS 功能
 
 CMS（`/admin/`）提供完整的内容管理界面：
 
-| 分类 | 内容 | 说明 |
-|------|------|------|
-| **Blog Posts (English)** | 英文文章 | Markdown 格式 |
-| **博客文章 (中文)** | 中文文章 | Markdown 格式 |
-| **Data Files** | | |
-| ├─ Notes / 笔记 | 短内容 | 双语、标签、图片 |
-| └─ Experiments / 实验项目 | 项目展示 | 双语、颜色、技术栈 |
-| **Settings / 设置** | | |
-| └─ Site Settings | 全局配置 | 站点信息、社交链接、显示数量 |
+| 分类                      | 内容     | 说明                         |
+| ------------------------- | -------- | ---------------------------- |
+| **Blog Posts (English)**  | 英文文章 | Markdown 格式                |
+| **博客文章 (中文)**       | 中文文章 | Markdown 格式                |
+| **Data Files**            |          |                              |
+| ├─ Notes / 笔记           | 短内容   | 双语、标签、图片             |
+| └─ Experiments / 实验项目 | 项目展示 | 双语、颜色、技术栈           |
+| **Settings / 设置**       |          |                              |
+| └─ Site Settings          | 全局配置 | 站点信息、社交链接、显示数量 |
 
 #### CMS 可编辑内容
 
@@ -197,9 +197,9 @@ CMS（`/admin/`）提供完整的内容管理界面：
 
 ## 多语言路由
 
-| 语言 | 路径 | RSS |
-|------|------|-----|
-| 英文 | `/` | `/rss.xml` |
+| 语言 | 路径   | RSS           |
+| ---- | ------ | ------------- |
+| 英文 | `/`    | `/rss.xml`    |
 | 中文 | `/zh/` | `/zh/rss.xml` |
 
 ## 部署
@@ -211,6 +211,19 @@ npm run build
 ```
 
 `dist/` 目录包含生产构建文件。
+
+### Analytics
+
+布局层支持通过官方 beacon 脚本接入 Cloudflare Web Analytics。构建前设置
+`PUBLIC_CLOUDFLARE_WEB_ANALYTICS_TOKEN`，生产 HTML 会包含统计脚本：
+
+```bash
+PUBLIC_CLOUDFLARE_WEB_ANALYTICS_TOKEN=your-token npm run build
+```
+
+如果没有设置该变量，页面不会渲染统计脚本，也不会发起第三方请求。
+`scripts/blog_publish.py` 发布时会把校验、构建和部署步骤写入 `logs/`
+目录下的 JSON 日志，方便定位失败阶段。
 
 ## CMS 认证配置
 
