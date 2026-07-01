@@ -7,6 +7,7 @@ interface Props {
 }
 
 const { lang } = Astro.props as Props;
+const year = new Date().getFullYear();
 
 const footerLinks = [
   { label: uiLabels.nav.blog[lang], path: '/blog/' },
@@ -19,23 +20,24 @@ const footerLinks = [
 
 <footer class="border-t border-slate-200 bg-white text-slate-600">
   <div class="mx-auto max-w-7xl px-5 py-8 md:px-6 lg:py-10">
-    <div
-      class="flex flex-col gap-7 lg:flex-row lg:items-start lg:justify-between"
-    >
-      <div class="max-w-xl">
-        <a
-          href={getLocalizedPath('/', lang)}
-          class="font-serif text-xl font-normal text-brand-dark transition-colors hover:text-brand-cyan"
-        >
-          {uiLabels.nav.home[lang]}
-        </a>
-        <p class="mt-3 max-w-lg font-serif text-sm leading-6 text-slate-500">
-          {uiLabels.footer.aboutBlurb[lang]}
-        </p>
-      </div>
+    <div class="max-w-xl">
+      <a
+        href={getLocalizedPath('/', lang)}
+        class="font-serif text-xl font-normal text-brand-dark transition-colors hover:text-brand-cyan"
+      >
+        {uiLabels.nav.home[lang]}
+      </a>
+      <p class="mt-3 max-w-lg font-serif text-sm leading-6 text-slate-500">
+        {uiLabels.footer.aboutBlurb[lang]}
+      </p>
+    </div>
 
+    <div
+      class="mt-7 flex flex-col gap-4 border-t border-slate-200 pt-5 text-xs text-slate-500 lg:flex-row lg:items-center lg:justify-between"
+    >
+      <p>&copy; {year} Twany's Blog.</p>
       <nav
-        class="flex max-w-2xl flex-wrap gap-x-5 gap-y-3 text-sm font-medium text-slate-500"
+        class="flex flex-wrap gap-x-5 gap-y-3 font-medium"
         aria-label="Footer navigation"
       >
         {
@@ -48,6 +50,12 @@ const footerLinks = [
             </a>
           ))
         }
+        <a
+          href={getLocalizedPath('/contact/', lang)}
+          class="text-brand-cyan transition-colors hover:text-brand-dark"
+        >
+          {uiLabels.footer.sayHello[lang]} -&gt;
+        </a>
       </nav>
     </div>
   </div>

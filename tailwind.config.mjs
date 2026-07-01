@@ -5,10 +5,26 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Instrument Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        serif: ['Newsreader', 'Georgia', 'serif'],
+        sans: [
+          'PingFang SC',
+          'Hiragino Sans GB',
+          'Microsoft YaHei',
+          'ui-sans-serif',
+          'system-ui',
+          'sans-serif',
+        ],
+        serif: [
+          'PingFang SC',
+          'Hiragino Sans GB',
+          'Microsoft YaHei',
+          'ui-sans-serif',
+          'system-ui',
+          'sans-serif',
+        ],
         display: [
-          'Instrument Sans',
+          'PingFang SC',
+          'Hiragino Sans GB',
+          'Microsoft YaHei',
           'ui-sans-serif',
           'system-ui',
           'sans-serif',
