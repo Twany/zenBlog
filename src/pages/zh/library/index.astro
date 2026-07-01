@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SpatialLibraryPage from '../../../components/pages/SpatialLibraryPage.astro';
+import { getBlogPosts } from '../../../utils/blog';
+
+const posts = await getBlogPosts('zh');
+---
+
+<BaseLayout
+  title="空间图书馆"
+  description="以空间书架的方式浏览文章、笔记与长文归档。"
+  lang="zh"
+>
+  <SpatialLibraryPage lang="zh" posts={posts} />
+</BaseLayout>

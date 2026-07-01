@@ -1,6 +1,7 @@
 export const uiLabels = {
   nav: {
     blog: { en: 'Blog', zh: '博客' },
+    library: { en: 'Library', zh: '图书馆' },
     notes: { en: 'Notes', zh: '碎碎念' },
     experiments: { en: 'Experiments', zh: '实验室' },
     about: { en: 'About', zh: '关于' },
