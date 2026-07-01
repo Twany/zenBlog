@@ -8,14 +8,6 @@ interface Props {
 
 const { lang } = Astro.props as Props;
 const year = new Date().getFullYear();
-
-const footerLinks = [
-  { label: uiLabels.nav.blog[lang], path: '/blog/' },
-  { label: uiLabels.nav.library[lang], path: '/library/' },
-  { label: uiLabels.nav.notes[lang], path: '/notes/' },
-  { label: uiLabels.nav.experiments[lang], path: '/experiments/' },
-  { label: uiLabels.nav.about[lang], path: '/about/' },
-];
 ---
 
 <footer class="border-t border-slate-200 bg-white text-slate-600">
@@ -40,16 +32,6 @@ const footerLinks = [
         class="flex flex-wrap gap-x-5 gap-y-3 font-medium"
         aria-label="Footer navigation"
       >
-        {
-          footerLinks.map((link) => (
-            <a
-              href={getLocalizedPath(link.path, lang)}
-              class="transition-colors hover:text-brand-cyan"
-            >
-              {link.label}
-            </a>
-          ))
-        }
         <a
           href={getLocalizedPath('/contact/', lang)}
           class="text-brand-cyan transition-colors hover:text-brand-dark"
