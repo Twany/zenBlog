@@ -37,7 +37,6 @@ const pages = [
   ['home', '/'],
   ['article', '/blog/codex-blog-publishing-system/'],
   ['blog', '/blog/'],
-  ['topics', '/topics/'],
   ['notes', '/notes/'],
   ['library', '/library/'],
   ['contact', '/contact/'],

@@ -12,7 +12,6 @@ import {
   getSlugFromEntry,
 } from '../../utils/blog';
 import { getLocalizedPath } from '../../utils/i18n';
-import { getTopicSummaries } from '../../utils/topics';
 import type { BlogEntry } from '../../utils/blog';
 import type { Locale } from '../../utils/i18n';
 import Icon from '../Icon.astro';
@@ -27,7 +26,6 @@ const heroPost = posts[0];
 const latestPosts = posts.slice(0, 4);
 const featuredExperiments = experiments.slice(0, 4);
 const recentNotes = notes.slice(0, 4);
-const featuredTopics = getTopicSummaries(posts, lang).slice(0, 5);
 const codexPost = posts.find(
   (post) => getSlugFromEntry(post) === 'codex-blog-publishing-system'
 );
@@ -42,13 +40,9 @@ const copy =
           'I use this site to turn real building sessions into durable notes: what changed, why it changed, what survived verification, and what can be reused next time.',
         startHere: 'Start here',
         startDescription:
-          'Begin with the newest long-form piece, then move through topics instead of scrolling a raw archive.',
+          'Begin with the newest long-form piece, or jump into the full archive when you want a wider view.',
         readNewest: 'Read newest',
         browseArchive: 'Browse archive',
-        topicMap: 'Topic map',
-        tracks: 'Reading tracks',
-        tracksIntro:
-          'The archive is organized around recurring problems rather than content formats.',
         latest: 'Latest essays',
         signals: 'Current signals',
         signalsIntro:
@@ -58,7 +52,7 @@ const copy =
         builtSystemText:
           'A direct-publish workflow with bilingual posts, templates, OG images, validation, Cloudflare deploy, and live checks.',
         posts: 'essays',
-        topics: 'topics',
+        builds: 'builds',
         notes: 'notes',
       }
     : {
@@ -69,12 +63,9 @@ const copy =
           '我把真实构建过程沉淀到这里：改了什么、为什么改、如何验证、哪些判断可以在下一次复用。',
         startHere: '从这里开始',
         startDescription:
-          '先读最新长文，再按主题进入归档，而不是在时间线里盲翻。',
+          '先读最新长文；需要更完整的上下文时，再进入归档浏览。',
         readNewest: '阅读最新',
         browseArchive: '浏览归档',
-        topicMap: '专题地图',
-        tracks: '阅读轨道',
-        tracksIntro: '这个归档按反复出现的问题组织，而不只是按内容形式分类。',
         latest: '最新长文',
         signals: '当前信号',
         signalsIntro: '短笔记和构建产物，记录哪些东西正在变成文章素材。',
@@ -83,13 +74,13 @@ const copy =
         builtSystemText:
           '一条直发工作流：中英双语长文、模板、OG 图、内容校验、Cloudflare 部署和线上检查。',
         posts: '篇长文',
-        topics: '个专题',
+        builds: '个构建',
         notes: '条笔记',
       };
 
 const stats = [
   { value: posts.length, label: copy.posts },
-  { value: featuredTopics.length, label: copy.topics },
+  { value: featuredExperiments.length, label: copy.builds },
   { value: notes.length, label: copy.notes },
 ];
 ---
@@ -189,51 +180,6 @@ const stats = [
       </div>
     </div>
   </section>
-
-  {
-    featuredTopics.length ? (
-      <section class="mx-auto mb-20 max-w-7xl px-6">
-        <div class="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 class="font-serif text-4xl font-normal text-brand-dark md:text-5xl">
-              {copy.tracks}
-            </h2>
-            <p class="mt-4 max-w-2xl text-sm leading-7 text-slate-600">
-              {copy.tracksIntro}
-            </p>
-          </div>
-          <a
-            href={getLocalizedPath('/topics/', lang)}
-            class="inline-flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500 transition-colors hover:text-brand-cyan"
-          >
-            {copy.topicMap}
-            <Icon name="arrow-right" size={14} />
-          </a>
-        </div>
-
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-5">
-          {featuredTopics.map((topic, index) => (
-            <a
-              href={topic.href}
-              class={`group border-t border-slate-200 pt-5 ${
-                index === 0 ? 'md:col-span-2' : ''
-              }`}
-            >
-              <span class="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-cyan">
-                {topic.kind} / {topic.count}
-              </span>
-              <h3 class="mt-3 font-serif text-2xl leading-tight text-brand-dark transition-colors group-hover:text-brand-cyan">
-                {topic.name}
-              </h3>
-              <p class="mt-4 line-clamp-4 text-sm leading-6 text-slate-600">
-                {topic.description}
-              </p>
-            </a>
-          ))}
-        </div>
-      </section>
-    ) : null
-  }
 
   {
     latestPosts.length ? (

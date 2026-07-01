@@ -214,8 +214,8 @@ def post_deploy_check(slug: str, titles: dict[str, str], *, dry_run: bool) -> No
     targets = [
         ("article-en", f"https://twany.me/blog/{slug}/", titles["en"]),
         ("article-zh", f"https://twany.me/zh/blog/{slug}/", titles["zh"]),
-        ("topics", "https://twany.me/topics/", "Topics"),
-        ("llms", "https://twany.me/llms.txt", "## Topics"),
+        ("blog-index", "https://twany.me/blog/", "Blog"),
+        ("llms", "https://twany.me/llms.txt", "## Recent English Articles"),
         ("rss-en", "https://twany.me/rss.xml", "<rss"),
         ("rss-zh", "https://twany.me/zh/rss.xml", "<rss"),
     ]

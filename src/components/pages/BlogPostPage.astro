@@ -78,16 +78,15 @@ const readingPathCopy =
     ? {
         title: 'Reading path',
         description:
-          'This article sits inside these topic tracks. Use them to move through the archive by problem, not just by date.',
-        topicLabel: 'Topic tracks',
+          'Use these filters to keep reading through the archive by problem, not just by date.',
+        topicLabel: 'Archive filters',
         latestInCategory: 'More in this category',
         noCategoryPosts: 'This is the only article in this category for now.',
       }
     : {
         title: '阅读路径',
-        description:
-          '这篇文章属于下面这些主题轨道。你可以按问题继续读，而不是只按发布时间翻归档。',
-        topicLabel: '主题轨道',
+        description: '用这些筛选继续读同类内容，不必只按发布时间翻归档。',
+        topicLabel: '归档筛选',
         latestInCategory: '同分类继续读',
         noCategoryPosts: '这个分类目前只有这一篇。',
       };
@@ -101,7 +100,7 @@ const shareCopy =
         copyLink: 'Copy link',
         copied: 'Link copied.',
         copyFailed: 'Copy failed. Select the URL manually.',
-        topics: 'Follow this topic',
+        topics: 'Filter archive',
       }
     : {
         title: '分享或收藏',
@@ -110,7 +109,7 @@ const shareCopy =
         copyLink: '复制链接',
         copied: '链接已复制。',
         copyFailed: '复制失败，请手动复制地址。',
-        topics: '继续看这个主题',
+        topics: '筛选归档',
       };
 const absolutePostUrl = new URL(
   getBlogPostUrl(lang, getSlugFromEntry(entry)),

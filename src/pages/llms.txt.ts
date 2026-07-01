@@ -1,13 +1,11 @@
 import { SITE } from '../data/site';
 import { getBlogPosts, getBlogPostUrl, getSlugFromEntry } from '../utils/blog';
-import { getTopicSummaries } from '../utils/topics';
 
 export async function GET() {
   const [enPosts, zhPosts] = await Promise.all([
     getBlogPosts('en'),
     getBlogPosts('zh'),
   ]);
-  const topics = getTopicSummaries(enPosts, 'en').slice(0, 8);
 
   const lines = [
     `# ${SITE.name}`,
@@ -17,12 +15,8 @@ export async function GET() {
     '## Core Pages',
     `- Home: ${SITE.url}/`,
     `- Blog archive: ${SITE.url}/blog/`,
-    `- Topics: ${SITE.url}/topics/`,
     `- Spatial library: ${SITE.url}/library/`,
     `- Chinese home: ${SITE.url}/zh/`,
-    '',
-    '## Topics',
-    ...topics.map((topic) => `- ${topic.name}: ${SITE.url}${topic.href}`),
     '',
     '## Recent English Articles',
     ...enPosts
