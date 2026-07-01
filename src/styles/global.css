@@ -7,7 +7,7 @@ html {
 }
 
 body {
-  @apply bg-[#f8fafc] text-gray-800 font-sans antialiased;
+  @apply bg-white text-gray-800 font-sans antialiased;
 }
 
 ::selection {
@@ -40,7 +40,7 @@ body {
 .site-header.is-scrolled {
   height: 3.5rem;
   border-color: rgba(148, 163, 184, 0.45);
-  background-color: rgba(248, 250, 252, 0.94);
+  background-color: rgba(255, 255, 255, 0.96);
 }
 
 .site-header.is-scrolled .site-title {
