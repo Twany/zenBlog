@@ -19,7 +19,7 @@ interface Props {
 }
 
 const { lang, posts } = Astro.props as Props;
-const latestPosts = posts.slice(0, 4);
+const popularPosts = posts.slice(0, 3);
 const startPosts = posts.slice(0, 4);
 
 const copy =
@@ -30,9 +30,8 @@ const copy =
           'A working archive for AI workflows, interface judgment, and slow product thinking.',
         intro:
           'Essays from real building sessions: what changed, why it changed, and what can be reused.',
-        startHere: 'New',
         browseArchive: 'View all new',
-        latest: 'Latest essays',
+        popular: 'Popular essays',
       }
     : {
         eyebrow: '个人知识入口',
@@ -40,9 +39,8 @@ const copy =
           '一个持续工作的归档：AI 工作流、界面判断，以及慢一点的产品思考。',
         intro:
           '从真实构建过程里整理出的长文：改了什么、为什么改、哪些判断可以复用。',
-        startHere: '最新',
         browseArchive: '查看全部',
-        latest: '最新长文',
+        popular: '热门长文',
       };
 ---
 
@@ -51,10 +49,8 @@ const copy =
     {lang === 'en' ? 'Twany Blog - Notes on Gradual Awakening' : '渐悟备忘录'}
   </h1>
 
-  <section class="mx-auto mb-20 max-w-7xl px-6">
-    <div
-      class="grid grid-cols-1 gap-12 border-b border-slate-200 pb-14 lg:grid-cols-12 lg:gap-16"
-    >
+  <section class="mx-auto mb-14 max-w-7xl px-6 md:mb-16">
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
       <div class="max-w-3xl lg:col-span-7">
         <p class="mb-5 font-serif text-base italic text-brand-cyan">
           {copy.eyebrow}
@@ -71,19 +67,7 @@ const copy =
 
       <div class="lg:col-span-5">
         <div class="border-t border-slate-200 pt-5">
-          <div class="flex items-baseline justify-between gap-6">
-            <h2 class="font-sans text-2xl font-semibold text-brand-dark">
-              {copy.startHere}
-            </h2>
-            <a
-              href={getBlogIndexUrl(lang)}
-              class="shrink-0 text-sm font-semibold text-brand-dark transition-colors hover:text-brand-cyan"
-            >
-              {copy.browseArchive}
-            </a>
-          </div>
-
-          <div class="mt-6 space-y-6">
+          <div class="space-y-6">
             {
               startPosts.map((post) => {
                 const slug = getSlugFromEntry(post);
@@ -103,17 +87,27 @@ const copy =
               })
             }
           </div>
+
+          <div class="mt-8">
+            <a
+              href={getBlogIndexUrl(lang)}
+              class="inline-flex min-h-11 items-center gap-2 border-b border-slate-200 text-sm font-medium text-slate-600 transition-colors hover:border-brand-cyan hover:text-brand-cyan"
+            >
+              {copy.browseArchive}
+              <Icon name="arrow-right" size={14} />
+            </a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   {
-    latestPosts.length ? (
+    popularPosts.length ? (
       <section class="mx-auto mb-20 max-w-7xl px-6">
-        <div class="border-t border-slate-200 pt-12">
+        <div>
           <div class="mb-10 flex flex-col gap-5 md:flex-row md:items-baseline md:justify-between">
-            <SectionHeading title={copy.latest} />
+            <SectionHeading title={copy.popular} />
             <a
               href={getBlogIndexUrl(lang)}
               class="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-slate-500 transition-colors hover:text-brand-cyan"
@@ -123,7 +117,7 @@ const copy =
             </a>
           </div>
           <div class="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-            {latestPosts.map((post) => {
+            {popularPosts.map((post) => {
               const slug = getSlugFromEntry(post);
               return (
                 <PostCard

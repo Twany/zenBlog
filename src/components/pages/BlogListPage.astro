@@ -1,5 +1,4 @@
 ---
-import SectionHeading from '../SectionHeading.astro';
 import PostCard from '../PostCard.astro';
 import Icon from '../Icon.astro';
 import { uiLabels } from '../../data/uiLabels';
@@ -48,26 +47,6 @@ const allPostsLabel = lang === 'en' ? 'All posts' : '全部文章';
     <aside class="hidden w-full lg:block lg:w-1/4 space-y-8" data-filter-panel>
       <div>
         <h3 class="font-sans font-semibold text-sm mb-4 text-brand-dark">
-          {uiLabels.common.search[lang]}
-        </h3>
-        <div class="relative">
-          <input
-            type="text"
-            placeholder={lang === 'en' ? 'Search posts' : '搜索文章'}
-            aria-label={uiLabels.common.search[lang]}
-            class="w-full min-h-12 border border-gray-300 bg-transparent p-3 pl-10 rounded-none focus:border-brand-cyan outline-none transition-colors font-sans"
-            data-filter-search
-          />
-          <Icon
-            name="search"
-            class="absolute left-3 top-3.5 text-gray-400 w-5 h-5"
-            size={20}
-          />
-        </div>
-      </div>
-
-      <div>
-        <h3 class="font-sans font-semibold text-sm mb-4 text-brand-dark">
           {uiLabels.common.categories[lang]}
         </h3>
         <div class="flex flex-wrap gap-2">
@@ -91,7 +70,29 @@ const allPostsLabel = lang === 'en' ? 'All posts' : '全部文章';
     </aside>
 
     <div class="w-full lg:w-3/4">
-      <SectionHeading title={uiLabels.common.viewArchive[lang]} as="h1" />
+      <div
+        class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+      >
+        <h1
+          class="font-serif text-3xl font-normal text-brand-dark text-balance lg:text-4xl"
+        >
+          {uiLabels.common.viewArchive[lang]}
+        </h1>
+        <div class="relative w-full md:max-w-xs">
+          <input
+            type="text"
+            placeholder={lang === 'en' ? 'Search posts' : '搜索文章'}
+            aria-label={uiLabels.common.search[lang]}
+            class="w-full min-h-12 border border-gray-300 bg-transparent p-3 pl-10 rounded-none font-sans outline-none transition-colors focus:border-brand-cyan"
+            data-filter-search
+          />
+          <Icon
+            name="search"
+            class="absolute left-3 top-3.5 h-5 w-5 text-gray-400"
+            size={20}
+          />
+        </div>
+      </div>
 
       <div class="flex flex-col" data-posts>
         {
