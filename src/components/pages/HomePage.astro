@@ -6,7 +6,11 @@ import { uiLabels } from '../../data/uiLabels';
 import { notes } from '../../data/notes';
 import { experiments } from '../../data/experiments';
 import { formatDate } from '../../utils/date';
-import { getBlogIndexUrl, getBlogPostUrl, getSlugFromEntry } from '../../utils/blog';
+import {
+  getBlogIndexUrl,
+  getBlogPostUrl,
+  getSlugFromEntry,
+} from '../../utils/blog';
 import { getLocalizedPath } from '../../utils/i18n';
 import type { BlogEntry } from '../../utils/blog';
 import type { Locale } from '../../utils/i18n';
@@ -23,7 +27,12 @@ const subPosts = posts.slice(1, 3);
 const popularPosts = posts.slice(3, 6);
 const featuredExperiments = experiments.slice(0, 4);
 const recentNotes = notes.slice(0, 4);
+const positioning =
+  lang === 'en'
+    ? 'Notes on AI workflows, interface craft, code, and slow product thinking.'
+    : '记录 AI 工作流、界面手感、代码，以及慢一点的产品思考。';
 ---
+
 <div class="animate-fade-in">
   <h1 class="sr-only">
     {lang === 'en' ? 'Twany Blog - Notes on Gradual Awakening' : '渐悟备忘录'}
@@ -32,47 +41,61 @@ const recentNotes = notes.slice(0, 4);
   <section class="max-w-7xl mx-auto px-6 mb-24">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
       <div class="lg:col-span-8 flex flex-col gap-12">
-        <div class="flex items-baseline justify-between mb-2">
-          <h2 class="font-serif text-4xl lg:text-5xl text-brand-dark font-normal text-balance">
-            {uiLabels.common.recently[lang]}
-          </h2>
+        <div class="flex items-start justify-between mb-2 gap-8">
+          <div>
+            <h2
+              class="font-serif text-4xl lg:text-5xl text-brand-dark font-normal text-balance"
+            >
+              {uiLabels.common.recently[lang]}
+            </h2>
+            <p
+              class="mt-4 max-w-2xl text-sm md:text-base leading-7 text-slate-600"
+            >
+              {positioning}
+            </p>
+          </div>
           <a
             href={getBlogIndexUrl(lang)}
             class="hidden md:flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-brand-cyan transition-colors focus-visible:outline-none"
           >
-            {uiLabels.common.viewArchive[lang]} <Icon name="arrow-right" size={14} />
+            {uiLabels.common.viewArchive[lang]}
+            <Icon name="arrow-right" size={14} />
           </a>
         </div>
 
-        {heroPost ? (
-          <div class="mb-4">
-            <PostCard
-              lang={lang}
-              href={getBlogPostUrl(lang, getSlugFromEntry(heroPost))}
-              title={heroPost.data.title}
-              excerpt={heroPost.data.description}
-              category={heroPost.data.category}
-              date={formatDate(heroPost.data.pubDate, lang)}
-              readTime={heroPost.data.readTime}
-              tags={heroPost.data.tags ?? []}
-              featured
-            />
-          </div>
-        ) : null}
+        {
+          heroPost ? (
+            <div class="mb-4">
+              <PostCard
+                lang={lang}
+                href={getBlogPostUrl(lang, getSlugFromEntry(heroPost))}
+                title={heroPost.data.title}
+                excerpt={heroPost.data.description}
+                category={heroPost.data.category}
+                date={formatDate(heroPost.data.pubDate, lang)}
+                readTime={heroPost.data.readTime}
+                tags={heroPost.data.tags ?? []}
+                featured
+              />
+            </div>
+          ) : null
+        }
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12">
-          {subPosts.map((post) => (
-            <PostCard
-              lang={lang}
-              href={getBlogPostUrl(lang, getSlugFromEntry(post))}
-              title={post.data.title}
-              excerpt={post.data.description}
-              category={post.data.category}
-              date={formatDate(post.data.pubDate, lang)}
-              readTime={post.data.readTime}
-              tags={post.data.tags ?? []}
-            />
-          ))}
+          {
+            subPosts.map((post) => (
+              <PostCard
+                lang={lang}
+                href={getBlogPostUrl(lang, getSlugFromEntry(post))}
+                title={post.data.title}
+                excerpt={post.data.description}
+                category={post.data.category}
+                date={formatDate(post.data.pubDate, lang)}
+                readTime={post.data.readTime}
+                tags={post.data.tags ?? []}
+              />
+            ))
+          }
         </div>
 
         <a
@@ -86,29 +109,37 @@ const recentNotes = notes.slice(0, 4);
       <div class="lg:col-span-4">
         <div class="sticky top-32 border-t border-slate-200 pt-5">
           <div class="flex items-center justify-between mb-8">
-            <h2 class="font-sans font-semibold text-sm uppercase tracking-widest text-brand-dark">
+            <h2
+              class="font-sans font-semibold text-sm uppercase tracking-widest text-brand-dark"
+            >
               {uiLabels.common.latestNotes[lang]}
             </h2>
           </div>
 
           <div class="space-y-7">
-            {recentNotes.map((note) => (
-              <div class="group">
-                <div class="flex flex-col gap-2">
-                  <span class="font-mono text-[11px] text-slate-500 uppercase tracking-wider">{note.date}</span>
-                  <p class="font-serif text-gray-700 text-sm leading-relaxed line-clamp-3">
-                    {note.content[lang]}
-                  </p>
-                  {note.tags ? (
-                    <div class="flex flex-wrap gap-1 mt-1">
-                      {note.tags.slice(0, 2).map((tag) => (
-                        <span class="text-[10px] uppercase font-semibold text-slate-500">#{tag}</span>
-                      ))}
-                    </div>
-                  ) : null}
+            {
+              recentNotes.map((note) => (
+                <div class="group">
+                  <div class="flex flex-col gap-2">
+                    <span class="font-mono text-[11px] text-slate-500 uppercase tracking-wider">
+                      {note.date}
+                    </span>
+                    <p class="font-serif text-gray-700 text-sm leading-relaxed line-clamp-3">
+                      {note.content[lang]}
+                    </p>
+                    {note.tags ? (
+                      <div class="flex flex-wrap gap-1 mt-1">
+                        {note.tags.slice(0, 2).map((tag) => (
+                          <span class="text-[10px] uppercase font-semibold text-slate-500">
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            }
           </div>
 
           <div class="mt-8 pt-5 border-t border-gray-200">
@@ -116,7 +147,8 @@ const recentNotes = notes.slice(0, 4);
               href={getLocalizedPath('/notes/', lang)}
               class="min-h-11 text-xs font-semibold uppercase tracking-widest text-brand-cyan hover:text-brand-dark transition-colors flex items-center gap-2"
             >
-              {uiLabels.common.viewAllNotes[lang]} <Icon name="arrow-right" size={12} />
+              {uiLabels.common.viewAllNotes[lang]}
+              <Icon name="arrow-right" size={12} />
             </a>
           </div>
         </div>
@@ -124,31 +156,37 @@ const recentNotes = notes.slice(0, 4);
     </div>
   </section>
 
-  {popularPosts.length ? (
-    <section class="max-w-7xl mx-auto px-6 mb-20">
-      <SectionHeading title={uiLabels.common.popular[lang]} />
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-        {popularPosts.map((post) => (
-          <PostCard
-            lang={lang}
-            href={getBlogPostUrl(lang, getSlugFromEntry(post))}
-            title={post.data.title}
-            excerpt={post.data.description}
-            category={post.data.category}
-            date={formatDate(post.data.pubDate, lang)}
-            readTime={post.data.readTime}
-            tags={post.data.tags ?? []}
-          />
-        ))}
-      </div>
-    </section>
-  ) : null}
+  {
+    popularPosts.length ? (
+      <section class="max-w-7xl mx-auto px-6 mb-20">
+        <SectionHeading title={uiLabels.common.popular[lang]} />
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          {popularPosts.map((post) => (
+            <PostCard
+              lang={lang}
+              href={getBlogPostUrl(lang, getSlugFromEntry(post))}
+              title={post.data.title}
+              excerpt={post.data.description}
+              category={post.data.category}
+              date={formatDate(post.data.pubDate, lang)}
+              readTime={post.data.readTime}
+              tags={post.data.tags ?? []}
+            />
+          ))}
+        </div>
+      </section>
+    ) : null
+  }
 
   <section class="max-w-7xl mx-auto px-6 mb-20">
     <div class="border-t border-slate-200 pt-12">
-      <div class="flex flex-col md:flex-row md:items-baseline justify-between mb-12 gap-6">
+      <div
+        class="flex flex-col md:flex-row md:items-baseline justify-between mb-12 gap-6"
+      >
         <div>
-          <h2 class="font-serif text-4xl lg:text-5xl text-brand-dark font-normal text-balance">
+          <h2
+            class="font-serif text-4xl lg:text-5xl text-brand-dark font-normal text-balance"
+          >
             {uiLabels.common.lab[lang]}
           </h2>
         </div>
@@ -156,14 +194,17 @@ const recentNotes = notes.slice(0, 4);
           href={getLocalizedPath('/experiments/', lang)}
           class="inline-flex min-h-11 items-center text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-brand-cyan transition-colors"
         >
-          {uiLabels.common.viewArchive[lang]} <span class="ml-2">→</span>
+          {uiLabels.common.viewArchive[lang]}
+          <span class="ml-2">→</span>
         </a>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {featuredExperiments.map((exp) => (
-          <ExperimentCard experiment={exp} lang={lang} />
-        ))}
+        {
+          featuredExperiments.map((exp) => (
+            <ExperimentCard experiment={exp} lang={lang} />
+          ))
+        }
       </div>
     </div>
   </section>

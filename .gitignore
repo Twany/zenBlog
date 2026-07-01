@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 visual-qa/
+visual-qa-baseline/
 *.local
 
 .env

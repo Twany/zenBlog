@@ -11,19 +11,34 @@ interface Props {
 
 const { lang } = Astro.props as Props;
 ---
+
 <div class="max-w-6xl mx-auto px-6">
   <div class="flex items-end justify-between mb-12">
     <div class="flex flex-col gap-4">
-      <SectionHeading title={uiLabels.common.fieldNotes[lang]} as="h1" class="mb-0" />
+      <SectionHeading
+        title={uiLabels.common.fieldNotes[lang]}
+        as="h1"
+        class="mb-0"
+      />
       <p class="font-serif text-slate-600 italic max-w-lg">
         {uiLabels.common.notesDesc[lang]}
       </p>
     </div>
   </div>
 
-  <div class="columns-1 md:columns-2 gap-8 space-y-8 animate-fade-in">
-    {notes.map((note) => (
-      <NoteCard note={note} lang={lang} class="mb-8" />
-    ))}
+  <div
+    class="relative ml-2 max-w-3xl border-l border-slate-200 pl-6 md:ml-4 md:pl-10 animate-fade-in"
+  >
+    {
+      notes.map((note) => (
+        <div class="relative pb-10 last:pb-0">
+          <span
+            class="absolute -left-[1.94rem] top-1 h-3 w-3 rounded-full bg-white border-2 border-brand-cyan md:-left-[2.94rem]"
+            aria-hidden="true"
+          />
+          <NoteCard note={note} lang={lang} />
+        </div>
+      ))
+    }
   </div>
 </div>

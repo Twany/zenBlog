@@ -43,6 +43,10 @@ const copy = {
     startHere: 'Start here',
     latestPath: 'Latest',
     longformPath: 'Longform',
+    listMode: 'Reading list',
+    listIntro:
+      'A compact route for scanning the same archive without the shelf interaction.',
+    readNow: 'Read',
     preview: 'Preview',
   },
   zh: {
@@ -64,6 +68,9 @@ const copy = {
     startHere: '从这里开始',
     latestPath: '最新',
     longformPath: '长文',
+    listMode: '阅读列表',
+    listIntro: '同一批文章的轻量扫描入口，不需要在书架中逐本预览。',
+    readNow: '阅读',
     preview: '预览',
   },
 }[lang];
@@ -284,88 +291,121 @@ addReadingPath({
 
     {
       shelves.length > 0 ? (
-        <div class="shelf-wall" aria-label={copy.themes}>
-          {shelves.map((shelf, shelfIndex) => (
-            <section
-              class="shelf-bay"
-              id={shelf.id}
-              data-shelf-section={shelf.id}
-              style={`--shelf-accent: ${shelf.accent}; --shelf-tone: ${shelf.tone};`}
-              aria-labelledby={`${shelf.id}-title`}
-            >
-              <div class="shelf-label">
-                <span>
-                  {copy.shelf} {shelfIndex + 1}
-                </span>
-                <h2 id={`${shelf.id}-title`}>{shelf.category}</h2>
-                <p>
-                  {shelf.posts.length} {copy.articleLabel}
-                </p>
-              </div>
-
-              <div class="book-rail">
-                {shelf.posts.map((post, postIndex) => (
-                  <a
-                    class={`book-card ${shelfIndex === 0 && postIndex === 0 ? 'is-featured' : ''}`}
-                    href={getBlogPostUrl(lang, getSlugFromEntry(post))}
-                    style={`--book-color: ${getBookTone(shelfIndex, postIndex)}; --book-height: ${Math.min(13.5, 8.75 + getReadMinutes(post.data.readTime) * 0.22)}rem; --book-delay: ${postIndex * 50}ms;`}
-                    aria-label={`${copy.open}: ${post.data.title}`}
-                    title={post.data.title}
-                  >
-                    <span class="book-edge" aria-hidden="true" />
-                    <span class="book-spine">
-                      <span class="book-title">
-                        {lang === 'en'
-                          ? getSpineTitleParts(post).map((word) => (
-                              <span>{word}</span>
-                            ))
-                          : getSpineTitle(post)}
-                      </span>
-                      <span class="book-meta">{post.data.readTime}</span>
-                    </span>
-                    <span class="book-preview">
-                      <span class="preview-kicker">
-                        {post.data.category} /{' '}
-                        {getFormatLabel(post.data.readTime)}
-                      </span>
-                      <strong>{post.data.title}</strong>
-                      <span class="preview-description">
-                        {post.data.description}
-                      </span>
-                      <span class="preview-tags">
-                        {(post.data.tags ?? []).slice(0, 3).map((tag) => (
-                          <em>{tag}</em>
-                        ))}
-                      </span>
-                      <span class="preview-meta">
-                        <span>
-                          <Icon name="calendar" size={15} />{' '}
-                          {formatDate(post.data.pubDate, lang)}
-                        </span>
-                        <span>
-                          <Icon name="clock" size={15} /> {post.data.readTime}
-                        </span>
-                      </span>
-                      <span class="preview-action">
-                        {copy.open}
-                        <Icon name="arrow-right" size={16} />
-                      </span>
-                    </span>
-                  </a>
-                ))}
-
-                <div class="empty-cubby" aria-hidden="true">
-                  <span class="empty-cubby-slots">
-                    <i />
-                    <i />
-                    <i />
+        <>
+          <div class="shelf-wall" aria-label={copy.themes}>
+            {shelves.map((shelf, shelfIndex) => (
+              <section
+                class="shelf-bay"
+                id={shelf.id}
+                data-shelf-section={shelf.id}
+                style={`--shelf-accent: ${shelf.accent}; --shelf-tone: ${shelf.tone};`}
+                aria-labelledby={`${shelf.id}-title`}
+              >
+                <div class="shelf-label">
+                  <span>
+                    {copy.shelf} {shelfIndex + 1}
                   </span>
-                  <span class="empty-cubby-note">{copy.empty}</span>
+                  <h2 id={`${shelf.id}-title`}>{shelf.category}</h2>
+                  <p>
+                    {shelf.posts.length} {copy.articleLabel}
+                  </p>
                 </div>
+
+                <div class="book-rail">
+                  {shelf.posts.map((post, postIndex) => (
+                    <a
+                      class={`book-card ${shelfIndex === 0 && postIndex === 0 ? 'is-featured' : ''}`}
+                      href={getBlogPostUrl(lang, getSlugFromEntry(post))}
+                      style={`--book-color: ${getBookTone(shelfIndex, postIndex)}; --book-height: ${Math.min(13.5, 8.75 + getReadMinutes(post.data.readTime) * 0.22)}rem; --book-delay: ${postIndex * 50}ms;`}
+                      aria-label={`${copy.open}: ${post.data.title}`}
+                      title={post.data.title}
+                    >
+                      <span class="book-edge" aria-hidden="true" />
+                      <span class="book-spine">
+                        <span class="book-title">
+                          {lang === 'en'
+                            ? getSpineTitleParts(post).map((word) => (
+                                <span>{word}</span>
+                              ))
+                            : getSpineTitle(post)}
+                        </span>
+                        <span class="book-meta">{post.data.readTime}</span>
+                      </span>
+                      <span class="book-preview">
+                        <span class="preview-kicker">
+                          {post.data.category} /{' '}
+                          {getFormatLabel(post.data.readTime)}
+                        </span>
+                        <strong>{post.data.title}</strong>
+                        <span class="preview-description">
+                          {post.data.description}
+                        </span>
+                        <span class="preview-tags">
+                          {(post.data.tags ?? []).slice(0, 3).map((tag) => (
+                            <em>{tag}</em>
+                          ))}
+                        </span>
+                        <span class="preview-meta">
+                          <span>
+                            <Icon name="calendar" size={15} />{' '}
+                            {formatDate(post.data.pubDate, lang)}
+                          </span>
+                          <span>
+                            <Icon name="clock" size={15} /> {post.data.readTime}
+                          </span>
+                        </span>
+                        <span class="preview-action">
+                          {copy.open}
+                          <Icon name="arrow-right" size={16} />
+                        </span>
+                      </span>
+                    </a>
+                  ))}
+
+                  <div class="empty-cubby" aria-hidden="true">
+                    <span class="empty-cubby-slots">
+                      <i />
+                      <i />
+                      <i />
+                    </span>
+                    <span class="empty-cubby-note">{copy.empty}</span>
+                  </div>
+                </div>
+              </section>
+            ))}
+          </div>
+
+          <section
+            class="library-list-mode"
+            aria-labelledby="library-list-title"
+          >
+            <div class="list-mode-header">
+              <div>
+                <span>{copy.listMode}</span>
+                <h2 id="library-list-title">{copy.allShelves}</h2>
               </div>
-            </section>
-          ))}
-        </div>
+              <p>{copy.listIntro}</p>
+            </div>
+            <div class="library-list-grid">
+              {posts.map((post) => (
+                <a
+                  class="library-list-item"
+                  href={getBlogPostUrl(lang, getSlugFromEntry(post))}
+                >
+                  <span class="list-item-meta">
+                    {post.data.category} / {post.data.readTime}
+                  </span>
+                  <strong>{post.data.title}</strong>
+                  <span>{post.data.description}</span>
+                  <em>
+                    {copy.readNow}
+                    <Icon name="arrow-right" size={14} />
+                  </em>
+                </a>
+              ))}
+            </div>
+          </section>
+        </>
       ) : (
         <div class="empty-library">
           <Icon name="library" size={36} />
@@ -687,6 +727,107 @@ addReadingPath({
     display: grid;
     gap: 0.9rem;
     perspective: 1600px;
+  }
+
+  .library-list-mode {
+    margin-top: 1rem;
+    padding: clamp(1rem, 2.6vw, 1.6rem);
+    border: 1px solid rgba(205, 231, 225, 0.13);
+    background:
+      linear-gradient(90deg, rgba(106, 212, 213, 0.06), transparent 22rem),
+      rgba(246, 240, 229, 0.04);
+  }
+
+  .list-mode-header {
+    display: grid;
+    grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: end;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(205, 231, 225, 0.13);
+  }
+
+  .list-mode-header span,
+  .list-item-meta {
+    color: #6ad4d5;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .list-mode-header h2 {
+    margin: 0.25rem 0 0;
+    color: #f6f0e5;
+    font-family: Merriweather, serif;
+    font-size: clamp(1.35rem, 2vw, 1.9rem);
+    font-weight: 700;
+  }
+
+  .list-mode-header p {
+    margin: 0;
+    color: rgba(246, 240, 229, 0.62);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .library-list-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .library-list-item {
+    display: grid;
+    gap: 0.45rem;
+    min-height: 10.75rem;
+    padding: 1rem 1.1rem;
+    border-bottom: 1px solid rgba(205, 231, 225, 0.1);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      background 180ms ease,
+      color 180ms ease;
+  }
+
+  .library-list-item:nth-child(odd) {
+    border-right: 1px solid rgba(205, 231, 225, 0.1);
+  }
+
+  .library-list-item:hover,
+  .library-list-item:focus-visible {
+    background: rgba(106, 212, 213, 0.08);
+  }
+
+  .library-list-item strong {
+    color: #f6f0e5;
+    font-family: Merriweather, serif;
+    font-size: 1.08rem;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+
+  .library-list-item > span:not(.list-item-meta) {
+    display: -webkit-box;
+    overflow: hidden;
+    color: rgba(246, 240, 229, 0.62);
+    font-size: 0.86rem;
+    line-height: 1.55;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .library-list-item em {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    align-self: end;
+    color: #6ad4d5;
+    font-size: 0.7rem;
+    font-style: normal;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
   .shelf-bay {
@@ -1192,6 +1333,15 @@ addReadingPath({
       grid-template-columns: 1fr;
       min-height: auto;
       transform: none;
+    }
+
+    .list-mode-header,
+    .library-list-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .library-list-item:nth-child(odd) {
+      border-right: 0;
     }
 
     .shelf-label {

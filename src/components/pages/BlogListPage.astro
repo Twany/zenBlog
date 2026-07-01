@@ -14,14 +14,62 @@ interface Props {
 }
 
 const { lang, posts } = Astro.props as Props;
-const categories = ['All', ...Array.from(new Set(posts.map((post) => post.data.category)))];
-const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? []))).sort();
+const categories = [
+  'All',
+  ...Array.from(new Set(posts.map((post) => post.data.category))),
+];
+const allTags = Array.from(
+  new Set(posts.flatMap((post) => post.data.tags ?? []))
+).sort();
+const tagCounts = posts.reduce((counts, post) => {
+  (post.data.tags ?? []).forEach((tag) => {
+    counts.set(tag, (counts.get(tag) ?? 0) + 1);
+  });
+  return counts;
+}, new Map<string, number>());
+const visibleTags = Array.from(tagCounts.entries())
+  .sort(
+    ([tagA, countA], [tagB, countB]) =>
+      countB - countA || tagA.localeCompare(tagB)
+  )
+  .slice(0, 10)
+  .map(([tag]) => tag);
+const hiddenTagCount = Math.max(0, allTags.length - visibleTags.length);
+const filterLabel = lang === 'en' ? 'Filter posts' : '筛选文章';
+const allPostsLabel = lang === 'en' ? 'All posts' : '全部文章';
 ---
+
 <div class="max-w-7xl mx-auto px-6">
   <div class="flex flex-col lg:flex-row gap-12">
-    <aside class="w-full lg:w-1/4 space-y-8">
+    <div class="lg:hidden">
+      <button
+        type="button"
+        class="min-h-12 w-full border-y border-slate-200 py-3 flex items-center justify-between gap-4 text-left"
+        aria-expanded="false"
+        data-filter-toggle
+      >
+        <span
+          class="font-sans text-xs font-semibold uppercase tracking-widest text-brand-dark"
+          >{filterLabel}</span
+        >
+        <span class="flex items-center gap-2 text-xs text-slate-500">
+          <span data-filter-summary>{allPostsLabel}</span>
+          <Icon name="chevron-down" size={16} />
+        </span>
+      </button>
+    </div>
+
+    <aside
+      class="hidden w-full lg:block lg:w-1/4 space-y-8"
+      data-filter-panel
+      data-filter-all-tags={allTags.join(',')}
+    >
       <div>
-        <h3 class="font-sans font-semibold text-sm uppercase tracking-widest mb-4 text-brand-dark">{uiLabels.common.search[lang]}</h3>
+        <h3
+          class="font-sans font-semibold text-sm uppercase tracking-widest mb-4 text-brand-dark"
+        >
+          {uiLabels.common.search[lang]}
+        </h3>
         <div class="relative">
           <input
             type="text"
@@ -30,48 +78,77 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
             class="w-full min-h-12 border border-gray-300 bg-transparent p-3 pl-10 rounded-none focus:border-brand-cyan outline-none transition-colors font-sans"
             data-filter-search
           />
-          <Icon name="search" class="absolute left-3 top-3.5 text-gray-400 w-5 h-5" size={20} />
+          <Icon
+            name="search"
+            class="absolute left-3 top-3.5 text-gray-400 w-5 h-5"
+            size={20}
+          />
         </div>
       </div>
 
       <div>
-        <h3 class="font-sans font-semibold text-sm uppercase tracking-widest mb-4 text-brand-dark">{uiLabels.common.categories[lang]}</h3>
+        <h3
+          class="font-sans font-semibold text-sm uppercase tracking-widest mb-4 text-brand-dark"
+        >
+          {uiLabels.common.categories[lang]}
+        </h3>
         <div class="flex flex-wrap lg:flex-col gap-2">
-          {categories.map((cat) => (
-            <button
-              type="button"
-              class={`min-h-11 text-left px-0 py-2 font-semibold uppercase text-sm tracking-wide transition-colors border-b ${
-                cat === 'All'
-                  ? 'border-brand-cyan text-brand-cyan'
-                  : 'border-slate-200 text-slate-600 hover:text-brand-dark'
-              }`}
-              data-filter-category={cat}
-            >
-              {cat === 'All' ? uiLabels.blog.all[lang] : cat}
-            </button>
-          ))}
+          {
+            categories.map((cat) => (
+              <button
+                type="button"
+                class={`min-h-11 text-left px-0 py-2 font-semibold uppercase text-sm tracking-wide transition-colors border-b ${
+                  cat === 'All'
+                    ? 'border-brand-cyan text-brand-cyan'
+                    : 'border-slate-200 text-slate-600 hover:text-brand-dark'
+                }`}
+                data-filter-category={cat}
+              >
+                {cat === 'All' ? uiLabels.blog.all[lang] : cat}
+              </button>
+            ))
+          }
         </div>
       </div>
 
       <div>
         <div class="flex items-center justify-between mb-4">
-          <h3 class="font-sans font-semibold text-sm uppercase tracking-widest text-brand-dark">{uiLabels.common.tags[lang]}</h3>
-          <button type="button" class="min-h-11 px-2 -mr-2 text-xs text-slate-500 hover:text-red-600 flex items-center gap-1" data-filter-clear>
+          <h3
+            class="font-sans font-semibold text-sm uppercase tracking-widest text-brand-dark"
+          >
+            {uiLabels.common.tags[lang]}
+          </h3>
+          <button
+            type="button"
+            class="min-h-11 px-2 -mr-2 text-xs text-slate-500 hover:text-red-600 flex items-center gap-1"
+            data-filter-clear
+          >
             <Icon name="x" size={12} />
             {uiLabels.blog.clearTag[lang]}
           </button>
         </div>
         <div class="flex flex-wrap gap-2">
-          {allTags.map((tag) => (
-            <button
-              type="button"
-              class="min-h-11 text-xs font-semibold uppercase tracking-wider px-0 py-2 border-b transition-colors text-slate-600 border-gray-300 hover:border-brand-cyan hover:text-brand-cyan bg-transparent"
-              data-filter-tag={tag}
-            >
-              {tag}
-            </button>
-          ))}
+          {
+            visibleTags.map((tag) => (
+              <button
+                type="button"
+                class="min-h-11 text-xs font-semibold uppercase tracking-wider px-0 py-2 border-b transition-colors text-slate-600 border-gray-300 hover:border-brand-cyan hover:text-brand-cyan bg-transparent"
+                data-filter-tag={tag}
+              >
+                {tag}
+              </button>
+            ))
+          }
         </div>
+        {
+          hiddenTagCount > 0 ? (
+            <p class="mt-4 text-xs text-slate-500">
+              {lang === 'en'
+                ? `Showing ${visibleTags.length} common tags. Search still covers all posts.`
+                : `显示 ${visibleTags.length} 个常用标签，搜索仍覆盖全部文章。`}
+            </p>
+          ) : null
+        }
       </div>
     </aside>
 
@@ -79,33 +156,42 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
       <SectionHeading title={uiLabels.common.viewArchive[lang]} as="h1" />
 
       <div class="flex flex-col" data-posts>
-        {posts.map((post) => (
-          <div
-            class="border-b border-gray-100 pb-8 mb-8 last:border-0 last:pb-0 last:mb-0"
-            data-post
-            data-category={post.data.category}
-            data-tags={(post.data.tags ?? []).join(',')}
-            data-title={post.data.title.toLowerCase()}
-            data-excerpt={post.data.description.toLowerCase()}
-          >
-            <PostCard
-              lang={lang}
-              href={getBlogPostUrl(lang, getSlugFromEntry(post))}
-              title={post.data.title}
-              excerpt={post.data.description}
-              category={post.data.category}
-              date={formatDate(post.data.pubDate, lang)}
-              readTime={post.data.readTime}
-              tags={post.data.tags ?? []}
-            />
-          </div>
-        ))}
+        {
+          posts.map((post) => (
+            <div
+              class="border-b border-gray-100 pb-8 mb-8 last:border-0 last:pb-0 last:mb-0"
+              data-post
+              data-category={post.data.category}
+              data-tags={(post.data.tags ?? []).join(',')}
+              data-title={post.data.title.toLowerCase()}
+              data-excerpt={post.data.description.toLowerCase()}
+            >
+              <PostCard
+                lang={lang}
+                href={getBlogPostUrl(lang, getSlugFromEntry(post))}
+                title={post.data.title}
+                excerpt={post.data.description}
+                category={post.data.category}
+                date={formatDate(post.data.pubDate, lang)}
+                readTime={post.data.readTime}
+                tags={post.data.tags ?? []}
+              />
+            </div>
+          ))
+        }
       </div>
 
-      <div class="py-20 text-center text-slate-500 font-serif italic text-lg bg-gray-50 flex flex-col items-center gap-4 hidden" data-empty>
+      <div
+        class="py-20 text-center text-slate-500 font-serif italic text-lg bg-gray-50 flex flex-col items-center gap-4 hidden"
+        data-empty
+      >
         <Icon name="tag" size={48} class="text-gray-200" />
         <p>{uiLabels.blog.noResults[lang]}</p>
-        <button type="button" class="min-h-11 px-4 text-brand-cyan text-sm font-bold uppercase underline" data-filter-reset>
+        <button
+          type="button"
+          class="min-h-11 px-4 text-brand-cyan text-sm font-bold uppercase underline"
+          data-filter-reset
+        >
           {uiLabels.blog.clearFilters[lang]}
         </button>
       </div>
@@ -115,16 +201,46 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
 
 <script is:inline>
   const searchInput = document.querySelector('[data-filter-search]');
-  const categoryButtons = Array.from(document.querySelectorAll('[data-filter-category]'));
+  const categoryButtons = Array.from(
+    document.querySelectorAll('[data-filter-category]')
+  );
   const tagButtons = Array.from(document.querySelectorAll('[data-filter-tag]'));
   const clearTagButton = document.querySelector('[data-filter-clear]');
   const resetButton = document.querySelector('[data-filter-reset]');
+  const filterToggle = document.querySelector('[data-filter-toggle]');
+  const filterPanel = document.querySelector('[data-filter-panel]');
+  const filterSummary = document.querySelector('[data-filter-summary]');
   const posts = Array.from(document.querySelectorAll('[data-post]'));
   const emptyState = document.querySelector('[data-empty]');
+  const knownCategories = categoryButtons.map(
+    (button) => button.dataset.filterCategory || ''
+  );
+  const knownTags = (filterPanel?.dataset.filterAllTags || '')
+    .split(',')
+    .filter(Boolean);
 
   let activeCategory = 'All';
   let activeTag = '';
   let query = '';
+
+  const getDisplayLabel = () => {
+    if (query) return query;
+    if (activeTag) return `#${activeTag}`;
+    if (activeCategory !== 'All') return activeCategory;
+    return document.documentElement.lang.startsWith('zh')
+      ? '全部文章'
+      : 'All posts';
+  };
+
+  const syncUrl = () => {
+    if (!window.history?.replaceState) return;
+    const params = new URLSearchParams();
+    if (activeCategory !== 'All') params.set('category', activeCategory);
+    if (activeTag) params.set('tag', activeTag);
+    if (query) params.set('q', query);
+    const nextUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}${window.location.hash}`;
+    window.history.replaceState(null, '', nextUrl);
+  };
 
   const setActiveCategory = (category) => {
     activeCategory = category;
@@ -143,6 +259,8 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
       const isActive = button.dataset.filterTag === tag;
       button.classList.toggle('text-brand-cyan', isActive);
       button.classList.toggle('border-brand-cyan', isActive);
+      button.classList.toggle('text-slate-600', !isActive);
+      button.classList.toggle('border-gray-300', !isActive);
     });
   };
 
@@ -154,9 +272,11 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
       const title = post.dataset.title || '';
       const excerpt = post.dataset.excerpt || '';
 
-      const matchesCategory = activeCategory === 'All' || category === activeCategory;
+      const matchesCategory =
+        activeCategory === 'All' || category === activeCategory;
       const matchesTag = !activeTag || tags.includes(activeTag);
-      const matchesSearch = !query || title.includes(query) || excerpt.includes(query);
+      const matchesSearch =
+        !query || title.includes(query) || excerpt.includes(query);
 
       const shouldShow = matchesCategory && matchesTag && matchesSearch;
       post.classList.toggle('hidden', !shouldShow);
@@ -166,6 +286,12 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
     if (emptyState) {
       emptyState.classList.toggle('hidden', visible > 0);
     }
+
+    if (filterSummary) {
+      filterSummary.textContent = getDisplayLabel();
+    }
+
+    syncUrl();
   };
 
   categoryButtons.forEach((button) => {
@@ -200,4 +326,23 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
     query = event.target.value.trim().toLowerCase();
     updatePosts();
   });
+
+  filterToggle?.addEventListener('click', () => {
+    const isOpen = filterToggle.getAttribute('aria-expanded') === 'true';
+    filterToggle.setAttribute('aria-expanded', String(!isOpen));
+    filterPanel?.classList.toggle('hidden', isOpen);
+  });
+
+  const initialParams = new URLSearchParams(window.location.search);
+  const initialCategory = initialParams.get('category') || 'All';
+  const initialTag = initialParams.get('tag') || '';
+  const initialQuery = initialParams.get('q') || '';
+
+  setActiveCategory(
+    knownCategories.includes(initialCategory) ? initialCategory : 'All'
+  );
+  setActiveTag(knownTags.includes(initialTag) ? initialTag : '');
+  query = initialQuery.trim().toLowerCase();
+  if (searchInput) searchInput.value = initialQuery;
+  updatePosts();
 </script>

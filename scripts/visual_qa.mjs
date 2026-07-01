@@ -1,6 +1,7 @@
 /* global console, document, getComputedStyle, window */
 import { chromium } from 'playwright-core';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { Buffer } from 'node:buffer';
+import { copyFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 
@@ -11,11 +12,22 @@ const args = new Map(
   })
 );
 
-const baseUrl = (args.get('base-url') ?? process.env.VISUAL_QA_BASE_URL ?? 'https://twany.me').replace(
-  /\/$/,
-  ''
+const baseUrl = (
+  args.get('base-url') ??
+  process.env.VISUAL_QA_BASE_URL ??
+  'https://twany.me'
+).replace(/\/$/, '');
+const outDir = path.resolve(
+  args.get('out-dir') ?? process.env.VISUAL_QA_OUT_DIR ?? 'visual-qa'
 );
-const outDir = path.resolve(args.get('out-dir') ?? process.env.VISUAL_QA_OUT_DIR ?? 'visual-qa');
+const baselineDir = path.resolve(
+  args.get('baseline-dir') ??
+    process.env.VISUAL_QA_BASELINE_DIR ??
+    'visual-qa-baseline'
+);
+const updateBaseline = args.has('update-baseline');
+const failOnDiff = args.has('fail-on-diff');
+const useBaseline = updateBaseline || failOnDiff || args.has('baseline-dir');
 const chromePath =
   args.get('chrome-path') ??
   process.env.CHROME_PATH ??
@@ -25,6 +37,7 @@ const pages = [
   ['home', '/'],
   ['article', '/blog/codex-blog-publishing-system/'],
   ['blog', '/blog/'],
+  ['notes', '/notes/'],
   ['library', '/library/'],
   ['contact', '/contact/'],
 ];
@@ -35,6 +48,9 @@ const viewports = [
 ];
 
 await mkdir(outDir, { recursive: true });
+if (useBaseline) {
+  await mkdir(baselineDir, { recursive: true });
+}
 
 const browser = await chromium.launch({
   executablePath: chromePath,
@@ -61,8 +77,34 @@ for (const [viewportName, viewport] of viewports) {
       timeout: 45_000,
     });
 
-    const screenshotPath = path.join(outDir, `${viewportName}-${pageName}.png`);
+    const screenshotName = `${viewportName}-${pageName}.png`;
+    const screenshotPath = path.join(outDir, screenshotName);
     await page.screenshot({ path: screenshotPath, fullPage: false });
+
+    let baselineStatus = 'not-checked';
+    let baselinePath = null;
+
+    if (useBaseline) {
+      baselinePath = path.join(baselineDir, screenshotName);
+
+      if (updateBaseline) {
+        await copyFile(screenshotPath, baselinePath);
+        baselineStatus = 'updated';
+      } else {
+        try {
+          const [currentScreenshot, baselineScreenshot] = await Promise.all([
+            readFile(screenshotPath),
+            readFile(baselinePath),
+          ]);
+          baselineStatus =
+            Buffer.compare(currentScreenshot, baselineScreenshot) === 0
+              ? 'matched'
+              : 'changed';
+        } catch {
+          baselineStatus = 'missing';
+        }
+      }
+    }
 
     const metrics = await page.evaluate(() => {
       const header = document.querySelector('header');
@@ -73,10 +115,15 @@ for (const [viewportName, viewport] of viewports) {
         title: document.title,
         innerWidth: window.innerWidth,
         scrollWidth: document.documentElement.scrollWidth,
-        hasHorizontalOverflow: document.documentElement.scrollWidth > window.innerWidth + 1,
-        headerHeight: header ? Math.round(header.getBoundingClientRect().height) : null,
+        hasHorizontalOverflow:
+          document.documentElement.scrollWidth > window.innerWidth + 1,
+        headerHeight: header
+          ? Math.round(header.getBoundingClientRect().height)
+          : null,
         firstHeading: heading ? heading.textContent.trim().slice(0, 120) : null,
-        tocVisible: tocButton ? getComputedStyle(tocButton).display !== 'none' : false,
+        tocVisible: tocButton
+          ? getComputedStyle(tocButton).display !== 'none'
+          : false,
       };
     });
 
@@ -87,6 +134,8 @@ for (const [viewportName, viewport] of viewports) {
       status: response?.status() ?? null,
       errors,
       screenshotPath,
+      baselinePath,
+      baselineStatus,
       ...metrics,
     });
 
@@ -107,17 +156,21 @@ const failures = results.filter(
     result.status < 200 ||
     result.status >= 300 ||
     result.errors.length > 0 ||
-    result.hasHorizontalOverflow
+    result.hasHorizontalOverflow ||
+    (failOnDiff && ['changed', 'missing'].includes(result.baselineStatus))
 );
 
 for (const result of results) {
   const status = failures.includes(result) ? 'FAIL' : 'OK';
   console.log(
-    `${status} ${result.viewport}/${result.page} ${result.status} overflow=${result.hasHorizontalOverflow} errors=${result.errors.length}`
+    `${status} ${result.viewport}/${result.page} ${result.status} overflow=${result.hasHorizontalOverflow} errors=${result.errors.length} baseline=${result.baselineStatus}`
   );
 }
 
 console.log(`Report: ${reportPath}`);
+if (useBaseline) {
+  console.log(`Baseline: ${baselineDir}`);
+}
 
 if (failures.length > 0) {
   process.exitCode = 1;
