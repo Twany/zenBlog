@@ -70,15 +70,15 @@ const allPostsLabel = lang === 'en' ? 'All posts' : '全部文章';
         <h3 class="font-sans font-semibold text-sm mb-4 text-brand-dark">
           {uiLabels.common.categories[lang]}
         </h3>
-        <div class="flex flex-wrap lg:flex-col gap-2">
+        <div class="flex flex-wrap gap-2">
           {
             categories.map((cat) => (
               <button
                 type="button"
-                class={`min-h-11 text-left px-0 py-2 font-medium text-sm transition-colors border-b ${
+                class={`min-h-10 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
                   cat === 'All'
                     ? 'border-brand-cyan text-brand-cyan'
-                    : 'border-slate-200 text-slate-600 hover:text-brand-dark'
+                    : 'border-slate-200 text-slate-600 hover:border-brand-cyan hover:text-brand-cyan'
                 }`}
                 data-filter-category={cat}
               >
@@ -187,6 +187,8 @@ const allPostsLabel = lang === 'en' ? 'All posts' : '全部文章';
       button.classList.toggle('text-brand-cyan', isActive);
       button.classList.toggle('border-slate-200', !isActive);
       button.classList.toggle('text-slate-600', !isActive);
+      button.classList.toggle('hover:border-brand-cyan', !isActive);
+      button.classList.toggle('hover:text-brand-cyan', !isActive);
     });
   };
 
