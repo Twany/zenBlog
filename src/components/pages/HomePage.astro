@@ -8,6 +8,7 @@ import { experiments } from '../../data/experiments';
 import { formatDate } from '../../utils/date';
 import {
   getBlogIndexUrl,
+  getBlogPostImageUrl,
   getBlogPostUrl,
   getSlugFromEntry,
 } from '../../utils/blog';
@@ -83,6 +84,7 @@ const stats = [
   { value: featuredExperiments.length, label: copy.builds },
   { value: notes.length, label: copy.notes },
 ];
+const heroSlug = heroPost ? getSlugFromEntry(heroPost) : '';
 ---
 
 <div class="animate-fade-in">
@@ -141,9 +143,18 @@ const stats = [
           {
             heroPost ? (
               <a
-                href={getBlogPostUrl(lang, getSlugFromEntry(heroPost))}
+                href={getBlogPostUrl(lang, heroSlug)}
                 class="group mt-8 block border-t border-slate-200 pt-5"
               >
+                <div class="mb-5 aspect-[1200/630] overflow-hidden border border-slate-200 bg-slate-50">
+                  <img
+                    src={getBlogPostImageUrl(lang, heroSlug)}
+                    alt={heroPost.data.title}
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.015]"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </div>
                 <span class="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-cyan">
                   {formatDate(heroPost.data.pubDate, lang)}
                 </span>
@@ -161,7 +172,7 @@ const stats = [
             {
               heroPost ? (
                 <a
-                  href={getBlogPostUrl(lang, getSlugFromEntry(heroPost))}
+                  href={getBlogPostUrl(lang, heroSlug)}
                   class="inline-flex min-h-11 items-center gap-2 border border-slate-200 px-3 text-xs font-semibold uppercase tracking-widest text-slate-600 transition-colors hover:border-brand-cyan hover:text-brand-cyan"
                 >
                   {copy.readNewest}
@@ -196,19 +207,26 @@ const stats = [
             </a>
           </div>
           <div class="grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2">
-            {latestPosts.map((post, index) => (
-              <PostCard
-                lang={lang}
-                href={getBlogPostUrl(lang, getSlugFromEntry(post))}
-                title={post.data.title}
-                excerpt={post.data.description}
-                category={post.data.category}
-                date={formatDate(post.data.pubDate, lang)}
-                readTime={post.data.readTime}
-                tags={post.data.tags ?? []}
-                featured={index === 0}
-              />
-            ))}
+            {latestPosts.map((post, index) =>
+              (() => {
+                const slug = getSlugFromEntry(post);
+                return (
+                  <PostCard
+                    lang={lang}
+                    href={getBlogPostUrl(lang, slug)}
+                    title={post.data.title}
+                    excerpt={post.data.description}
+                    category={post.data.category}
+                    date={formatDate(post.data.pubDate, lang)}
+                    readTime={post.data.readTime}
+                    tags={post.data.tags ?? []}
+                    image={getBlogPostImageUrl(lang, slug)}
+                    imageAlt={post.data.title}
+                    featured={index === 0}
+                  />
+                );
+              })()
+            )}
           </div>
         </div>
       </section>

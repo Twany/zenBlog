@@ -1,7 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogPostPage from '../../components/pages/BlogPostPage.astro';
-import { getBlogPosts, getSlugFromEntry } from '../../utils/blog';
+import {
+  getBlogPostImageUrl,
+  getBlogPosts,
+  getSlugFromEntry,
+} from '../../utils/blog';
 import { SITE } from '../../data/site';
 
 export async function getStaticPaths() {
@@ -22,7 +26,7 @@ const slug = getSlugFromEntry(entry);
   description={entry.data.description}
   type="article"
   lang="en"
-  image={`/og/en/${slug}.png`}
+  image={getBlogPostImageUrl('en', slug)}
   imageAlt={entry.data.title}
   article={{
     publishedTime: entry.data.pubDate.toISOString(),

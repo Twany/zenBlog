@@ -14,7 +14,8 @@ export const getSlugFromEntry = (entry: BlogEntry) => {
 
 export const shouldShowDrafts = () => import.meta.env.DEV;
 
-export const isVisibleBlogPost = (entry: BlogEntry) => !entry.data.draft || shouldShowDrafts();
+export const isVisibleBlogPost = (entry: BlogEntry) =>
+  !entry.data.draft || shouldShowDrafts();
 
 export const getBlogPosts = async (locale: Locale) => {
   const entries = await getCollection('blog');
@@ -36,3 +37,6 @@ export const getBlogPostUrl = (locale: Locale, slug: string) => {
   }
   return `/${locale}/blog/${slug}/`;
 };
+
+export const getBlogPostImageUrl = (locale: Locale, slug: string) =>
+  `/og/${locale}/${slug}.png`;

@@ -11,6 +11,9 @@ interface Props {
   date: string;
   readTime?: string;
   tags?: string[];
+  image?: string;
+  imageAlt?: string;
+  imageLayout?: 'stacked' | 'media';
   featured?: boolean;
 }
 
@@ -23,53 +26,95 @@ const {
   date,
   readTime,
   tags = [],
+  image,
+  imageAlt,
+  imageLayout = 'stacked',
   featured = false,
 } = Astro.props as Props;
+const isMediaLayout = imageLayout === 'media';
 ---
+
 <article class="flex flex-col group h-full border-t border-slate-200 pt-5">
-  <a href={href} class="flex flex-col gap-3">
-    <div class="flex flex-wrap items-center gap-2 text-xs font-semibold tracking-widest uppercase leading-none">
-      {category ? (
-        <>
-          <span class="text-brand-cyan">{category}</span>
-          <span class="text-gray-300">/</span>
-        </>
-      ) : null}
-      <span class="text-slate-600">{date}</span>
-        {readTime ? (
-          <>
-            <span class="text-gray-300">•</span>
-            <span class="text-slate-500">
-              {readTime} {uiLabels.common.readSuffix[lang]}
-            </span>
-          </>
-        ) : null}
-    </div>
+  <a
+    href={href}
+    class={`gap-4 ${
+      isMediaLayout
+        ? 'flex flex-col md:grid md:grid-cols-[minmax(180px,0.42fr)_1fr] md:items-start md:gap-6'
+        : 'flex flex-col'
+    }`}
+  >
+    {
+      image ? (
+        <div
+          class={`overflow-hidden border border-slate-200 bg-slate-50 ${
+            isMediaLayout ? 'aspect-[1200/630]' : 'mb-2 aspect-[1200/630]'
+          }`}
+        >
+          <img
+            src={image}
+            alt={imageAlt ?? title}
+            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.015]"
+            loading={featured ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        </div>
+      ) : null
+    }
 
-    <h3
-      class={`font-serif font-normal text-brand-dark group-hover:text-brand-cyan transition-colors leading-tight block ${
-        featured ? 'text-3xl lg:text-4xl mt-2' : 'text-xl lg:text-2xl'
-      }`}
-    >
-      {title}
-    </h3>
-
-    {tags.length ? (
-      <div class="flex flex-wrap gap-2">
-        {tags.map((tag) => (
-          <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-            {tag}
-          </span>
-        ))}
+    <div class="flex flex-col gap-3">
+      <div
+        class="flex flex-wrap items-center gap-2 text-xs font-semibold tracking-widest uppercase leading-none"
+      >
+        {
+          category ? (
+            <>
+              <span class="text-brand-cyan">{category}</span>
+              <span class="text-gray-300">/</span>
+            </>
+          ) : null
+        }
+        <span class="text-slate-600">{date}</span>
+        {
+          readTime ? (
+            <>
+              <span class="text-gray-300">•</span>
+              <span class="text-slate-500">
+                {readTime} {uiLabels.common.readSuffix[lang]}
+              </span>
+            </>
+          ) : null
+        }
       </div>
-    ) : null}
 
-    <p
-      class={`text-gray-600 font-sans leading-relaxed ${
-        featured ? 'text-lg lg:text-xl line-clamp-4' : 'text-sm lg:text-base line-clamp-3'
-      }`}
-    >
-      {excerpt}
-    </p>
+      <h3
+        class={`font-serif font-normal text-brand-dark group-hover:text-brand-cyan transition-colors leading-tight block ${
+          featured ? 'text-3xl lg:text-4xl mt-2' : 'text-xl lg:text-2xl'
+        }`}
+      >
+        {title}
+      </h3>
+
+      {
+        tags.length ? (
+          <div class="flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                {tag}
+              </span>
+            ))}
+          </div>
+        ) : null
+      }
+
+      <p
+        class={`text-gray-600 font-sans leading-relaxed ${
+          featured
+            ? 'text-lg lg:text-xl line-clamp-4'
+            : 'text-sm lg:text-base line-clamp-3'
+        }`}
+      >
+        {excerpt}
+      </p>
+    </div>
   </a>
 </article>

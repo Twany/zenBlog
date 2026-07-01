@@ -4,7 +4,11 @@ import PostCard from '../PostCard.astro';
 import Icon from '../Icon.astro';
 import { uiLabels } from '../../data/uiLabels';
 import { formatDate } from '../../utils/date';
-import { getBlogPostUrl, getSlugFromEntry } from '../../utils/blog';
+import {
+  getBlogPostImageUrl,
+  getBlogPostUrl,
+  getSlugFromEntry,
+} from '../../utils/blog';
 import type { BlogEntry } from '../../utils/blog';
 import type { Locale } from '../../utils/i18n';
 
@@ -157,27 +161,33 @@ const allPostsLabel = lang === 'en' ? 'All posts' : '全部文章';
 
       <div class="flex flex-col" data-posts>
         {
-          posts.map((post) => (
-            <div
-              class="border-b border-gray-100 pb-8 mb-8 last:border-0 last:pb-0 last:mb-0"
-              data-post
-              data-category={post.data.category}
-              data-tags={(post.data.tags ?? []).join(',')}
-              data-title={post.data.title.toLowerCase()}
-              data-excerpt={post.data.description.toLowerCase()}
-            >
-              <PostCard
-                lang={lang}
-                href={getBlogPostUrl(lang, getSlugFromEntry(post))}
-                title={post.data.title}
-                excerpt={post.data.description}
-                category={post.data.category}
-                date={formatDate(post.data.pubDate, lang)}
-                readTime={post.data.readTime}
-                tags={post.data.tags ?? []}
-              />
-            </div>
-          ))
+          posts.map((post) => {
+            const slug = getSlugFromEntry(post);
+            return (
+              <div
+                class="border-b border-gray-100 pb-8 mb-8 last:border-0 last:pb-0 last:mb-0"
+                data-post
+                data-category={post.data.category}
+                data-tags={(post.data.tags ?? []).join(',')}
+                data-title={post.data.title.toLowerCase()}
+                data-excerpt={post.data.description.toLowerCase()}
+              >
+                <PostCard
+                  lang={lang}
+                  href={getBlogPostUrl(lang, slug)}
+                  title={post.data.title}
+                  excerpt={post.data.description}
+                  category={post.data.category}
+                  date={formatDate(post.data.pubDate, lang)}
+                  readTime={post.data.readTime}
+                  tags={post.data.tags ?? []}
+                  image={getBlogPostImageUrl(lang, slug)}
+                  imageAlt={post.data.title}
+                  imageLayout="media"
+                />
+              </div>
+            );
+          })
         }
       </div>
 
