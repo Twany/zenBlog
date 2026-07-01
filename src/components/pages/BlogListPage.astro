@@ -5,7 +5,7 @@ import Icon from '../Icon.astro';
 import { uiLabels } from '../../data/uiLabels';
 import { formatDate } from '../../utils/date';
 import {
-  getBlogPostImageUrl,
+  getBlogPostFeatureImageUrl,
   getBlogPostUrl,
   getSlugFromEntry,
 } from '../../utils/blog';
@@ -112,7 +112,7 @@ const allPostsLabel = lang === 'en' ? 'All posts' : '全部文章';
                   title={post.data.title}
                   excerpt={post.data.description}
                   date={formatDate(post.data.pubDate, lang)}
-                  image={getBlogPostImageUrl(lang, slug)}
+                  image={getBlogPostFeatureImageUrl(slug)}
                   imageAlt={post.data.title}
                   imageLayout="media"
                   showCategory={false}

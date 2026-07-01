@@ -1,0 +1,87 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1200 630"
+  role="img"
+  aria-labelledby="title desc"
+>
+  <title id="title">Abstract startup journey illustration</title>
+  <desc id="desc">
+    A simple creative canvas growing into a polished product system.
+  </desc>
+  <rect width="1200" height="630" fill="#ffffff" />
+  <path
+    d="M164 456c86-139 185-211 296-214 126-3 192 86 315 60 91-19 169-84 273-196"
+    fill="none"
+    stroke="#2563eb"
+    stroke-width="5"
+    stroke-linecap="round"
+  />
+  <g transform="translate(144 242)">
+    <rect width="160" height="196" rx="18" fill="#fff" stroke="#dbe3ef" />
+    <rect x="28" y="30" width="104" height="78" rx="10" fill="#f1f5f9" />
+    <circle cx="56" cy="58" r="14" fill="#14b8a6" opacity=".76" />
+    <path
+      d="M40 102 72 78l24 18 18-12 18 18"
+      fill="none"
+      stroke="#2563eb"
+      stroke-width="4"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <rect x="28" y="132" width="96" height="8" rx="4" fill="#cbd5e1" />
+    <rect x="28" y="154" width="64" height="8" rx="4" fill="#cbd5e1" />
+  </g>
+  <g transform="translate(482 162)">
+    <rect width="236" height="268" rx="24" fill="#f8fafc" stroke="#dbe3ef" />
+    <rect
+      x="34"
+      y="38"
+      width="76"
+      height="76"
+      rx="16"
+      fill="#2563eb"
+      opacity=".1"
+    />
+    <rect
+      x="126"
+      y="38"
+      width="76"
+      height="76"
+      rx="16"
+      fill="#14b8a6"
+      opacity=".13"
+    />
+    <rect
+      x="34"
+      y="132"
+      width="168"
+      height="22"
+      rx="11"
+      fill="#fff"
+      stroke="#dbe3ef"
+    />
+    <rect x="34" y="176" width="112" height="12" rx="6" fill="#cbd5e1" />
+    <rect x="34" y="204" width="150" height="12" rx="6" fill="#cbd5e1" />
+  </g>
+  <g transform="translate(850 110)">
+    <rect width="214" height="318" rx="28" fill="#fff" stroke="#dbe3ef" />
+    <path
+      d="M54 190c22-58 48-94 78-108 24-11 43-9 58-2"
+      fill="none"
+      stroke="#2563eb"
+      stroke-width="5"
+      stroke-linecap="round"
+    />
+    <circle cx="62" cy="198" r="18" fill="#2563eb" opacity=".14" />
+    <circle cx="134" cy="84" r="18" fill="#14b8a6" opacity=".18" />
+    <circle cx="188" cy="86" r="10" fill="#2563eb" opacity=".2" />
+    <rect x="42" y="236" width="130" height="10" rx="5" fill="#cbd5e1" />
+    <rect x="42" y="264" width="92" height="10" rx="5" fill="#cbd5e1" />
+  </g>
+  <g fill="#0f172a" opacity=".12">
+    <circle cx="392" cy="190" r="6" />
+    <circle cx="772" cy="242" r="7" />
+    <circle cx="744" cy="430" r="5" />
+    <circle cx="1042" cy="484" r="8" />
+  </g>
+</svg>

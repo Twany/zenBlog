@@ -40,3 +40,6 @@ export const getBlogPostUrl = (locale: Locale, slug: string) => {
 
 export const getBlogPostImageUrl = (locale: Locale, slug: string) =>
   `/og/${locale}/${slug}.png`;
+
+export const getBlogPostFeatureImageUrl = (slug: string) =>
+  `/images/posts/${slug}.svg`;

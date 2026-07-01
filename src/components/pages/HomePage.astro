@@ -5,7 +5,7 @@ import { uiLabels } from '../../data/uiLabels';
 import { formatDate } from '../../utils/date';
 import {
   getBlogIndexUrl,
-  getBlogPostImageUrl,
+  getBlogPostFeatureImageUrl,
   getBlogPostUrl,
   getSlugFromEntry,
 } from '../../utils/blog';
@@ -83,7 +83,7 @@ const copy =
               <a href={getBlogPostUrl(lang, heroSlug)} class="group mt-7 block">
                 <div class="mb-5 aspect-[1200/630] overflow-hidden border border-slate-200 bg-slate-50">
                   <img
-                    src={getBlogPostImageUrl(lang, heroSlug)}
+                    src={getBlogPostFeatureImageUrl(heroSlug)}
                     alt={heroPost.data.title}
                     class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.015]"
                     loading="eager"
@@ -148,7 +148,7 @@ const copy =
                   title={post.data.title}
                   excerpt={post.data.description}
                   date={formatDate(post.data.pubDate, lang)}
-                  image={getBlogPostImageUrl(lang, slug)}
+                  image={getBlogPostFeatureImageUrl(slug)}
                   imageAlt={post.data.title}
                   showCategory={false}
                   showReadTime={false}
