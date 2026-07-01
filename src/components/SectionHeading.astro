@@ -2,12 +2,14 @@
 interface Props {
   title: string;
   class?: string;
+  as?: 'h1' | 'h2' | 'h3';
 }
 
-const { title, class: className = '' } = Astro.props as Props;
+const { title, class: className = '', as = 'h2' } = Astro.props as Props;
+const Tag = as;
 ---
 <div class={`mb-10 ${className}`}>
-  <h2 class="font-serif text-4xl lg:text-5xl text-gray-400 font-light border-b border-gray-200 pb-4 inline-block w-full">
+  <Tag class="font-serif text-4xl lg:text-5xl text-brand-dark font-normal border-b border-gray-200 pb-4 inline-block w-full text-balance">
     {title}
-  </h2>
+  </Tag>
 </div>

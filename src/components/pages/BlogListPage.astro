@@ -21,12 +21,13 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
   <div class="flex flex-col lg:flex-row gap-12">
     <aside class="w-full lg:w-1/4 space-y-8">
       <div>
-        <h3 class="font-display font-bold text-lg uppercase mb-4 text-brand-dark">{uiLabels.common.search[lang]}</h3>
+        <h3 class="font-sans font-semibold text-sm uppercase tracking-widest mb-4 text-brand-dark">{uiLabels.common.search[lang]}</h3>
         <div class="relative">
           <input
             type="text"
-            placeholder="..."
-            class="w-full border-2 border-gray-200 p-3 pl-10 rounded-none focus:border-brand-cyan outline-none transition-colors font-sans"
+            placeholder={lang === 'en' ? 'Search posts' : '搜索文章'}
+            aria-label={uiLabels.common.search[lang]}
+            class="w-full min-h-12 border border-gray-300 bg-transparent p-3 pl-10 rounded-none focus:border-brand-cyan outline-none transition-colors font-sans"
             data-filter-search
           />
           <Icon name="search" class="absolute left-3 top-3.5 text-gray-400 w-5 h-5" size={20} />
@@ -34,15 +35,15 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
       </div>
 
       <div>
-        <h3 class="font-display font-bold text-lg uppercase mb-4 text-brand-dark">{uiLabels.common.categories[lang]}</h3>
+        <h3 class="font-sans font-semibold text-sm uppercase tracking-widest mb-4 text-brand-dark">{uiLabels.common.categories[lang]}</h3>
         <div class="flex flex-wrap lg:flex-col gap-2">
           {categories.map((cat) => (
             <button
               type="button"
-              class={`text-left px-4 py-2 font-bold uppercase text-sm tracking-wide transition-all ${
+              class={`min-h-11 text-left px-0 py-2 font-semibold uppercase text-sm tracking-wide transition-colors border-b ${
                 cat === 'All'
-                  ? 'bg-brand-cyan text-white shadow-md transform translate-x-1'
-                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  ? 'border-brand-cyan text-brand-cyan'
+                  : 'border-slate-200 text-slate-600 hover:text-brand-dark'
               }`}
               data-filter-category={cat}
             >
@@ -54,8 +55,8 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
 
       <div>
         <div class="flex items-center justify-between mb-4">
-          <h3 class="font-display font-bold text-lg uppercase text-brand-dark">{uiLabels.common.tags[lang]}</h3>
-          <button type="button" class="text-xs text-gray-400 hover:text-red-500 flex items-center gap-1" data-filter-clear>
+          <h3 class="font-sans font-semibold text-sm uppercase tracking-widest text-brand-dark">{uiLabels.common.tags[lang]}</h3>
+          <button type="button" class="min-h-11 px-2 -mr-2 text-xs text-slate-500 hover:text-red-600 flex items-center gap-1" data-filter-clear>
             <Icon name="x" size={12} />
             {uiLabels.blog.clearTag[lang]}
           </button>
@@ -64,7 +65,7 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
           {allTags.map((tag) => (
             <button
               type="button"
-              class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full border transition-all text-gray-400 border-gray-200 hover:border-brand-cyan hover:text-brand-cyan bg-white"
+              class="min-h-11 text-xs font-semibold uppercase tracking-wider px-0 py-2 border-b transition-colors text-slate-600 border-gray-300 hover:border-brand-cyan hover:text-brand-cyan bg-transparent"
               data-filter-tag={tag}
             >
               {tag}
@@ -75,7 +76,7 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
     </aside>
 
     <div class="w-full lg:w-3/4">
-      <SectionHeading title={uiLabels.common.viewArchive[lang]} />
+      <SectionHeading title={uiLabels.common.viewArchive[lang]} as="h1" />
 
       <div class="flex flex-col" data-posts>
         {posts.map((post) => (
@@ -101,10 +102,10 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
         ))}
       </div>
 
-      <div class="py-20 text-center text-gray-400 font-serif italic text-lg bg-gray-50 flex flex-col items-center gap-4 hidden" data-empty>
+      <div class="py-20 text-center text-slate-500 font-serif italic text-lg bg-gray-50 flex flex-col items-center gap-4 hidden" data-empty>
         <Icon name="tag" size={48} class="text-gray-200" />
         <p>{uiLabels.blog.noResults[lang]}</p>
-        <button type="button" class="text-brand-cyan text-sm font-bold uppercase underline" data-filter-reset>
+        <button type="button" class="min-h-11 px-4 text-brand-cyan text-sm font-bold uppercase underline" data-filter-reset>
           {uiLabels.blog.clearFilters[lang]}
         </button>
       </div>
@@ -129,12 +130,10 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
     activeCategory = category;
     categoryButtons.forEach((button) => {
       const isActive = button.dataset.filterCategory === category;
-      button.classList.toggle('bg-brand-cyan', isActive);
-      button.classList.toggle('text-white', isActive);
-      button.classList.toggle('shadow-md', isActive);
-      button.classList.toggle('translate-x-1', isActive);
-      button.classList.toggle('bg-gray-100', !isActive);
-      button.classList.toggle('text-gray-500', !isActive);
+      button.classList.toggle('border-brand-cyan', isActive);
+      button.classList.toggle('text-brand-cyan', isActive);
+      button.classList.toggle('border-slate-200', !isActive);
+      button.classList.toggle('text-slate-600', !isActive);
     });
   };
 
@@ -142,9 +141,8 @@ const allTags = Array.from(new Set(posts.flatMap((post) => post.data.tags ?? [])
     activeTag = tag;
     tagButtons.forEach((button) => {
       const isActive = button.dataset.filterTag === tag;
-      button.classList.toggle('bg-brand-dark', isActive);
-      button.classList.toggle('text-white', isActive);
-      button.classList.toggle('border-brand-dark', isActive);
+      button.classList.toggle('text-brand-cyan', isActive);
+      button.classList.toggle('border-brand-cyan', isActive);
     });
   };
 

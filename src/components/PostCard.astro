@@ -26,20 +26,20 @@ const {
   featured = false,
 } = Astro.props as Props;
 ---
-<article class="flex flex-col group h-full">
+<article class="flex flex-col group h-full border-t border-slate-200 pt-5">
   <a href={href} class="flex flex-col gap-3">
-    <div class="flex flex-wrap items-center gap-2 text-xs font-bold tracking-widest uppercase leading-none">
+    <div class="flex flex-wrap items-center gap-2 text-xs font-semibold tracking-widest uppercase leading-none">
       {category ? (
         <>
           <span class="text-brand-cyan">{category}</span>
           <span class="text-gray-300">/</span>
         </>
       ) : null}
-      <span class="text-gray-500">{date}</span>
+      <span class="text-slate-600">{date}</span>
         {readTime ? (
           <>
             <span class="text-gray-300">•</span>
-            <span class="text-gray-400">
+            <span class="text-slate-500">
               {readTime} {uiLabels.common.readSuffix[lang]}
             </span>
           </>
@@ -47,7 +47,7 @@ const {
     </div>
 
     <h3
-      class={`font-sans font-bold text-brand-dark group-hover:text-brand-cyan transition-colors leading-tight block ${
+      class={`font-serif font-normal text-brand-dark group-hover:text-brand-cyan transition-colors leading-tight block ${
         featured ? 'text-3xl lg:text-4xl mt-2' : 'text-xl lg:text-2xl'
       }`}
     >
@@ -57,7 +57,7 @@ const {
     {tags.length ? (
       <div class="flex flex-wrap gap-2">
         {tags.map((tag) => (
-          <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400 bg-gray-50 border border-gray-100 px-2 py-0.5 rounded-sm group-hover:border-gray-200 transition-colors">
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
             {tag}
           </span>
         ))}
@@ -65,7 +65,7 @@ const {
     ) : null}
 
     <p
-      class={`text-gray-600 font-serif leading-relaxed ${
+      class={`text-gray-600 font-sans leading-relaxed ${
         featured ? 'text-lg lg:text-xl line-clamp-4' : 'text-sm lg:text-base line-clamp-3'
       }`}
     >

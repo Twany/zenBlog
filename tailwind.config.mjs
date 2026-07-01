@@ -1,5 +1,4 @@
 import typography from '@tailwindcss/typography';
-import lineClamp from '@tailwindcss/line-clamp';
 
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,ts,tsx}'],
@@ -8,7 +7,7 @@ export default {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
         serif: ['Merriweather', 'serif'],
-        display: ['Oswald', 'sans-serif'],
+        display: ['Inter', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       colors: {
@@ -32,14 +31,14 @@ export default {
           css: {
             color: theme('colors.gray.700'),
             p: {
-              fontSize: '1rem',
-              lineHeight: '1.75',
-              marginTop: '1em',
-              marginBottom: '1em',
+              fontSize: '1.0625rem',
+              lineHeight: '1.85',
+              marginTop: '1.05em',
+              marginBottom: '1.05em',
             },
             li: {
-              fontSize: '1rem',
-              lineHeight: '1.75',
+              fontSize: '1.0625rem',
+              lineHeight: '1.8',
             },
             a: {
               color: theme('colors.brand.cyan'),
@@ -52,8 +51,8 @@ export default {
             },
             'h1, h2, h3, h4': {
               color: theme('colors.brand.dark'),
-              fontFamily: theme('fontFamily.display').join(', '),
-              fontWeight: '700',
+              fontFamily: theme('fontFamily.serif').join(', '),
+              fontWeight: '400',
             },
             h1: {
               fontSize: '2rem',
@@ -80,14 +79,16 @@ export default {
               marginBottom: '0.5rem',
             },
             blockquote: {
-              fontSize: '1rem',
-              lineHeight: '1.7',
+              fontSize: '1.0625rem',
+              lineHeight: '1.8',
+              fontStyle: 'normal',
+              borderLeftColor: theme('colors.brand.cyan'),
             },
             code: {
-              color: theme('colors.pink.600'),
-              backgroundColor: theme('colors.gray.100'),
+              color: theme('colors.brand.dark'),
+              backgroundColor: theme('colors.slate.100'),
               padding: '2px 4px',
-              borderRadius: '4px',
+              borderRadius: '2px',
               fontWeight: '600',
             },
             'code::before': { content: '""' },
@@ -95,12 +96,12 @@ export default {
             pre: {
               backgroundColor: theme('colors.brand.slate'),
               color: theme('colors.gray.100'),
-              borderRadius: '8px',
+              borderRadius: '2px',
             },
           },
         },
       }),
     },
   },
-  plugins: [typography, lineClamp],
+  plugins: [typography],
 };
