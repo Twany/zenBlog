@@ -177,13 +177,14 @@ const allPostsLabel = lang === 'en' ? 'All posts' : '全部文章';
                   href={getBlogPostUrl(lang, slug)}
                   title={post.data.title}
                   excerpt={post.data.description}
-                  category={post.data.category}
                   date={formatDate(post.data.pubDate, lang)}
-                  readTime={post.data.readTime}
-                  tags={post.data.tags ?? []}
                   image={getBlogPostImageUrl(lang, slug)}
                   imageAlt={post.data.title}
                   imageLayout="media"
+                  showCategory={false}
+                  showReadTime={false}
+                  showTags={false}
+                  showExcerpt={false}
                 />
               </div>
             );

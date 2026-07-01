@@ -14,6 +14,10 @@ interface Props {
   image?: string;
   imageAlt?: string;
   imageLayout?: 'stacked' | 'media';
+  showCategory?: boolean;
+  showReadTime?: boolean;
+  showTags?: boolean;
+  showExcerpt?: boolean;
   featured?: boolean;
 }
 
@@ -29,6 +33,10 @@ const {
   image,
   imageAlt,
   imageLayout = 'stacked',
+  showCategory = true,
+  showReadTime = true,
+  showTags = true,
+  showExcerpt = true,
   featured = false,
 } = Astro.props as Props;
 const isMediaLayout = imageLayout === 'media';
@@ -66,7 +74,7 @@ const isMediaLayout = imageLayout === 'media';
         class="flex flex-wrap items-center gap-2 text-xs font-semibold tracking-widest uppercase leading-none"
       >
         {
-          category ? (
+          showCategory && category ? (
             <>
               <span class="text-brand-cyan">{category}</span>
               <span class="text-gray-300">/</span>
@@ -75,7 +83,7 @@ const isMediaLayout = imageLayout === 'media';
         }
         <span class="text-slate-600">{date}</span>
         {
-          readTime ? (
+          showReadTime && readTime ? (
             <>
               <span class="text-gray-300">•</span>
               <span class="text-slate-500">
@@ -95,7 +103,7 @@ const isMediaLayout = imageLayout === 'media';
       </h3>
 
       {
-        tags.length ? (
+        showTags && tags.length ? (
           <div class="flex flex-wrap gap-2">
             {tags.map((tag) => (
               <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
@@ -106,15 +114,19 @@ const isMediaLayout = imageLayout === 'media';
         ) : null
       }
 
-      <p
-        class={`text-gray-600 font-sans leading-relaxed ${
-          featured
-            ? 'text-lg lg:text-xl line-clamp-4'
-            : 'text-sm lg:text-base line-clamp-3'
-        }`}
-      >
-        {excerpt}
-      </p>
+      {
+        showExcerpt ? (
+          <p
+            class={`text-gray-600 font-sans leading-relaxed ${
+              featured
+                ? 'text-lg lg:text-xl line-clamp-4'
+                : 'text-sm lg:text-base line-clamp-3'
+            }`}
+          >
+            {excerpt}
+          </p>
+        ) : null
+      }
     </div>
   </a>
 </article>
