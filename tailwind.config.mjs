@@ -5,9 +5,14 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        serif: ['Merriweather', 'serif'],
-        display: ['Inter', 'sans-serif'],
+        sans: ['Instrument Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        serif: ['Newsreader', 'Georgia', 'serif'],
+        display: [
+          'Instrument Sans',
+          'ui-sans-serif',
+          'system-ui',
+          'sans-serif',
+        ],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       colors: {
@@ -53,6 +58,7 @@ export default {
               color: theme('colors.brand.dark'),
               fontFamily: theme('fontFamily.serif').join(', '),
               fontWeight: '400',
+              letterSpacing: '0',
             },
             h1: {
               fontSize: '2rem',

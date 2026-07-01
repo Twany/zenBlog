@@ -26,7 +26,7 @@ const footerLinks = [
       <div class="max-w-xl">
         <a
           href={getLocalizedPath('/', lang)}
-          class="font-display text-xl font-bold uppercase tracking-[0.05em] text-brand-dark transition-colors hover:text-brand-cyan"
+          class="font-serif text-xl font-normal text-brand-dark transition-colors hover:text-brand-cyan"
         >
           {uiLabels.nav.home[lang]}
         </a>
@@ -36,7 +36,7 @@ const footerLinks = [
       </div>
 
       <nav
-        class="flex max-w-2xl flex-wrap gap-x-5 gap-y-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-500"
+        class="flex max-w-2xl flex-wrap gap-x-5 gap-y-3 text-sm font-medium text-slate-500"
         aria-label="Footer navigation"
       >
         {
@@ -58,7 +58,7 @@ const footerLinks = [
       <p>&copy; {year} Twany's Blog.</p>
       <a
         href={getLocalizedPath('/contact/', lang)}
-        class="inline-flex w-fit items-center gap-2 font-bold uppercase tracking-[0.16em] text-brand-cyan transition-colors hover:text-brand-dark"
+        class="inline-flex w-fit items-center gap-2 font-medium text-brand-cyan transition-colors hover:text-brand-dark"
       >
         {uiLabels.footer.sayHello[lang]}
         <span aria-hidden="true">-&gt;</span>

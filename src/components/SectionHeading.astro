@@ -8,8 +8,11 @@ interface Props {
 const { title, class: className = '', as = 'h2' } = Astro.props as Props;
 const Tag = as;
 ---
-<div class={`mb-10 ${className}`}>
-  <Tag class="font-serif text-4xl lg:text-5xl text-brand-dark font-normal border-b border-gray-200 pb-4 inline-block w-full text-balance">
+
+<div class={`mb-8 ${className}`}>
+  <Tag
+    class="inline-block w-full font-serif text-3xl font-normal text-brand-dark text-balance lg:text-4xl"
+  >
     {title}
   </Tag>
 </div>

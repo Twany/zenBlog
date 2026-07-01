@@ -34,18 +34,18 @@ const isActive = (path: string) => {
 ---
 
 <header
-  class="site-header fixed top-0 left-0 right-0 z-50 h-16 border-b border-slate-200/80 bg-white/95 text-brand-dark backdrop-blur-xl lg:h-20"
+  class="site-header fixed top-0 left-0 right-0 z-50 h-14 border-b border-slate-200/80 bg-white/95 text-brand-dark backdrop-blur-xl lg:h-16"
 >
   <div
     class="max-w-7xl mx-auto px-5 md:px-6 h-full flex items-center justify-between relative z-10"
   >
     <a href={getLocalizedPath('/', lang)} class="flex items-center gap-3 group">
       <span
-        class="h-6 w-px bg-brand-cyan transition-all duration-300 group-hover:h-7"
+        class="h-5 w-px bg-brand-cyan transition-all duration-300 group-hover:h-6"
         aria-hidden="true"></span>
       <div class="flex text-left">
         <span
-          class="site-title font-serif text-xl font-normal leading-none text-brand-dark transition-all duration-300 lg:text-2xl"
+          class="site-title font-serif text-lg font-normal leading-none text-brand-dark transition-all duration-300 lg:text-xl"
         >
           Twany Blog
         </span>
@@ -53,12 +53,12 @@ const isActive = (path: string) => {
     </a>
 
     <div class="flex items-center gap-3 lg:gap-5">
-      <nav class="hidden md:flex gap-5 lg:gap-7" aria-label="Main navigation">
+      <nav class="hidden md:flex gap-5 lg:gap-6" aria-label="Main navigation">
         {
           navItems.map((link) => (
             <a
               href={getLocalizedPath(link.path, lang)}
-              class={`relative group font-sans text-xs font-semibold uppercase tracking-[0.14em] transition-colors lg:text-[13px] ${
+              class={`relative group font-sans text-sm font-medium transition-colors ${
                 isActive(link.path)
                   ? 'text-brand-dark'
                   : 'text-slate-500 hover:text-brand-dark'
@@ -67,7 +67,7 @@ const isActive = (path: string) => {
             >
               {link.label}
               <span
-                class={`absolute -bottom-2 left-0 h-0.5 bg-brand-cyan transition-all duration-300 ${
+                class={`absolute -bottom-1 left-0 h-px bg-brand-cyan transition-all duration-300 ${
                   isActive(link.path) ? 'w-full' : 'w-0 group-hover:w-full'
                 }`}
               />
@@ -78,14 +78,14 @@ const isActive = (path: string) => {
 
       <a
         href={alternateHref}
-        class="hidden min-h-9 items-center gap-2 border border-slate-200 bg-white/60 px-3 text-xs font-semibold uppercase tracking-widest text-slate-600 transition-all hover:border-brand-cyan hover:text-brand-cyan md:flex"
+        class="hidden min-h-9 items-center gap-2 px-2 text-sm font-medium text-slate-500 transition-colors hover:text-brand-cyan md:flex"
       >
         <Icon name="globe" size={14} />
         <span>{alternateLocale === 'en' ? 'EN' : '中文'}</span>
       </a>
 
       <button
-        class="p-2 text-brand-dark md:hidden"
+        class="p-2 text-brand-dark transition-colors hover:text-brand-cyan md:hidden"
         type="button"
         data-menu-toggle
         aria-label={menuLabel}
@@ -112,7 +112,7 @@ const isActive = (path: string) => {
         navItems.map((link) => (
           <a
             href={getLocalizedPath(link.path, lang)}
-            class={`min-h-11 border-b border-slate-100 py-3 text-left font-sans text-sm font-bold uppercase tracking-[0.18em] ${
+            class={`min-h-11 border-b border-slate-100 py-3 text-left font-sans text-base font-medium ${
               isActive(link.path) ? 'text-brand-cyan' : 'text-slate-600'
             }`}
             data-menu-link
@@ -124,7 +124,7 @@ const isActive = (path: string) => {
     </div>
     <a
       href={alternateHref}
-      class="mt-4 flex min-h-11 items-center gap-3 border border-slate-200 px-3 text-sm font-bold uppercase tracking-[0.16em] text-slate-600"
+      class="mt-4 flex min-h-11 items-center gap-3 border-t border-slate-100 pt-4 text-sm font-medium text-slate-600"
       data-menu-link
     >
       <Icon name="globe" size={18} />

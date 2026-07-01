@@ -59,9 +59,7 @@ const copy =
       class="grid grid-cols-1 gap-12 border-b border-slate-200 pb-16 lg:grid-cols-12 lg:gap-16"
     >
       <div class="lg:col-span-8">
-        <p
-          class="mb-5 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-brand-cyan"
-        >
+        <p class="mb-5 font-serif text-base italic text-brand-cyan">
           {copy.eyebrow}
         </p>
         <h2
@@ -76,9 +74,7 @@ const copy =
 
       <div class="lg:col-span-4">
         <div class="border-t border-slate-200 pt-5">
-          <h2
-            class="font-sans text-sm font-semibold uppercase tracking-widest text-brand-dark"
-          >
+          <h2 class="font-sans text-sm font-semibold text-brand-dark">
             {copy.startHere}
           </h2>
 
@@ -94,7 +90,7 @@ const copy =
                     decoding="async"
                   />
                 </div>
-                <span class="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-cyan">
+                <span class="text-sm font-medium text-brand-cyan">
                   {formatDate(heroPost.data.pubDate, lang)}
                 </span>
                 <h3 class="mt-3 font-serif text-2xl leading-tight text-brand-dark transition-colors group-hover:text-brand-cyan">
@@ -109,7 +105,7 @@ const copy =
               heroPost ? (
                 <a
                   href={getBlogPostUrl(lang, heroSlug)}
-                  class="inline-flex min-h-11 items-center gap-2 border border-slate-200 px-3 text-xs font-semibold uppercase tracking-widest text-slate-600 transition-colors hover:border-brand-cyan hover:text-brand-cyan"
+                  class="inline-flex min-h-11 items-center gap-2 border-b border-slate-200 text-sm font-medium text-slate-600 transition-colors hover:border-brand-cyan hover:text-brand-cyan"
                 >
                   {copy.readNewest}
                   <Icon name="arrow-right" size={14} />
@@ -118,7 +114,7 @@ const copy =
             }
             <a
               href={getBlogIndexUrl(lang)}
-              class="inline-flex min-h-11 items-center gap-2 px-1 text-xs font-semibold uppercase tracking-widest text-brand-cyan transition-colors hover:text-brand-dark"
+              class="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-brand-cyan transition-colors hover:text-brand-dark"
             >
               {copy.browseArchive}
             </a>
@@ -136,7 +132,7 @@ const copy =
             <SectionHeading title={copy.latest} />
             <a
               href={getBlogIndexUrl(lang)}
-              class="inline-flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500 transition-colors hover:text-brand-cyan"
+              class="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-slate-500 transition-colors hover:text-brand-cyan"
             >
               {uiLabels.common.viewArchive[lang]}
               <Icon name="arrow-right" size={14} />

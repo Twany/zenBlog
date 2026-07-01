@@ -42,10 +42,10 @@ const {
 const isMediaLayout = imageLayout === 'media';
 ---
 
-<article class="flex flex-col group h-full border-t border-slate-200 pt-5">
+<article class="flex h-full flex-col pt-5 group">
   <a
     href={href}
-    class={`gap-4 ${
+    class={`gap-4 outline-none ${
       isMediaLayout
         ? 'flex flex-col md:grid md:grid-cols-[minmax(180px,0.42fr)_1fr] md:items-start md:gap-6'
         : 'flex flex-col'
@@ -54,7 +54,7 @@ const isMediaLayout = imageLayout === 'media';
     {
       image ? (
         <div
-          class={`overflow-hidden border border-slate-200 bg-slate-50 ${
+          class={`overflow-hidden bg-slate-50 ${
             isMediaLayout ? 'aspect-[1200/630]' : 'mb-2 aspect-[1200/630]'
           }`}
         >
@@ -71,7 +71,7 @@ const isMediaLayout = imageLayout === 'media';
 
     <div class="flex flex-col gap-3">
       <div
-        class="flex flex-wrap items-center gap-2 text-xs font-semibold tracking-widest uppercase leading-none"
+        class="flex flex-wrap items-center gap-2 text-sm font-medium leading-none text-slate-500"
       >
         {
           showCategory && category ? (
@@ -81,7 +81,7 @@ const isMediaLayout = imageLayout === 'media';
             </>
           ) : null
         }
-        <span class="text-slate-600">{date}</span>
+        <span>{date}</span>
         {
           showReadTime && readTime ? (
             <>
@@ -95,7 +95,7 @@ const isMediaLayout = imageLayout === 'media';
       </div>
 
       <h3
-        class={`font-serif font-normal text-brand-dark group-hover:text-brand-cyan transition-colors leading-tight block ${
+        class={`font-serif font-normal text-brand-dark transition-colors group-hover:text-brand-cyan leading-tight block ${
           featured ? 'text-3xl lg:text-4xl mt-2' : 'text-xl lg:text-2xl'
         }`}
       >
@@ -106,9 +106,7 @@ const isMediaLayout = imageLayout === 'media';
         showTags && tags.length ? (
           <div class="flex flex-wrap gap-2">
             {tags.map((tag) => (
-              <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                {tag}
-              </span>
+              <span class="text-xs font-medium text-slate-500">{tag}</span>
             ))}
           </div>
         ) : null
