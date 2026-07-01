@@ -1,15 +1,74 @@
 ---
-// Sveltia CMS Admin Page
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdminChecksPage from '../../components/pages/AdminChecksPage.astro';
+import { getBlogPostUrl, getSlugFromEntry } from '../../utils/blog';
+import { SITE } from '../../data/site';
+
+const entries = await getCollection('blog');
+const publicRoot = join(process.cwd(), 'public');
+const byTranslationKey = new Map<string, Set<string>>();
+
+entries.forEach((entry) => {
+  const current = byTranslationKey.get(entry.data.translationKey) ?? new Set();
+  current.add(entry.data.lang);
+  byTranslationKey.set(entry.data.translationKey, current);
+});
+
+const rows = entries
+  .map((entry) => {
+    const slug = getSlugFromEntry(entry);
+    const lang = entry.data.lang;
+    const pair = byTranslationKey.get(entry.data.translationKey);
+    const paired = Boolean(pair?.has(lang === 'en' ? 'zh' : 'en'));
+    const tagCount = entry.data.tags?.length ?? 0;
+    const template = entry.data.template ?? 'workflow-tutorial';
+    const socialSummary = entry.data.socialSummary ?? '';
+    const descriptionOk = entry.data.description.length >= 50;
+    const socialSummaryOk =
+      socialSummary.length > 0 && socialSummary.length <= 220;
+    const ogOk = existsSync(join(publicRoot, 'og', lang, `${slug}.png`));
+    const issues = [
+      entry.data.draft ? 'draft' : '',
+      paired ? '' : 'missing pair',
+      template ? '' : 'missing template',
+      tagCount >= 4 ? '' : 'few tags',
+      descriptionOk ? '' : 'short description',
+      socialSummaryOk ? '' : 'missing social summary',
+      ogOk ? '' : 'missing og',
+    ].filter(Boolean);
+
+    return {
+      title: entry.data.title,
+      slug,
+      lang,
+      url: getBlogPostUrl(lang, slug),
+      translationKey: entry.data.translationKey,
+      draft: entry.data.draft ?? false,
+      template,
+      tagCount,
+      descriptionOk,
+      socialSummaryOk,
+      ogOk,
+      paired,
+      issues,
+    };
+  })
+  .sort(
+    (a, b) =>
+      Number(b.issues.length > 0) - Number(a.issues.length > 0) ||
+      a.translationKey.localeCompare(b.translationKey) ||
+      a.lang.localeCompare(b.lang)
+  );
 ---
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-  <title>Content Manager | Twany Blog</title>
-</head>
-<body>
-  <script is:inline src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js" type="module"></script>
-</body>
-</html>
+
+<BaseLayout
+  title="Publish Checks"
+  description="Static publishing health checks for Twany Blog content."
+  lang="en"
+  canonical={`${SITE.url}/admin/`}
+>
+  <AdminChecksPage rows={rows} />
+</BaseLayout>

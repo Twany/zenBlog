@@ -24,29 +24,74 @@ interface Props {
 
 const { lang, posts } = Astro.props as Props;
 const heroPost = posts[0];
-const subPosts = posts.slice(1, 3);
-const popularPosts = posts.slice(3, 6);
+const latestPosts = posts.slice(0, 4);
 const featuredExperiments = experiments.slice(0, 4);
 const recentNotes = notes.slice(0, 4);
-const featuredTopics = getTopicSummaries(posts, lang).slice(0, 4);
-const positioning =
-  lang === 'en'
-    ? 'Notes on AI workflows, interface craft, code, and slow product thinking.'
-    : '记录 AI 工作流、界面手感、代码，以及慢一点的产品思考。';
-const topicsCopy =
+const featuredTopics = getTopicSummaries(posts, lang).slice(0, 5);
+const codexPost = posts.find(
+  (post) => getSlugFromEntry(post) === 'codex-blog-publishing-system'
+);
+
+const copy =
   lang === 'en'
     ? {
-        title: 'Topic Map',
-        viewAll: 'View topics',
-        articles: 'articles',
-        article: 'article',
+        eyebrow: 'Personal knowledge index',
+        title:
+          'A working archive for AI workflows, interface judgment, and slow product thinking.',
+        intro:
+          'I use this site to turn real building sessions into durable notes: what changed, why it changed, what survived verification, and what can be reused next time.',
+        startHere: 'Start here',
+        startDescription:
+          'Begin with the newest long-form piece, then move through topics instead of scrolling a raw archive.',
+        readNewest: 'Read newest',
+        browseArchive: 'Browse archive',
+        topicMap: 'Topic map',
+        tracks: 'Reading tracks',
+        tracksIntro:
+          'The archive is organized around recurring problems rather than content formats.',
+        latest: 'Latest essays',
+        signals: 'Current signals',
+        signalsIntro:
+          'Short notes and build artifacts that show what is becoming article material.',
+        building: 'Now building',
+        builtSystem: 'Codex-to-blog publishing system',
+        builtSystemText:
+          'A direct-publish workflow with bilingual posts, templates, OG images, validation, Cloudflare deploy, and live checks.',
+        posts: 'essays',
+        topics: 'topics',
+        notes: 'notes',
       }
     : {
-        title: '专题地图',
-        viewAll: '查看专题',
-        articles: '篇文章',
-        article: '篇文章',
+        eyebrow: '个人知识入口',
+        title:
+          '一个持续工作的归档：AI 工作流、界面判断，以及慢一点的产品思考。',
+        intro:
+          '我把真实构建过程沉淀到这里：改了什么、为什么改、如何验证、哪些判断可以在下一次复用。',
+        startHere: '从这里开始',
+        startDescription:
+          '先读最新长文，再按主题进入归档，而不是在时间线里盲翻。',
+        readNewest: '阅读最新',
+        browseArchive: '浏览归档',
+        topicMap: '专题地图',
+        tracks: '阅读轨道',
+        tracksIntro: '这个归档按反复出现的问题组织，而不只是按内容形式分类。',
+        latest: '最新长文',
+        signals: '当前信号',
+        signalsIntro: '短笔记和构建产物，记录哪些东西正在变成文章素材。',
+        building: '正在构建',
+        builtSystem: 'Codex 到博客的发布系统',
+        builtSystemText:
+          '一条直发工作流：中英双语长文、模板、OG 图、内容校验、Cloudflare 部署和线上检查。',
+        posts: '篇长文',
+        topics: '个专题',
+        notes: '条笔记',
       };
+
+const stats = [
+  { value: posts.length, label: copy.posts },
+  { value: featuredTopics.length, label: copy.topics },
+  { value: notes.length, label: copy.notes },
+];
 ---
 
 <div class="animate-fade-in">
@@ -54,117 +99,90 @@ const topicsCopy =
     {lang === 'en' ? 'Twany Blog - Notes on Gradual Awakening' : '渐悟备忘录'}
   </h1>
 
-  <section class="max-w-7xl mx-auto px-6 mb-24">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-      <div class="lg:col-span-8 flex flex-col gap-12">
-        <div class="flex items-start justify-between mb-2 gap-8">
-          <div>
-            <h2
-              class="font-serif text-4xl lg:text-5xl text-brand-dark font-normal text-balance"
-            >
-              {uiLabels.common.recently[lang]}
-            </h2>
-            <p
-              class="mt-4 max-w-2xl text-sm md:text-base leading-7 text-slate-600"
-            >
-              {positioning}
-            </p>
-          </div>
-          <a
-            href={getBlogIndexUrl(lang)}
-            class="hidden md:flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-brand-cyan transition-colors focus-visible:outline-none"
-          >
-            {uiLabels.common.viewArchive[lang]}
-            <Icon name="arrow-right" size={14} />
-          </a>
-        </div>
+  <section class="mx-auto mb-20 max-w-7xl px-6">
+    <div
+      class="grid grid-cols-1 gap-12 border-b border-slate-200 pb-16 lg:grid-cols-12 lg:gap-16"
+    >
+      <div class="lg:col-span-8">
+        <p
+          class="mb-5 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-brand-cyan"
+        >
+          {copy.eyebrow}
+        </p>
+        <h2
+          class="max-w-5xl font-serif text-4xl font-normal leading-tight text-brand-dark text-balance md:text-6xl"
+        >
+          {copy.title}
+        </h2>
+        <p class="mt-7 max-w-3xl text-base leading-8 text-slate-600 md:text-lg">
+          {copy.intro}
+        </p>
 
-        {
-          heroPost ? (
-            <div class="mb-4">
-              <PostCard
-                lang={lang}
-                href={getBlogPostUrl(lang, getSlugFromEntry(heroPost))}
-                title={heroPost.data.title}
-                excerpt={heroPost.data.description}
-                category={heroPost.data.category}
-                date={formatDate(heroPost.data.pubDate, lang)}
-                readTime={heroPost.data.readTime}
-                tags={heroPost.data.tags ?? []}
-                featured
-              />
-            </div>
-          ) : null
-        }
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12">
+        <div
+          class="mt-10 grid grid-cols-3 gap-4 border-y border-slate-200 py-5"
+        >
           {
-            subPosts.map((post) => (
-              <PostCard
-                lang={lang}
-                href={getBlogPostUrl(lang, getSlugFromEntry(post))}
-                title={post.data.title}
-                excerpt={post.data.description}
-                category={post.data.category}
-                date={formatDate(post.data.pubDate, lang)}
-                readTime={post.data.readTime}
-                tags={post.data.tags ?? []}
-              />
+            stats.map((stat) => (
+              <div>
+                <div class="font-serif text-3xl text-brand-dark">
+                  {stat.value}
+                </div>
+                <div class="mt-1 text-xs font-semibold uppercase tracking-widest text-slate-500">
+                  {stat.label}
+                </div>
+              </div>
             ))
           }
         </div>
-
-        <a
-          href={getBlogIndexUrl(lang)}
-          class="md:hidden w-full py-4 border border-gray-200 text-xs font-semibold uppercase tracking-widest text-gray-500 hover:border-brand-cyan hover:text-brand-cyan transition-colors text-center"
-        >
-          {uiLabels.common.viewArchive[lang]}
-        </a>
       </div>
 
       <div class="lg:col-span-4">
-        <div class="sticky top-32 border-t border-slate-200 pt-5">
-          <div class="flex items-center justify-between mb-8">
-            <h2
-              class="font-sans font-semibold text-sm uppercase tracking-widest text-brand-dark"
-            >
-              {uiLabels.common.latestNotes[lang]}
-            </h2>
-          </div>
+        <div class="border-t border-slate-200 pt-5">
+          <h2
+            class="font-sans text-sm font-semibold uppercase tracking-widest text-brand-dark"
+          >
+            {copy.startHere}
+          </h2>
+          <p class="mt-4 text-sm leading-7 text-slate-600">
+            {copy.startDescription}
+          </p>
 
-          <div class="space-y-7">
+          {
+            heroPost ? (
+              <a
+                href={getBlogPostUrl(lang, getSlugFromEntry(heroPost))}
+                class="group mt-8 block border-t border-slate-200 pt-5"
+              >
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-cyan">
+                  {formatDate(heroPost.data.pubDate, lang)}
+                </span>
+                <h3 class="mt-3 font-serif text-2xl leading-tight text-brand-dark transition-colors group-hover:text-brand-cyan">
+                  {heroPost.data.title}
+                </h3>
+                <p class="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">
+                  {heroPost.data.description}
+                </p>
+              </a>
+            ) : null
+          }
+
+          <div class="mt-8 flex flex-wrap gap-3">
             {
-              recentNotes.map((note) => (
-                <div class="group">
-                  <div class="flex flex-col gap-2">
-                    <span class="font-mono text-[11px] text-slate-500 uppercase tracking-wider">
-                      {note.date}
-                    </span>
-                    <p class="font-serif text-gray-700 text-sm leading-relaxed line-clamp-3">
-                      {note.content[lang]}
-                    </p>
-                    {note.tags ? (
-                      <div class="flex flex-wrap gap-1 mt-1">
-                        {note.tags.slice(0, 2).map((tag) => (
-                          <span class="text-[10px] uppercase font-semibold text-slate-500">
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              ))
+              heroPost ? (
+                <a
+                  href={getBlogPostUrl(lang, getSlugFromEntry(heroPost))}
+                  class="inline-flex min-h-11 items-center gap-2 border border-slate-200 px-3 text-xs font-semibold uppercase tracking-widest text-slate-600 transition-colors hover:border-brand-cyan hover:text-brand-cyan"
+                >
+                  {copy.readNewest}
+                  <Icon name="arrow-right" size={14} />
+                </a>
+              ) : null
             }
-          </div>
-
-          <div class="mt-8 pt-5 border-t border-gray-200">
             <a
-              href={getLocalizedPath('/notes/', lang)}
-              class="min-h-11 text-xs font-semibold uppercase tracking-widest text-brand-cyan hover:text-brand-dark transition-colors flex items-center gap-2"
+              href={getBlogIndexUrl(lang)}
+              class="inline-flex min-h-11 items-center gap-2 px-1 text-xs font-semibold uppercase tracking-widest text-brand-cyan transition-colors hover:text-brand-dark"
             >
-              {uiLabels.common.viewAllNotes[lang]}
-              <Icon name="arrow-right" size={12} />
+              {copy.browseArchive}
             </a>
           </div>
         </div>
@@ -174,41 +192,76 @@ const topicsCopy =
 
   {
     featuredTopics.length ? (
-      <section class="max-w-7xl mx-auto px-6 mb-20">
-        <div class="border-t border-slate-200 pt-12">
-          <div class="flex flex-col md:flex-row md:items-baseline justify-between mb-10 gap-6">
-            <h2 class="font-serif text-4xl lg:text-5xl text-brand-dark font-normal text-balance">
-              {topicsCopy.title}
+      <section class="mx-auto mb-20 max-w-7xl px-6">
+        <div class="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 class="font-serif text-4xl font-normal text-brand-dark md:text-5xl">
+              {copy.tracks}
             </h2>
+            <p class="mt-4 max-w-2xl text-sm leading-7 text-slate-600">
+              {copy.tracksIntro}
+            </p>
+          </div>
+          <a
+            href={getLocalizedPath('/topics/', lang)}
+            class="inline-flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500 transition-colors hover:text-brand-cyan"
+          >
+            {copy.topicMap}
+            <Icon name="arrow-right" size={14} />
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-5">
+          {featuredTopics.map((topic, index) => (
             <a
-              href={getLocalizedPath('/topics/', lang)}
-              class="inline-flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-brand-cyan transition-colors"
+              href={topic.href}
+              class={`group border-t border-slate-200 pt-5 ${
+                index === 0 ? 'md:col-span-2' : ''
+              }`}
             >
-              {topicsCopy.viewAll}
+              <span class="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-cyan">
+                {topic.kind} / {topic.count}
+              </span>
+              <h3 class="mt-3 font-serif text-2xl leading-tight text-brand-dark transition-colors group-hover:text-brand-cyan">
+                {topic.name}
+              </h3>
+              <p class="mt-4 line-clamp-4 text-sm leading-6 text-slate-600">
+                {topic.description}
+              </p>
+            </a>
+          ))}
+        </div>
+      </section>
+    ) : null
+  }
+
+  {
+    latestPosts.length ? (
+      <section class="mx-auto mb-20 max-w-7xl px-6">
+        <div class="border-t border-slate-200 pt-12">
+          <div class="mb-10 flex flex-col gap-5 md:flex-row md:items-baseline md:justify-between">
+            <SectionHeading title={copy.latest} />
+            <a
+              href={getBlogIndexUrl(lang)}
+              class="inline-flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500 transition-colors hover:text-brand-cyan"
+            >
+              {uiLabels.common.viewArchive[lang]}
               <Icon name="arrow-right" size={14} />
             </a>
           </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredTopics.map((topic) => (
-              <a
-                href={topic.href}
-                class="group border-t border-slate-200 pt-5 min-h-48 flex flex-col"
-              >
-                <span class="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-cyan">
-                  {topic.kind}
-                </span>
-                <h3 class="mt-3 font-serif text-2xl text-brand-dark group-hover:text-brand-cyan transition-colors">
-                  {topic.name}
-                </h3>
-                <p class="mt-4 text-sm leading-6 text-slate-600 line-clamp-3">
-                  {topic.description}
-                </p>
-                <span class="mt-auto pt-5 text-xs font-semibold uppercase tracking-widest text-slate-500">
-                  {topic.count}{' '}
-                  {topic.count === 1 ? topicsCopy.article : topicsCopy.articles}
-                </span>
-              </a>
+          <div class="grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2">
+            {latestPosts.map((post, index) => (
+              <PostCard
+                lang={lang}
+                href={getBlogPostUrl(lang, getSlugFromEntry(post))}
+                title={post.data.title}
+                excerpt={post.data.description}
+                category={post.data.category}
+                date={formatDate(post.data.pubDate, lang)}
+                readTime={post.data.readTime}
+                tags={post.data.tags ?? []}
+                featured={index === 0}
+              />
             ))}
           </div>
         </div>
@@ -216,50 +269,96 @@ const topicsCopy =
     ) : null
   }
 
-  {
-    popularPosts.length ? (
-      <section class="max-w-7xl mx-auto px-6 mb-20">
-        <SectionHeading title={uiLabels.common.popular[lang]} />
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {popularPosts.map((post) => (
-            <PostCard
-              lang={lang}
-              href={getBlogPostUrl(lang, getSlugFromEntry(post))}
-              title={post.data.title}
-              excerpt={post.data.description}
-              category={post.data.category}
-              date={formatDate(post.data.pubDate, lang)}
-              readTime={post.data.readTime}
-              tags={post.data.tags ?? []}
-            />
-          ))}
-        </div>
-      </section>
-    ) : null
-  }
+  <section class="mx-auto mb-20 max-w-7xl px-6">
+    <div
+      class="grid grid-cols-1 gap-12 border-t border-slate-200 pt-12 lg:grid-cols-12"
+    >
+      <div class="lg:col-span-4">
+        <h2 class="font-serif text-4xl font-normal text-brand-dark md:text-5xl">
+          {copy.signals}
+        </h2>
+        <p class="mt-4 text-sm leading-7 text-slate-600">
+          {copy.signalsIntro}
+        </p>
+      </div>
 
-  <section class="max-w-7xl mx-auto px-6 mb-20">
-    <div class="border-t border-slate-200 pt-12">
-      <div
-        class="flex flex-col md:flex-row md:items-baseline justify-between mb-12 gap-6"
-      >
-        <div>
-          <h2
-            class="font-serif text-4xl lg:text-5xl text-brand-dark font-normal text-balance"
-          >
-            {uiLabels.common.lab[lang]}
-          </h2>
+      <div class="lg:col-span-4">
+        <h3
+          class="mb-6 font-sans text-sm font-semibold uppercase tracking-widest text-brand-dark"
+        >
+          {uiLabels.common.latestNotes[lang]}
+        </h3>
+        <div class="space-y-6">
+          {
+            recentNotes.map((note) => (
+              <div class="border-t border-slate-200 pt-4">
+                <span class="font-mono text-[11px] uppercase tracking-wider text-slate-500">
+                  {note.date}
+                </span>
+                <p class="mt-2 font-serif text-sm leading-relaxed text-slate-700 line-clamp-3">
+                  {note.content[lang]}
+                </p>
+              </div>
+            ))
+          }
         </div>
         <a
-          href={getLocalizedPath('/experiments/', lang)}
-          class="inline-flex min-h-11 items-center text-xs font-semibold uppercase tracking-widest text-slate-500 hover:text-brand-cyan transition-colors"
+          href={getLocalizedPath('/notes/', lang)}
+          class="mt-7 inline-flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand-cyan transition-colors hover:text-brand-dark"
         >
-          {uiLabels.common.viewArchive[lang]}
-          <span class="ml-2">→</span>
+          {uiLabels.common.viewAllNotes[lang]}
+          <Icon name="arrow-right" size={12} />
         </a>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="lg:col-span-4">
+        <h3
+          class="mb-6 font-sans text-sm font-semibold uppercase tracking-widest text-brand-dark"
+        >
+          {copy.building}
+        </h3>
+        <a
+          href={codexPost
+            ? getBlogPostUrl(lang, getSlugFromEntry(codexPost))
+            : getBlogIndexUrl(lang)}
+          class="group block border-t border-slate-200 pt-4"
+        >
+          <span
+            class="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-cyan"
+          >
+            AI Workflow
+          </span>
+          <h4
+            class="mt-3 font-serif text-2xl leading-tight text-brand-dark transition-colors group-hover:text-brand-cyan"
+          >
+            {copy.builtSystem}
+          </h4>
+          <p class="mt-4 text-sm leading-7 text-slate-600">
+            {copy.builtSystemText}
+          </p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto mb-20 max-w-7xl px-6">
+    <div class="border-t border-slate-200 pt-12">
+      <div
+        class="mb-12 flex flex-col gap-6 md:flex-row md:items-baseline md:justify-between"
+      >
+        <h2 class="font-serif text-4xl font-normal text-brand-dark lg:text-5xl">
+          {uiLabels.common.lab[lang]}
+        </h2>
+        <a
+          href={getLocalizedPath('/experiments/', lang)}
+          class="inline-flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500 transition-colors hover:text-brand-cyan"
+        >
+          {uiLabels.common.viewArchive[lang]}
+          <Icon name="arrow-right" size={14} />
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {
           featuredExperiments.map((exp) => (
             <ExperimentCard experiment={exp} lang={lang} />

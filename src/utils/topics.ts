@@ -88,7 +88,9 @@ export const getTopicSummaries = (posts: BlogEntry[], locale: Locale) => {
     candidates.forEach(({ name, kind }) => {
       const current = groups.get(name);
       if (current) {
-        current.posts.push(post);
+        if (!current.posts.some((currentPost) => currentPost.id === post.id)) {
+          current.posts.push(post);
+        }
       } else {
         groups.set(name, { kind, posts: [post] });
       }

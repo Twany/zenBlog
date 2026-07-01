@@ -1,8 +1,12 @@
 ---
 import Icon from '../Icon.astro';
-import SectionHeading from '../SectionHeading.astro';
 import { formatDate } from '../../utils/date';
-import { getTopicLatestHref, getTopicSummaries } from '../../utils/topics';
+import {
+  getTopicFilterUrl,
+  getTopicLatestHref,
+  getTopicSummaries,
+} from '../../utils/topics';
+import { getBlogPostUrl, getSlugFromEntry } from '../../utils/blog';
 import type { BlogEntry } from '../../utils/blog';
 import type { Locale } from '../../utils/i18n';
 
@@ -12,94 +16,207 @@ interface Props {
 }
 
 const { lang, posts } = Astro.props as Props;
-const topics = getTopicSummaries(posts, lang).slice(0, 12);
+const topics = getTopicSummaries(posts, lang).slice(0, 18);
+const categoryTopics = topics.filter((topic) => topic.kind === 'category');
+const tagTopics = topics.filter((topic) => topic.kind === 'tag');
+const newestTopic = topics[0];
 const copy =
   lang === 'en'
     ? {
-        title: 'Topics',
+        title: 'Topic Map',
         intro:
-          'A topic map for the archive: AI workflow, design, product thinking, publishing, and the engineering details behind them.',
-        latest: 'Latest',
-        articles: 'articles',
-        article: 'article',
+          'The archive is easier to read as a map of recurring problems: AI workflow, publishing, product judgment, interface craft, and the engineering details that connect them.',
+        categories: 'categories',
+        tags: 'tags',
+        essays: 'essays',
+        latest: 'Latest update',
+        representative: 'Representative path',
         browse: 'Browse topic',
         readLatest: 'Read latest',
+        categoryRail: 'Category tracks',
+        tagRail: 'Tag clusters',
       }
     : {
-        title: '专题',
+        title: '专题地图',
         intro:
-          '把归档按主题重新组织：AI 工作流、设计、产品思考、发布系统，以及背后的工程细节。',
-        latest: '最新',
-        articles: '篇文章',
-        article: '篇文章',
+          '这个归档更适合按反复出现的问题阅读：AI 工作流、发布系统、产品判断、界面手感，以及把它们连起来的工程细节。',
+        categories: '个分类',
+        tags: '个标签',
+        essays: '篇长文',
+        latest: '最近更新',
+        representative: '代表路径',
         browse: '浏览专题',
         readLatest: '阅读最新',
+        categoryRail: '分类轨道',
+        tagRail: '标签簇',
       };
+
+const stats = [
+  { value: posts.length, label: copy.essays },
+  { value: categoryTopics.length, label: copy.categories },
+  { value: tagTopics.length, label: copy.tags },
+];
 ---
 
 <div class="mx-auto max-w-7xl px-6">
-  <div class="mb-12 max-w-3xl">
-    <SectionHeading title={copy.title} as="h1" class="mb-6" />
-    <p class="text-base leading-8 text-slate-600 md:text-lg">{copy.intro}</p>
-  </div>
+  <header
+    class="mb-14 grid grid-cols-1 gap-10 border-b border-slate-200 pb-12 lg:grid-cols-12"
+  >
+    <div class="lg:col-span-8">
+      <p
+        class="mb-5 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-brand-cyan"
+      >
+        {copy.title}
+      </p>
+      <h1
+        class="font-serif text-4xl font-normal leading-tight text-brand-dark text-balance md:text-6xl"
+      >
+        {copy.intro}
+      </h1>
+    </div>
 
-  <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-    {
-      topics.map((topic, index) => (
-        <article class="group flex min-h-[19rem] flex-col border-t border-slate-200 pt-5 transition-colors hover:border-brand-cyan">
-          <div class="mb-8 flex items-start justify-between gap-4">
-            <div>
-              <span class="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-cyan">
-                {topic.kind}
-              </span>
-              <h2 class="mt-3 font-serif text-3xl font-normal leading-tight text-brand-dark text-balance">
-                {topic.name}
-              </h2>
+    <div class="lg:col-span-4">
+      <div
+        class="grid grid-cols-3 gap-4 border-y border-slate-200 py-5 lg:grid-cols-1 lg:border-t lg:border-b-0"
+      >
+        {
+          stats.map((stat) => (
+            <div class="lg:border-b lg:border-slate-100 lg:pb-4">
+              <div class="font-serif text-3xl text-brand-dark">
+                {stat.value}
+              </div>
+              <div class="mt-1 text-xs font-semibold uppercase tracking-widest text-slate-500">
+                {stat.label}
+              </div>
             </div>
-            <span class="font-mono text-xs text-slate-400">
-              {String(index + 1).padStart(2, '0')}
+          ))
+        }
+      </div>
+      {
+        newestTopic ? (
+          <a
+            href={getTopicLatestHref(lang, newestTopic)}
+            class="group mt-6 block border-t border-slate-200 pt-5"
+          >
+            <span class="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-cyan">
+              {copy.latest}
             </span>
-          </div>
+            <h2 class="mt-3 font-serif text-2xl leading-tight text-brand-dark transition-colors group-hover:text-brand-cyan">
+              {newestTopic.latestPost.data.title}
+            </h2>
+            <p class="mt-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+              {newestTopic.name} /{' '}
+              {formatDate(newestTopic.latestPost.data.pubDate, lang)}
+            </p>
+          </a>
+        ) : null
+      }
+    </div>
+  </header>
 
-          <p class="mb-8 text-sm leading-7 text-slate-600">
-            {topic.description}
-          </p>
+  {
+    categoryTopics.length ? (
+      <section class="mb-16">
+        <h2 class="mb-8 font-sans text-sm font-semibold uppercase tracking-widest text-brand-dark">
+          {copy.categoryRail}
+        </h2>
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+          {categoryTopics.map((topic, index) => (
+            <article class="group border-t border-slate-200 pt-5">
+              <div class="mb-8 flex items-start justify-between gap-4">
+                <div>
+                  <span class="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-cyan">
+                    {topic.kind} / {topic.count}
+                  </span>
+                  <h3 class="mt-3 font-serif text-3xl font-normal leading-tight text-brand-dark text-balance">
+                    {topic.name}
+                  </h3>
+                </div>
+                <span class="font-mono text-xs text-slate-400">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+              </div>
 
-          <div class="mt-auto space-y-5">
-            <div class="border-t border-slate-100 pt-4">
-              <span class="text-xs font-semibold uppercase tracking-widest text-slate-500">
-                {copy.latest} / {topic.count}{' '}
-                {topic.count === 1 ? copy.article : copy.articles}
+              <p class="mb-7 text-sm leading-7 text-slate-600">
+                {topic.description}
+              </p>
+
+              <div class="border-t border-slate-100 pt-5">
+                <p class="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
+                  {copy.representative}
+                </p>
+                <div class="space-y-4">
+                  {topic.posts.slice(0, 3).map((post) => (
+                    <a
+                      href={getBlogPostUrl(lang, getSlugFromEntry(post))}
+                      class="group/item grid grid-cols-[auto_1fr] gap-3"
+                    >
+                      <span class="mt-1.5 h-1.5 w-1.5 bg-brand-cyan" />
+                      <span>
+                        <span class="block font-serif text-base leading-snug text-brand-dark transition-colors group-hover/item:text-brand-cyan">
+                          {post.data.title}
+                        </span>
+                        <span class="mt-1 block text-xs font-semibold uppercase tracking-wider text-slate-500">
+                          {formatDate(post.data.pubDate, lang)} /{' '}
+                          {post.data.readTime}
+                        </span>
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <div class="mt-7 flex flex-wrap gap-3 border-t border-slate-100 pt-5">
+                <a
+                  href={topic.href}
+                  class="inline-flex min-h-11 items-center gap-2 border border-slate-200 px-3 text-xs font-semibold uppercase tracking-widest text-slate-600 transition-colors hover:border-brand-cyan hover:text-brand-cyan"
+                >
+                  {copy.browse}
+                  <Icon name="arrow-right" size={14} />
+                </a>
+                <a
+                  href={getTopicLatestHref(lang, topic)}
+                  class="inline-flex min-h-11 items-center gap-2 px-1 text-xs font-semibold uppercase tracking-widest text-brand-cyan transition-colors hover:text-brand-dark"
+                >
+                  {copy.readLatest}
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    ) : null
+  }
+
+  {
+    tagTopics.length ? (
+      <section class="mb-20 border-t border-slate-200 pt-12">
+        <h2 class="mb-8 font-sans text-sm font-semibold uppercase tracking-widest text-brand-dark">
+          {copy.tagRail}
+        </h2>
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {tagTopics.map((topic) => (
+            <a
+              href={getTopicFilterUrl(lang, topic.name, topic.kind)}
+              class="group border-t border-slate-200 pt-5"
+            >
+              <span class="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-cyan">
+                {topic.count} / {copy.essays}
               </span>
-              <a
-                href={getTopicLatestHref(lang, topic)}
-                class="mt-2 block font-serif text-lg leading-snug text-brand-dark transition-colors group-hover:text-brand-cyan"
-              >
-                {topic.latestPost.data.title}
-              </a>
-              <span class="mt-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <h3 class="mt-3 font-serif text-2xl leading-tight text-brand-dark transition-colors group-hover:text-brand-cyan">
+                {topic.name}
+              </h3>
+              <p class="mt-4 line-clamp-3 text-sm leading-6 text-slate-600">
+                {topic.description}
+              </p>
+              <p class="mt-5 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                {copy.latest} /{' '}
                 {formatDate(topic.latestPost.data.pubDate, lang)}
-              </span>
-            </div>
-
-            <div class="flex flex-wrap gap-3">
-              <a
-                href={topic.href}
-                class="inline-flex min-h-11 items-center gap-2 border border-slate-200 px-3 text-xs font-semibold uppercase tracking-widest text-slate-600 transition-colors hover:border-brand-cyan hover:text-brand-cyan"
-              >
-                {copy.browse}
-                <Icon name="arrow-right" size={14} />
-              </a>
-              <a
-                href={getTopicLatestHref(lang, topic)}
-                class="inline-flex min-h-11 items-center gap-2 px-1 text-xs font-semibold uppercase tracking-widest text-brand-cyan transition-colors hover:text-brand-dark"
-              >
-                {copy.readLatest}
-              </a>
-            </div>
-          </div>
-        </article>
-      ))
-    }
-  </div>
+              </p>
+            </a>
+          ))}
+        </div>
+      </section>
+    ) : null
+  }
 </div>
