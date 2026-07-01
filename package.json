@@ -10,6 +10,8 @@
     "check": "astro check",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "blog:draft": "python3 scripts/blog_draft.py",
+    "blog:publish": "python3 scripts/blog_publish.py",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest",
@@ -23,7 +25,7 @@
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
-    "@tailwindcss/line-clamp": "^0.4.4",
+    "@astrojs/check": "^0.9.9",
     "@tailwindcss/typography": "^0.5.13",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",

@@ -49,6 +49,7 @@ collections:
       - { label: "Read Time", name: "readTime", widget: "string", default: "5 min read" }
       - { label: "Language", name: "lang", widget: "hidden", default: "en" }
       - { label: "Translation Key", name: "translationKey", widget: "string", hint: "Use same key for EN/ZH versions (e.g., my-post-slug)" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false, hint: "Draft posts are visible in local dev only and excluded from production builds." }
       - { label: "Content", name: "body", widget: "markdown" }
 
   # 中文博客文章
@@ -72,6 +73,7 @@ collections:
       - { label: "阅读时间", name: "readTime", widget: "string", default: "5 分钟阅读" }
       - { label: "语言", name: "lang", widget: "hidden", default: "zh" }
       - { label: "翻译键", name: "translationKey", widget: "string", hint: "与英文版本使用相同的键" }
+      - { label: "草稿", name: "draft", widget: "boolean", default: false, required: false, hint: "草稿仅在本地开发环境可见，生产构建会排除。" }
       - { label: "内容", name: "body", widget: "markdown" }
 
   # 笔记和实验项目

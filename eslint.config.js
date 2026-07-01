@@ -13,6 +13,12 @@ export default [
       parserOptions: {
         project: './tsconfig.json',
       },
+      globals: {
+        document: 'readonly',
+        window: 'readonly',
+        HTMLElement: 'readonly',
+        IntersectionObserver: 'readonly',
+      },
     },
     plugins: {
       '@typescript-eslint': tseslint,

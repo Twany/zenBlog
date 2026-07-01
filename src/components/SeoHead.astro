@@ -89,7 +89,7 @@ const articleSchema = article ? {
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="description" content={metaDescription} />
-<meta name="theme-color" content="#00B4D8" />
+<meta name="theme-color" content="#2563EB" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <link rel="icon" type="image/jpeg" href="/images/static/icon.jpg" />
@@ -118,6 +118,6 @@ const articleSchema = article ? {
 {image ? <meta property="og:image" content={image} /> : null}
 {image ? <meta name="twitter:image" content={image} /> : null}
 
-<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
-<script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
-{articleSchema ? <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} /> : null}
+<script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+{articleSchema ? <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} /> : null}

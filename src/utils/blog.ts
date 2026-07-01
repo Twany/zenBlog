@@ -12,10 +12,14 @@ export const getSlugFromEntry = (entry: BlogEntry) => {
   return entry.slug;
 };
 
+export const shouldShowDrafts = () => import.meta.env.DEV;
+
+export const isVisibleBlogPost = (entry: BlogEntry) => !entry.data.draft || shouldShowDrafts();
+
 export const getBlogPosts = async (locale: Locale) => {
   const entries = await getCollection('blog');
   return entries
-    .filter((entry) => entry.data.lang === locale)
+    .filter((entry) => entry.data.lang === locale && isVisibleBlogPost(entry))
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 };
 

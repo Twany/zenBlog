@@ -11,6 +11,7 @@ const blog = defineCollection({
     readTime: z.string(),
     lang: z.enum(['en', 'zh']),
     translationKey: z.string(),
+    draft: z.boolean().optional().default(false),
   }),
 });
 
