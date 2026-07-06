@@ -5,30 +5,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: [
-          'PingFang SC',
-          'Hiragino Sans GB',
-          'Microsoft YaHei',
-          'ui-sans-serif',
-          'system-ui',
-          'sans-serif',
-        ],
-        serif: [
-          'PingFang SC',
-          'Hiragino Sans GB',
-          'Microsoft YaHei',
-          'ui-sans-serif',
-          'system-ui',
-          'sans-serif',
-        ],
-        display: [
-          'PingFang SC',
-          'Hiragino Sans GB',
-          'Microsoft YaHei',
-          'ui-sans-serif',
-          'system-ui',
-          'sans-serif',
-        ],
+        sans: ['Helvetica', 'Arial', 'sans-serif'],
+        serif: ['Helvetica', 'Arial', 'sans-serif'],
+        display: ['Helvetica', 'Arial', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       colors: {
